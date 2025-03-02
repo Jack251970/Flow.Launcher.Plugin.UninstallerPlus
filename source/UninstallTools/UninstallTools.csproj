@@ -52,10 +52,8 @@
 		</None>
 	</ItemGroup>
 	<ItemGroup>
-    <!--<ProjectReference Include="..\KlocTools\KlocTools.csproj" />-->
-    <!--<ProjectReference Include="..\ObjectListView\ObjectListView.csproj" />-->
-    <ProjectReference Include="..\..\..\Bulk-Crap-Uninstaller\source\KlocTools\KlocTools.csproj" />
-		<ProjectReference Include="..\..\..\Bulk-Crap-Uninstaller\source\ObjectListView\ObjectListView.csproj" />
+    <ProjectReference Include="..\KlocTools\KlocTools.csproj" />
+		<ProjectReference Include="..\ObjectListView\ObjectListView.csproj" />
 	</ItemGroup>
 	<ItemGroup>
 		<COMReference Include="Scripting">
