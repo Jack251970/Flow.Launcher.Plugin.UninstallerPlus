@@ -9,6 +9,7 @@
     Width="800"
     Height="450"
     Closed="Window_Closed"
+    Closing="Window_Closing"
     Loaded="Window_Loaded"
     mc:Ignorable="d">
     <Grid>
