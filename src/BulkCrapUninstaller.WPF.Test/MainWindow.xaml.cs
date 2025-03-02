@@ -1,12 +1,15 @@
-﻿using Klocman.Forms.Tools;
+﻿using System.Diagnostics;
 using System.Windows;
 using UninstallTools;
+using UninstallTools.Controls;
 using UninstallTools.Factory;
 
 namespace BulkCrapUninstaller.WPF.Test;
 
 public partial class MainWindow : Window
 {
+    private readonly UninstallerIconGetter _iconGetter;
+
     private IList<ApplicationUninstallerEntry>? _allUninstallers;
     public IList<ApplicationUninstallerEntry> AllUninstallers
     {
@@ -20,11 +23,17 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+        _iconGetter = new UninstallerIconGetter();
     }
 
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
         Task.Run(() => ListRefreshThread());
+    }
+
+    private void Window_Closed(object sender, EventArgs e)
+    {
+        _iconGetter?.Dispose();
     }
 
     private async Task ListRefreshThread(CancellationToken token = default)
@@ -71,7 +80,7 @@ public partial class MainWindow : Window
         await Application.Current.Dispatcher.InvokeAsync(() =>
         {
             ProgressBar.Maximum = progressMax;
-            TextBlock.Text = "Progress finished";
+            TextBlock.Text = "Program loading finished";
             SubProgressBar.Maximum = 2;
             SubProgressBar.Value = 0;
             SubTextBlock.Text = string.Empty;
@@ -83,16 +92,27 @@ public partial class MainWindow : Window
 
         AllUninstallers = uninstallerEntries;
 
-        /*dialogInterface.SetSubProgress(1, Localisable.Progress_Finishing_Icons);
+        await Application.Current.Dispatcher.InvokeAsync(() =>
+        {
+            SubProgressBar.Value = 1;
+            SubTextBlock.Text = "Icon loading finished";
+        });
+
         try
         {
             _iconGetter.UpdateIconList(AllUninstallers);
         }
         catch (Exception ex)
         {
-            PremadeDialogs.GenericError(ex);
+            Debug.WriteLine(ex);
         }
 
-        dialogInterface.SetSubProgressVisible(false);*/
+        /*await Application.Current.Dispatcher.InvokeAsync(() =>
+        {
+            ProgressBar.Visibility = Visibility.Hidden;
+            TextBlock.Visibility = Visibility.Hidden;
+            SubProgressBar.Visibility = Visibility.Hidden;
+            SubTextBlock.Visibility = Visibility.Hidden;
+        });*/
     }
 }

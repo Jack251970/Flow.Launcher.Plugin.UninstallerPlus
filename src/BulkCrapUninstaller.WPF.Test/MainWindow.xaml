@@ -8,6 +8,7 @@
     Title="MainWindow"
     Width="800"
     Height="450"
+    Closed="Window_Closed"
     Loaded="Window_Loaded"
     mc:Ignorable="d">
     <Grid>
