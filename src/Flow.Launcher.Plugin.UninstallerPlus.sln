@@ -1,0 +1,36 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35825.156
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flow.Launcher.Plugin.UninstallerPlus", "Flow.Launcher.Plugin.UninstallerPlus\Flow.Launcher.Plugin.UninstallerPlus.csproj", "{B83B9475-3B60-4DD2-9C7B-49B65E8C593C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BulkCrapUninstaller.WPF.Test", "BulkCrapUninstaller.WPF.Test\BulkCrapUninstaller.WPF.Test.csproj", "{7164C26E-E9A3-C9A6-E780-3479942209B2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UninstallTools", "..\source\UninstallTools\UninstallTools.csproj", "{A5AA69AD-4A6F-AF19-290D-45F9E5A8CF3A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B83B9475-3B60-4DD2-9C7B-49B65E8C593C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B83B9475-3B60-4DD2-9C7B-49B65E8C593C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B83B9475-3B60-4DD2-9C7B-49B65E8C593C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B83B9475-3B60-4DD2-9C7B-49B65E8C593C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7164C26E-E9A3-C9A6-E780-3479942209B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7164C26E-E9A3-C9A6-E780-3479942209B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7164C26E-E9A3-C9A6-E780-3479942209B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7164C26E-E9A3-C9A6-E780-3479942209B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A5AA69AD-4A6F-AF19-290D-45F9E5A8CF3A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5AA69AD-4A6F-AF19-290D-45F9E5A8CF3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A5AA69AD-4A6F-AF19-290D-45F9E5A8CF3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A5AA69AD-4A6F-AF19-290D-45F9E5A8CF3A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FCEF4E55-DC24-404A-9AC2-B8766A1305D8}
+	EndGlobalSection
+EndGlobal
