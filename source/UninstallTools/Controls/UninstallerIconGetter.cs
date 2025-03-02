@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 using Klocman.Extensions;
 
@@ -59,7 +60,7 @@ namespace UninstallTools.Controls
         }
 
         /// <exception cref="PlatformNotSupportedException">The current platform is not supported.</exception>
-        public void UpdateIconList(IEnumerable<ApplicationUninstallerEntry> objList)
+        public void UpdateIconList(IEnumerable<ApplicationUninstallerEntry> objList, CancellationToken token = default)
         {
             IconList = new ImageList();
             var windowsPath = Environment.GetFolderPath(Environment.SpecialFolder.System);
@@ -72,6 +73,9 @@ namespace UninstallTools.Controls
 
             foreach (var obj in objList)
             {
+                if (token.IsCancellationRequested)
+                    return;
+
                 if (IconListContainsKey(obj.DisplayName))
                     continue;
 
