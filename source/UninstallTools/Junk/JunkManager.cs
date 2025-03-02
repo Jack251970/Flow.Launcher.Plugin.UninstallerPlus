@@ -104,7 +104,12 @@ namespace UninstallTools.Junk
             {
                 try
                 {
-                    AddRange(knownFolderstype.GetProperties().Attempt(p => ((Windows.Storage.StorageFolder)p.GetValue(null))!.Path));
+                    //AddRange(knownFolderstype.GetProperties().Attempt(p => ((Windows.Storage.StorageFolder)p.GetValue(null))!.Path));
+                    AddRange(knownFolderstype.GetProperties().Attempt(p =>
+                    {
+                        var storageFolder = p.GetValue(null);
+                        return (string)storageFolder.GetType().GetProperty("Path").GetValue(storageFolder);
+                    }));
                 }
                 catch (Exception ex)
                 {
