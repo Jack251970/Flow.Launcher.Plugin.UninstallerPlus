@@ -14,8 +14,9 @@
     mc:Ignorable="d">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition />
-            <RowDefinition />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <ProgressBar
             x:Name="ProgressBar"
@@ -33,5 +34,8 @@
             x:Name="SubTextBlock"
             Grid.Row="1"
             Visibility="Collapsed" />
+        <ScrollViewer Grid.Row="2">
+            <TextBlock x:Name="UninstallerListTextBlock" />
+        </ScrollViewer>
     </Grid>
 </Window>

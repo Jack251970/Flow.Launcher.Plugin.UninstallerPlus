@@ -1,6 +1,7 @@
 ﻿using Klocman.Extensions;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Text;
 using System.Windows;
 using System.Windows.Threading;
 using UninstallTools;
@@ -143,6 +144,8 @@ public partial class MainWindow : Window
             SubProgressBar.Visibility = Visibility.Hidden;
             SubTextBlock.Visibility = Visibility.Hidden;
         }, DispatcherPriority.Normal, token);
+
+        _ = UpdateTextAsync();
     }
 
     private static async Task InvokeAsync(Action function, DispatcherPriority priority = DispatcherPriority.Normal, CancellationToken token = default)
@@ -167,5 +170,23 @@ public partial class MainWindow : Window
         {
             // Ignored - application exitted
         }
+    }
+
+    private async Task UpdateTextAsync()
+    {
+        var uninstallerListText = await Task.Run(() =>
+        {
+            var stringBuilder = new StringBuilder();
+            foreach (var uninstaller in AllUninstallers)
+            {
+                stringBuilder.AppendLine($"Name: {uninstaller.DisplayName} Publisher: {uninstaller.Publisher}");
+            }
+            return stringBuilder.ToString();
+        }).ConfigureAwait(false);
+
+        await InvokeAsync(() =>
+        {
+            UninstallerListTextBlock.Text = uninstallerListText;
+        }, DispatcherPriority.Normal, _cancellationTokenSource.Token);
     }
 }
