@@ -46,7 +46,7 @@ public partial class MainWindow : Window
         {
             Task.Run(() => ListRefreshThread(_cancellationTokenSource.Token), _cancellationTokenSource.Token);
         }
-        catch (TaskCanceledException)
+        catch (OperationCanceledException)
         {
             // Ignored - token cancelled
         }
@@ -133,9 +133,9 @@ public partial class MainWindow : Window
         {
             _iconGetter.UpdateIconList(AllUninstallers, token);
         }
-        catch (TaskCanceledException)
+        catch (OperationCanceledException)
         {
-            throw new TaskCanceledException("Icon loading cancelled");
+            throw new OperationCanceledException("Icon loading cancelled");
         }
         catch (Exception ex)
         {

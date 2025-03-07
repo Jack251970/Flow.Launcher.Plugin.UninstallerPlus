@@ -222,9 +222,9 @@ namespace UninstallTools.Factory
 
                 return mergedResults;
             }
-            catch (TaskCanceledException)
+            catch (OperationCanceledException)
             {
-                throw new TaskCanceledException("Get uninstaller entries cancelled");
+                throw new OperationCanceledException("Get uninstaller entries cancelled");
             }
             finally
             {
