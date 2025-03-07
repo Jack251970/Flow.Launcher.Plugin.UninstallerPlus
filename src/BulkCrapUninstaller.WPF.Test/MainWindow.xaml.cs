@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using Klocman.Extensions;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Threading;
@@ -24,6 +25,9 @@ public partial class MainWindow : Window
 
     private readonly CancellationTokenSource _cancellationTokenSource = new();
 
+    private const string FlowLauncherDisplayName = "Flow Launcher";
+    private const string FlowLauncherPublisher = "Flow-Launcher Team";
+    
     public MainWindow()
     {
         InitializeComponent();
@@ -106,9 +110,10 @@ public partial class MainWindow : Window
             SubTextBlock.Text = string.Empty;
         }, DispatcherPriority.Normal, token);
 
-        //if (!string.IsNullOrEmpty(Program.InstalledRegistryKeyName))
-        //    uninstallerEntries.RemoveAll(
-        //        x => PathTools.PathsEqual(x.RegistryKeyName, Program.InstalledRegistryKeyName));
+        // Remove Flow Launcher from the list so that it doesn't show up in the UI
+        uninstallerEntries.RemoveAll(x =>
+            (x.DisplayName == FlowLauncherDisplayName || x.DisplayNameTrimmed == FlowLauncherDisplayName) &&
+            (x.Publisher == FlowLauncherPublisher || x.PublisherTrimmed == FlowLauncherPublisher));
 
         AllUninstallers = uninstallerEntries;
 
