@@ -28,6 +28,11 @@ public partial class MainWindow : Window
 
     private const string FlowLauncherDisplayName = "Flow Launcher";
     private const string FlowLauncherPublisher = "Flow-Launcher Team";
+
+    private const string MicrosoftPublisher = "Microsoft";
+    private const string TweakRateId = "tweak";
+
+    private readonly Settings _settings = new();
     
     public MainWindow()
     {
@@ -179,7 +184,10 @@ public partial class MainWindow : Window
             var stringBuilder = new StringBuilder();
             foreach (var uninstaller in AllUninstallers)
             {
-                stringBuilder.AppendLine($"Name: {uninstaller.DisplayName} Publisher: {uninstaller.Publisher}");
+                if (ListViewFilter(uninstaller))
+                {
+                    stringBuilder.AppendLine($"Name: {uninstaller.DisplayName} Publisher: {uninstaller.Publisher}");
+                }
             }
             return stringBuilder.ToString();
         }).ConfigureAwait(false);
@@ -188,5 +196,50 @@ public partial class MainWindow : Window
         {
             UninstallerListTextBlock.Text = uninstallerListText;
         }, DispatcherPriority.Normal, _cancellationTokenSource.Token);
+    }
+
+    private bool ListViewFilter(ApplicationUninstallerEntry entry)
+    {
+        if (!_settings.FilterShowMicrosoft && !string.IsNullOrEmpty(entry.Publisher) && entry.Publisher.Contains(MicrosoftPublisher))
+        {
+            return false;
+        }
+
+        if (!_settings.AdvancedDisplayOrphans && entry.IsOrphaned)
+        {
+            return false;
+        }
+
+        if (!_settings.FilterShowSystemComponents && entry.SystemComponent)
+        {
+            return false;
+        }
+
+        if (!_settings.FilterShowProtected && entry.IsProtected)
+        {
+            return false;
+        }
+
+        if (entry.RatingId != null && !_settings.FilterShowTweaks && entry.RatingId.StartsWith(TweakRateId, StringComparison.Ordinal))
+        {
+            return false;
+        }
+
+        if (!_settings.FilterShowUpdates && entry.IsUpdate)
+        {
+            return false;
+        }
+
+        if (!_settings.FilterShowWinFeatures && entry.UninstallerKind == UninstallerType.WindowsFeature)
+        {
+            return false;
+        }
+
+        if (!_settings.FilterShowStoreApps && entry.UninstallerKind == UninstallerType.StoreApp)
+        {
+            return false;
+        }
+
+        return true;
     }
 }
