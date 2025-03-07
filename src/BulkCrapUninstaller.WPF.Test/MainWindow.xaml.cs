@@ -33,7 +33,9 @@ public partial class MainWindow : Window
     private const string TweakRateId = "tweak";
 
     private readonly Settings _settings = new();
-    
+
+    private readonly SemaphoreSlim _queryUpdateSemaphore = new(1, 1);
+
     public MainWindow()
     {
         InitializeComponent();
@@ -63,12 +65,15 @@ public partial class MainWindow : Window
 
     private void Window_Closed(object sender, EventArgs e)
     {
+        _queryUpdateSemaphore?.Dispose();
         _cancellationTokenSource?.Dispose();
         _iconGetter?.Dispose();
     }
 
-    private async Task ListRefreshThread(CancellationToken token = default)
+    private async Task ListRefreshThread(CancellationToken token)
     {
+        await _queryUpdateSemaphore.WaitAsync(token).ConfigureAwait(false);
+
         await InvokeAsync(() =>
         {
             ProgressBar.Visibility = Visibility.Visible;
@@ -150,7 +155,9 @@ public partial class MainWindow : Window
             SubTextBlock.Visibility = Visibility.Hidden;
         }, DispatcherPriority.Normal, token);
 
-        _ = UpdateTextAsync();
+        _queryUpdateSemaphore.Release();
+
+        _ = UpdateTextAsync(token);
     }
 
     private static async Task InvokeAsync(Action function, DispatcherPriority priority = DispatcherPriority.Normal, CancellationToken token = default)
@@ -177,8 +184,10 @@ public partial class MainWindow : Window
         }
     }
 
-    private async Task UpdateTextAsync()
+    private async Task UpdateTextAsync(CancellationToken token)
     {
+        await _queryUpdateSemaphore.WaitAsync(token);
+
         var uninstallerListText = await Task.Run(() =>
         {
             var stringBuilder = new StringBuilder();
@@ -196,6 +205,8 @@ public partial class MainWindow : Window
         {
             UninstallerListTextBlock.Text = uninstallerListText;
         }, DispatcherPriority.Normal, _cancellationTokenSource.Token);
+
+        _queryUpdateSemaphore.Release();
     }
 
     private bool ListViewFilter(ApplicationUninstallerEntry entry)
