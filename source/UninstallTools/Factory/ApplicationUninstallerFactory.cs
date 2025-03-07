@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Klocman.Extensions;
 using Klocman.Forms.Tools;
 using Klocman.IO;
@@ -29,21 +30,17 @@ namespace UninstallTools.Factory
 
             var concurrentFactory = new ConcurrentApplicationFactory((p) => GetMiscUninstallerEntries(p, token));
 
-            var mergedResults = new List<ApplicationUninstallerEntry>();
-
             try
             {
                 // Find msi products ---------------------------------------------------------------------------------------
-                if (token.IsCancellationRequested)
-                    return mergedResults;
+                token.ThrowIfCancellationRequested();
 
                 var msiProgress = new ListGenerationProgress(currentStep++, totalStepCount, Localisation.Progress_MSI);
                 callback(msiProgress);
                 var msiGuidCount = 0;
                 var msiProducts = MsiTools.MsiEnumProducts().DoForEach(x =>
                 {
-                    if (token.IsCancellationRequested)
-                        return;
+                    token.ThrowIfCancellationRequested();
 
                     msiProgress.Inner = new ListGenerationProgress(0, -1, string.Format(Localisation.Progress_MSI_sub, ++msiGuidCount));
                     callback(msiProgress);
@@ -56,8 +53,7 @@ namespace UninstallTools.Factory
                 IList<ApplicationUninstallerEntry> registryResults;
                 if (UninstallToolsGlobalConfig.ScanRegistry)
                 {
-                    if (token.IsCancellationRequested)
-                        return mergedResults;
+                    token.ThrowIfCancellationRequested();
 
                     var regProgress = new ListGenerationProgress(currentStep++, totalStepCount,
                         Localisation.Progress_Registry);
@@ -67,8 +63,7 @@ namespace UninstallTools.Factory
                     var registryFactory = new RegistryFactory(msiProducts);
                     registryResults = registryFactory.GetUninstallerEntries(report =>
                     {
-                        if (token.IsCancellationRequested)
-                            return;
+                        token.ThrowIfCancellationRequested();
 
                         regProgress.Inner = report;
                         callback(regProgress);
@@ -79,16 +74,14 @@ namespace UninstallTools.Factory
                     if (UninstallToolsGlobalConfig.UninstallerFactoryCache != null)
                         ApplyCache(registryResults, UninstallToolsGlobalConfig.UninstallerFactoryCache, InfoAdder);
 
-                    if (token.IsCancellationRequested)
-                        return mergedResults;
+                    token.ThrowIfCancellationRequested();
 
                     var installLocAddProgress = new ListGenerationProgress(currentStep++, totalStepCount, Localisation.Progress_GatherUninstallerInfo);
                     callback(installLocAddProgress);
 
                     FactoryThreadedHelpers.GenerateMissingInformation(registryResults, InfoAdder, null, true, report =>
                     {
-                        if (token.IsCancellationRequested)
-                            return;
+                        token.ThrowIfCancellationRequested();
 
                         installLocAddProgress.Inner = report;
                         callback(installLocAddProgress);
@@ -104,8 +97,7 @@ namespace UninstallTools.Factory
                 IList<ApplicationUninstallerEntry> driveResults;
                 if (UninstallToolsGlobalConfig.ScanDrives)
                 {
-                    if (token.IsCancellationRequested)
-                        return mergedResults;
+                    token.ThrowIfCancellationRequested();
 
                     var driveProgress = new ListGenerationProgress(currentStep++, totalStepCount, Localisation.Progress_DriveScan);
                     callback(driveProgress);
@@ -114,8 +106,7 @@ namespace UninstallTools.Factory
                     var driveFactory = new DirectoryFactory(registryResults);
                     driveResults = driveFactory.GetUninstallerEntries(report =>
                     {
-                        if (token.IsCancellationRequested)
-                            return;
+                        token.ThrowIfCancellationRequested();
 
                         driveProgress.Inner = report;
                         callback(driveProgress);
@@ -128,20 +119,18 @@ namespace UninstallTools.Factory
                 }
 
                 // Join up with the thread ----------------------------------------------------------------------------------
-                if (token.IsCancellationRequested)
-                    return mergedResults;
+                token.ThrowIfCancellationRequested();
 
                 var miscProgress = new ListGenerationProgress(currentStep++, totalStepCount, Localisation.Progress_AppStores);
                 callback(miscProgress);
                 var otherResults = concurrentFactory.GetResults(callback, miscProgress);
 
                 // Handle duplicate entries ----------------------------------------------------------------------------------
-                if (token.IsCancellationRequested)
-                    return mergedResults;
+                token.ThrowIfCancellationRequested();
 
                 var mergeProgress = new ListGenerationProgress(currentStep++, totalStepCount, Localisation.Progress_Merging);
                 callback(mergeProgress);
-                mergedResults = registryResults.ToList();
+                var mergedResults = registryResults.ToList();
                 MergeResults(mergedResults, otherResults, report =>
                 {
                     mergeProgress.Inner = report;
@@ -163,15 +152,13 @@ namespace UninstallTools.Factory
                 if (UninstallToolsGlobalConfig.UninstallerFactoryCache != null)
                     ApplyCache(mergedResults, UninstallToolsGlobalConfig.UninstallerFactoryCache, InfoAdder);
 
-                if (token.IsCancellationRequested)
-                    return mergedResults;
+                token.ThrowIfCancellationRequested();
 
                 var infoAddProgress = new ListGenerationProgress(currentStep++, totalStepCount, Localisation.Progress_GeneratingInfo);
                 callback(infoAddProgress);
                 FactoryThreadedHelpers.GenerateMissingInformation(mergedResults, InfoAdder, msiProducts, false, report =>
                 {
-                    if (token.IsCancellationRequested)
-                        return;
+                    token.ThrowIfCancellationRequested();
 
                     infoAddProgress.Inner = report;
                     callback(infoAddProgress);
@@ -182,8 +169,7 @@ namespace UninstallTools.Factory
                 {
                     foreach (var entry in mergedResults)
                     {
-                        if (token.IsCancellationRequested)
-                            return mergedResults;
+                        token.ThrowIfCancellationRequested();
 
                         UninstallToolsGlobalConfig.UninstallerFactoryCache.TryCacheItem(entry);
                     }
@@ -199,8 +185,7 @@ namespace UninstallTools.Factory
                 }
 
                 // Detect startups and attach them to uninstaller entries ----------------------------------------------------
-                if (token.IsCancellationRequested)
-                    return mergedResults;
+                token.ThrowIfCancellationRequested();
 
                 var startupsProgress = new ListGenerationProgress(currentStep, totalStepCount, Localisation.Progress_Startup);
                 callback(startupsProgress);
@@ -208,8 +193,7 @@ namespace UninstallTools.Factory
                 var startupEntries = new List<StartupEntryBase>();
                 foreach (var factory in StartupManager.Factories)
                 {
-                    if (token.IsCancellationRequested)
-                        return mergedResults;
+                    token.ThrowIfCancellationRequested();
 
                     startupsProgress.Inner = new ListGenerationProgress(i++, StartupManager.Factories.Count, factory.Key);
                     callback(startupsProgress);
@@ -223,8 +207,7 @@ namespace UninstallTools.Factory
                     }
                 }
 
-                if (token.IsCancellationRequested)
-                    return mergedResults;
+                token.ThrowIfCancellationRequested();
 
                 startupsProgress.Inner = new ListGenerationProgress(1, 1, Localisation.Progress_Merging);
                 callback(startupsProgress);
@@ -238,6 +221,10 @@ namespace UninstallTools.Factory
                 }
 
                 return mergedResults;
+            }
+            catch (TaskCanceledException)
+            {
+                throw new TaskCanceledException("Get uninstaller entries cancelled");
             }
             finally
             {
@@ -255,8 +242,7 @@ namespace UninstallTools.Factory
             var progress = 0;
             foreach (var entry in newResults)
             {
-                if (token.IsCancellationRequested)
-                    return;
+                token.ThrowIfCancellationRequested();
 
                 progressCallback?.Invoke(new ListGenerationProgress(progress++, newResults.Count, null));
 
@@ -316,8 +302,7 @@ namespace UninstallTools.Factory
             var progress = 0;
             foreach (var kvp in miscFactories)
             {
-                if (token.IsCancellationRequested)
-                    return otherResults;
+                token.ThrowIfCancellationRequested();
 
                 progressCallback(new ListGenerationProgress(progress++, miscFactories.Count, kvp.DisplayName));
                 try

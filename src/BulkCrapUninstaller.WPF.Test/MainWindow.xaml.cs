@@ -32,17 +32,18 @@ public partial class MainWindow : Window
 
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
-        Task.Run(async () =>
+        try
         {
-            try
-            {
-                await ListRefreshThread(_cancellationTokenSource.Token);
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Failed to refresh list: {ex.Message}");
-            }
-        }, _cancellationTokenSource.Token);
+            Task.Run(() => ListRefreshThread(_cancellationTokenSource.Token), _cancellationTokenSource.Token);
+        }
+        catch (TaskCanceledException)
+        {
+            // Ignored - token cancelled
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Failed to refresh list: {ex.Message}");
+        }
     }
 
     private void Window_Closing(object sender, CancelEventArgs e)
@@ -93,6 +94,7 @@ public partial class MainWindow : Window
                     SubTextBlock.Text = string.Empty;
                 }
             }, DispatcherPriority.Normal, token);
+
         }, token);
 
         await InvokeAsync(() =>
@@ -120,6 +122,10 @@ public partial class MainWindow : Window
         {
             _iconGetter.UpdateIconList(AllUninstallers, token);
         }
+        catch (TaskCanceledException)
+        {
+            throw new TaskCanceledException("Icon loading cancelled");
+        }
         catch (Exception ex)
         {
             Debug.WriteLine(ex);
@@ -134,37 +140,27 @@ public partial class MainWindow : Window
         }, DispatcherPriority.Normal, token);
     }
 
-    private static async Task<bool> InvokeAsync(Action function, DispatcherPriority priority = DispatcherPriority.Normal, CancellationToken token = default)
+    private static async Task InvokeAsync(Action function, DispatcherPriority priority = DispatcherPriority.Normal, CancellationToken token = default)
     {
-        try
+        // If the application is exitting, Application.Current will be null
+        if (Application.Current?.Dispatcher is not null)
         {
-            // If the application is exitting, Application.Current will be null
-            if (Application.Current?.Dispatcher is not null)
+            try
             {
-                try
-                {
-                    await Application.Current.Dispatcher.InvokeAsync(function, priority, token);
-                }
-                catch (InvalidOperationException ex)
-                {
-                    if (ex.Message is not "Failed to enqueue the operation")
-                    {
-                        throw;
-                    }
-                }
+                await Application.Current.Dispatcher.InvokeAsync(function, priority, token);
             }
-
-            return true;
+            catch (TaskCanceledException)
+            {
+                // Ignored - token cancelled
+            }
+            catch (InvalidOperationException ex) when (ex.Message is "Failed to enqueue the operation")
+            {
+                // Ignored - enqueue failed
+            }
         }
-        catch (TaskCanceledException)
+        else
         {
-            // Ignored - token is cancelled
-            return false;
-        }
-        catch (Exception ex)
-        {
-            Debug.WriteLine($"Failed to invoke async: {ex.Message}");
-            return false;
+            // Ignored - application exitted
         }
     }
 }
