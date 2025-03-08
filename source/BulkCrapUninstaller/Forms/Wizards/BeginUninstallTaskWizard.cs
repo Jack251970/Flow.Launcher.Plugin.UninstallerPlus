@@ -25,7 +25,7 @@ namespace BulkCrapUninstaller.Forms
         {
             InitializeComponent();
 
-            Icon = MessageBoxes.DefaultOwner.Icon;
+            Icon = Resources.Icon_Logo;
             DialogResult = DialogResult.Cancel;
 
             tabControl1.TabIndex = 0;
