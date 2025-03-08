@@ -161,10 +161,10 @@ public partial class MainWindow : Window
 
         await InvokeAsync(() =>
         {
-            ProgressBar.Visibility = Visibility.Hidden;
-            TextBlock.Visibility = Visibility.Hidden;
-            SubProgressBar.Visibility = Visibility.Hidden;
-            SubTextBlock.Visibility = Visibility.Hidden;
+            ProgressBar.Visibility = Visibility.Collapsed;
+            TextBlock.Visibility = Visibility.Collapsed;
+            SubProgressBar.Visibility = Visibility.Collapsed;
+            SubTextBlock.Visibility = Visibility.Collapsed;
         }, DispatcherPriority.Normal, token);
 
         _queryUpdateSemaphore.Release();
@@ -213,6 +213,7 @@ public partial class MainWindow : Window
             }
 
             var stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine($"{FilteredUninstallers.Count}/{AllUninstallers.Count} Uninstallers:");
             foreach (var uninstaller in FilteredUninstallers)
             {
                 stringBuilder.AppendLine($"{uninstaller.DisplayName} By {uninstaller.Publisher}");
