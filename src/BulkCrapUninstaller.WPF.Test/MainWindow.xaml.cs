@@ -37,7 +37,8 @@ public partial class MainWindow : Window
 
     private readonly Settings _settings = Settings.Default;
 
-    private readonly SemaphoreSlim _queryUpdateSemaphore = new(1, 1);
+    private const int QueryUpdateSemaphoreMaxCount = 1;
+    private readonly SemaphoreSlim _queryUpdateSemaphore = new(1, QueryUpdateSemaphoreMaxCount);
 
     private readonly Forms.Windows.MainWindow _mainWindow;
 
@@ -272,11 +273,19 @@ public partial class MainWindow : Window
         return true;
     }
 
-    private void UninstallButton_Click(object sender, RoutedEventArgs e)
+    private async void UninstallButton_Click(object sender, RoutedEventArgs e)
     {
         var uninstallText = UninstallTextBox.Text;
         if (!string.IsNullOrEmpty(uninstallText))
         {
+            if (_queryUpdateSemaphore.CurrentCount < QueryUpdateSemaphoreMaxCount)
+            {
+                // If the semaphore is not available which means that the list is being updated, just return empty results
+                return;
+            }
+
+            await _queryUpdateSemaphore.WaitAsync(_cancellationTokenSource.Token);
+
             foreach (var uninstaller in FilteredUninstallers)
             {
                 if (uninstaller.DisplayName.ToLower().Contains(uninstallText.ToLower()))
@@ -288,6 +297,8 @@ public partial class MainWindow : Window
                     }
                 }
             }
+
+            _queryUpdateSemaphore.Release();
         }
     }
 }
