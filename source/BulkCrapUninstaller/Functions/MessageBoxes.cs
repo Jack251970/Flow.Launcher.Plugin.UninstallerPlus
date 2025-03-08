@@ -622,7 +622,9 @@ namespace BulkCrapUninstaller.Functions
 
         public static string GetBundledFilePath(string filename)
         {
-            var path = Path.Combine(Program.AssemblyLocation.FullName, filename);
+            // MYTODO
+            return null;
+            /*var path = Path.Combine(Program.AssemblyLocation.FullName, filename);
             if (!File.Exists(path))
             {
                 path = Path.Combine(Program.AssemblyLocation.FullName, "..", filename);
@@ -633,7 +635,7 @@ namespace BulkCrapUninstaller.Functions
                 }
             }
 
-            return path;
+            return path;*/
         }
 
         public static bool AskToRetryFailedQuietAsLoud(Form owner, IEnumerable<string> failedNames)

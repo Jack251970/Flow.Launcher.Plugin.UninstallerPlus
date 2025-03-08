@@ -1,4 +1,5 @@
-﻿using Klocman.Extensions;
+﻿using BulkCrapUninstaller.Properties;
+using Klocman.Extensions;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Text;
@@ -32,17 +33,37 @@ public partial class MainWindow : Window
     private const string MicrosoftPublisher = "Microsoft";
     private const string TweakRateId = "tweak";
 
-    private readonly Settings _settings = new();
+    private readonly Settings _settings = Settings.Default;
 
     private readonly SemaphoreSlim _queryUpdateSemaphore = new(1, 1);
+
+    private readonly Forms.Windows.MainWindow _mainWindow;
 
     public MainWindow()
     {
         InitializeComponent();
         _iconGetter = new UninstallerIconGetter();
+        _mainWindow = new Forms.Windows.MainWindow(InitiateListRefresh);
     }
 
     private void Window_Loaded(object sender, RoutedEventArgs e)
+    {
+        InitiateListRefresh();
+    }
+
+    private void Window_Closing(object sender, CancelEventArgs e)
+    {
+        _cancellationTokenSource?.Cancel();
+    }
+
+    private void Window_Closed(object sender, EventArgs e)
+    {
+        _queryUpdateSemaphore?.Dispose();
+        _cancellationTokenSource?.Dispose();
+        _iconGetter?.Dispose();
+    }
+
+    private void InitiateListRefresh()
     {
         try
         {
@@ -56,18 +77,6 @@ public partial class MainWindow : Window
         {
             Debug.WriteLine($"Failed to refresh list: {ex.Message}");
         }
-    }
-
-    private void Window_Closing(object sender, CancelEventArgs e)
-    {
-        _cancellationTokenSource?.Cancel();
-    }
-
-    private void Window_Closed(object sender, EventArgs e)
-    {
-        _queryUpdateSemaphore?.Dispose();
-        _cancellationTokenSource?.Dispose();
-        _iconGetter?.Dispose();
     }
 
     private async Task ListRefreshThread(CancellationToken token)
@@ -115,7 +124,7 @@ public partial class MainWindow : Window
         await InvokeAsync(() =>
         {
             ProgressBar.Maximum = progressMax;
-            TextBlock.Text = "Program loading finished";
+            TextBlock.Text = Forms.Windows.MainWindow.ProgressFinishing;
             SubProgressBar.Maximum = 2;
             SubProgressBar.Value = 0;
             SubTextBlock.Text = string.Empty;
@@ -131,7 +140,7 @@ public partial class MainWindow : Window
         await InvokeAsync(() =>
         {
             SubProgressBar.Value = 1;
-            SubTextBlock.Text = "Icon loading finished";
+            SubTextBlock.Text = Forms.Windows.MainWindow.ProgressFinishingIcons;
         }, DispatcherPriority.Normal, token);
 
         try

@@ -296,7 +296,8 @@ namespace BulkCrapUninstaller.Forms
 
         private void toolStripButtonSettings_Click(object sender, EventArgs e)
         {
-            using (var sw = new SettingsWindow())
+            // MYTODO
+            /*using (var sw = new SettingsWindow())
             {
                 sw.OpenedTab = 1;
                 sw.ShowDialog();
@@ -305,15 +306,16 @@ namespace BulkCrapUninstaller.Forms
             _currentTargetStatus.OneLoudLimit = _settings.Settings.UninstallConcurrentOneLoud;
             _currentTargetStatus.ConcurrentUninstallerCount = _settings.Settings.UninstallConcurrency
                 ? _settings.Settings.UninstallConcurrentMaxCount
-                : 1;
+                : 1;*/
         }
 
         private void toolStripButtonProperties_Click(object sender, EventArgs e)
         {
-            using (var propertiesWindow = new PropertiesWindow())
+            // MYTODO
+            /*using (var propertiesWindow = new PropertiesWindow())
             {
                 propertiesWindow.ShowPropertiesDialog(SelectedUninstallerEntries);
-            }
+            }*/
         }
 
         private void toolStripButtonFolderOpen_Click(object sender, EventArgs e)

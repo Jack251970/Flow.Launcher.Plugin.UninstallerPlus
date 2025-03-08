@@ -12,6 +12,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KlocTools", "..\source\Kloc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectListView", "..\source\ObjectListView\ObjectListView.csproj", "{1262B504-8822-3EFB-B373-B3BB797E94CC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BulkCrapUninstaller", "BulkCrapUninstaller\BulkCrapUninstaller.csproj", "{F4A74902-99E6-8896-7289-2D705970B554}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetSettingBinder", "..\source\NetSettingBinder\NetSettingBinder.csproj", "{BBE10E43-0315-ECD6-B35D-6C4BB12B07FB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,6 +42,14 @@ Global
 		{1262B504-8822-3EFB-B373-B3BB797E94CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1262B504-8822-3EFB-B373-B3BB797E94CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1262B504-8822-3EFB-B373-B3BB797E94CC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4A74902-99E6-8896-7289-2D705970B554}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4A74902-99E6-8896-7289-2D705970B554}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4A74902-99E6-8896-7289-2D705970B554}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4A74902-99E6-8896-7289-2D705970B554}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BBE10E43-0315-ECD6-B35D-6C4BB12B07FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBE10E43-0315-ECD6-B35D-6C4BB12B07FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBE10E43-0315-ECD6-B35D-6C4BB12B07FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBE10E43-0315-ECD6-B35D-6C4BB12B07FB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

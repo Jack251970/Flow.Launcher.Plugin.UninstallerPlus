@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\source\UninstallTools\UninstallTools.csproj" />
+    <ProjectReference Include="..\BulkCrapUninstaller\BulkCrapUninstaller.csproj" />
   </ItemGroup>
 
 </Project>
