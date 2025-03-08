@@ -17,6 +17,7 @@
             <RowDefinition Height="30" />
             <RowDefinition Height="30" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="30" />
         </Grid.RowDefinitions>
         <ProgressBar
             x:Name="ProgressBar"
@@ -37,5 +38,19 @@
         <ScrollViewer Grid.Row="2">
             <TextBlock x:Name="UninstallerListTextBlock" />
         </ScrollViewer>
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="Please input uninstaller name:" />
+            <TextBox x:Name="UninstallTextBox" Grid.Column="1" />
+            <Button
+                x:Name="UninstallButton"
+                Grid.Column="2"
+                Click="UninstallButton_Click"
+                Content="Uninstall" />
+        </Grid>
     </Grid>
 </Window>

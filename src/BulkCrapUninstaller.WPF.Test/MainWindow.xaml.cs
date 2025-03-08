@@ -25,6 +25,8 @@ public partial class MainWindow : Window
         }
     }
 
+    private readonly List<ApplicationUninstallerEntry> FilteredUninstallers = new();
+
     private readonly CancellationTokenSource _cancellationTokenSource = new();
 
     private const string FlowLauncherDisplayName = "Flow Launcher";
@@ -199,13 +201,20 @@ public partial class MainWindow : Window
 
         var uninstallerListText = await Task.Run(() =>
         {
-            var stringBuilder = new StringBuilder();
+            FilteredUninstallers.Clear();
+
             foreach (var uninstaller in AllUninstallers)
             {
                 if (ListViewFilter(uninstaller))
                 {
-                    stringBuilder.AppendLine($"Name: {uninstaller.DisplayName} Publisher: {uninstaller.Publisher}");
+                    FilteredUninstallers.Add(uninstaller);
                 }
+            }
+
+            var stringBuilder = new StringBuilder();
+            foreach (var uninstaller in FilteredUninstallers)
+            {
+                stringBuilder.AppendLine($"{uninstaller.DisplayName} By {uninstaller.Publisher}");
             }
             return stringBuilder.ToString();
         }).ConfigureAwait(false);
@@ -261,5 +270,24 @@ public partial class MainWindow : Window
         }
 
         return true;
+    }
+
+    private void UninstallButton_Click(object sender, RoutedEventArgs e)
+    {
+        var uninstallText = UninstallTextBox.Text;
+        if (!string.IsNullOrEmpty(uninstallText))
+        {
+            foreach (var uninstaller in FilteredUninstallers)
+            {
+                if (uninstaller.DisplayName.ToLower().Contains(uninstallText.ToLower()))
+                {
+                    if (MessageBox.Show($"Do you want to uninstall {uninstaller.DisplayName} by {uninstaller.Publisher}?", 
+                        "Uninstall", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                    {
+                        _mainWindow.RunLoudUninstall(new[] { uninstaller }, AllUninstallers);
+                    }
+                }
+            }
+        }
     }
 }

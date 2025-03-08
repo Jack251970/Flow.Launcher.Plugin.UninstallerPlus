@@ -1,6 +1,8 @@
 ﻿using BulkCrapUninstaller.Functions;
 using BulkCrapUninstaller.Properties;
 using System;
+using System.Collections.Generic;
+using UninstallTools;
 
 namespace BulkCrapUninstaller.Forms.Windows;
 
@@ -19,15 +21,15 @@ public class MainWindow
         _appUninstaller = new AppUninstaller(listRefreshCallback, b => { }, b => { });
     }
 
-    public void RunLoudUninstall()
+    public void RunLoudUninstall(IEnumerable<ApplicationUninstallerEntry> selectedUninstallers,
+        IEnumerable<ApplicationUninstallerEntry> allUninstallers)
     {
-        // MYTODO
-        //_appUninstaller.RunUninstall(_listView.SelectedUninstallers, _listView.AllUninstallers, false);
+        _appUninstaller.RunUninstall(selectedUninstallers, allUninstallers, false);
     }
 
-    public void RunQuietUninstall()
+    public void RunQuietUninstall(IEnumerable<ApplicationUninstallerEntry> selectedUninstallers,
+        IEnumerable<ApplicationUninstallerEntry> allUninstallers)
     {
-        // MYTODO
-        //_appUninstaller.RunUninstall(_listView.SelectedUninstallers, _listView.AllUninstallers, true);
+        _appUninstaller.RunUninstall(selectedUninstallers, allUninstallers, true);
     }
 }
