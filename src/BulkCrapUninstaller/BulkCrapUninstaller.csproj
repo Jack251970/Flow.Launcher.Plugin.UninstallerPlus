@@ -240,11 +240,11 @@
   
 	<ItemGroup>
 		<ProjectReference Include="..\..\source\KlocTools\KlocTools.csproj" />
-		<ProjectReference Include="..\..\source\NetSettingBinder\NetSettingBinder.csproj" />
-		<!--<ProjectReference Include="..\NBug_custom\NBug.csproj" />-->
+    <ProjectReference Include="..\..\source\NetSettingBinder\NetSettingBinder.csproj" />
+    <!--<ProjectReference Include="..\NBug_custom\NBug.csproj" />-->
 		<ProjectReference Include="..\..\source\ObjectListView\ObjectListView.csproj" />
-		<!--<ProjectReference Include="..\PortableSettingsProvider\PortableSettingsProvider.csproj" />
-		<ProjectReference Include="..\SimpleTreeMap\SimpleTreeMap.csproj" />-->
+		<!--<ProjectReference Include="..\..\source\PortableSettingsProvider\PortableSettingsProvider.csproj" />
+		<ProjectReference Include="..\..\source\SimpleTreeMap\SimpleTreeMap.csproj" />-->
 		<ProjectReference Include="..\..\source\UninstallTools\UninstallTools.csproj" />
 	</ItemGroup>
   
