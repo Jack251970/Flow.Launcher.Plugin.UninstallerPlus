@@ -219,7 +219,16 @@ namespace BulkCrapUninstaller.Functions
                     // No turning back at this point (kind of)
                     listRefreshNeeded = true;
 
-                    if (_settings.CreateRestorePoint)
+                    static bool IsAdministrator()
+                    {
+                        using (var identity = System.Security.Principal.WindowsIdentity.GetCurrent())
+                        {
+                            var principal = new System.Security.Principal.WindowsPrincipal(identity);
+                            return principal.IsInRole(System.Security.Principal.WindowsBuiltInRole.Administrator);
+                        }
+                    }
+
+                    if (_settings.CreateRestorePoint && IsAdministrator())
                     {
                         try
                         {
