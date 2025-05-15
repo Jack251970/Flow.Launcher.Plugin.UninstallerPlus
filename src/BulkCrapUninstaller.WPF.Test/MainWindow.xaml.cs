@@ -232,13 +232,22 @@ public partial class MainWindow : Window
         _queryUpdateSemaphore.Release();
 
         // Local function
-        static ImageSource GetIcon(ApplicationUninstallerEntry uninstaller)
+        static BitmapSource GetIcon(ApplicationUninstallerEntry uninstaller)
         {
             var icon = uninstaller.GetIcon();
             if (icon != null)
             {
-                var bitmap = icon.ToBitmap();
-                return Imaging.CreateBitmapSourceFromHIcon(bitmap.GetHicon(), Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+                using var bitmap = icon.ToBitmap();
+                var hIcon = bitmap.GetHicon();
+                return Application.Current.Dispatcher.Invoke(() =>
+                {
+                    var imageSource = Imaging.CreateBitmapSourceFromHIcon(
+                        hIcon,
+                        Int32Rect.Empty,
+                        BitmapSizeOptions.FromEmptyOptions());
+                    imageSource.Freeze(); // Allows cross-thread use if needed
+                    return imageSource;
+                });
             }
 
             return null!;
