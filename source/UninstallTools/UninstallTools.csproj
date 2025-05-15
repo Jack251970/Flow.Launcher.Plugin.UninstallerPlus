@@ -56,7 +56,12 @@
 		<ProjectReference Include="..\ObjectListView\ObjectListView.csproj" />
 	</ItemGroup>
 	<ItemGroup>
-		<COMReference Include="Scripting">
+    <!-- Fix Build Error:
+    error MSB4803: The task "ResolveComReference" is not supported on the .NET Core version of MSBuild.
+    Please use the .NET Framework version of MSBuild. See https://aka.ms/msbuild/MSB4803 for further details.
+    -->
+    <!--
+    <COMReference Include="Scripting">
 			<Guid>{420B2830-E718-11CF-893D-00A0C9054228}</Guid>
 			<VersionMajor>1</VersionMajor>
 			<VersionMinor>0</VersionMinor>
@@ -65,6 +70,7 @@
 			<Isolated>False</Isolated>
 			<EmbedInteropTypes>false</EmbedInteropTypes>
 		</COMReference>
+    -->
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="Microsoft.VisualBasic" Version="10.3.0" />

@@ -3,7 +3,7 @@
     Apache License Version 2.0
 */
 
-using System;
+/*using System;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
@@ -120,4 +120,4 @@ namespace UninstallTools.Factory.InfoAdders
         public string[] CanProduceValueNames { get; } = { nameof(ApplicationUninstallerEntry.EstimatedSize) };
         public InfoAdderPriority Priority { get; } = InfoAdderPriority.RunLast;
     }
-}
+}*/
