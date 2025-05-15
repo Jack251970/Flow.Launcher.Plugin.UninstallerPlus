@@ -1,5 +1,4 @@
 using BulkCrapUninstaller.Forms.Windows;
-using BulkCrapUninstaller.Properties;
 using Klocman.Extensions;
 using System;
 using System.Collections.Generic;

@@ -1,5 +1,4 @@
-﻿using BulkCrapUninstaller.Properties;
-using Klocman.Extensions;
+﻿using Klocman.Extensions;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Text;
@@ -35,8 +34,8 @@ public partial class MainWindow : Window
     private const string MicrosoftPublisher = "Microsoft";
     private const string TweakRateId = "tweak";
 
-    private readonly Settings _settings = Settings.Default;
-
+    private readonly Settings _settings = new Settings();
+    
     private const int QueryUpdateSemaphoreMaxCount = 1;
     private readonly SemaphoreSlim _queryUpdateSemaphore = new(1, QueryUpdateSemaphoreMaxCount);
 
