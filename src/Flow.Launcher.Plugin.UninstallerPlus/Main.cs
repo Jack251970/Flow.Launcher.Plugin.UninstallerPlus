@@ -2,6 +2,7 @@ using BulkCrapUninstaller.Forms.Windows;
 using Klocman.Extensions;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
@@ -130,6 +131,9 @@ public class UninstallerPlus : IAsyncPlugin, IAsyncReloadable, IPluginI18n, ISet
         // Init settings
         Settings = context.API.LoadSettingJsonStorage<Settings>();
         Context.API.LogDebug(ClassName, $"Init: {Settings}");
+
+        // Init settings property changed event
+        Settings.PropertyChanged += Settings_PropertyChanged;
 
         // Init Bulk-Crap-Uninstaller instances
         _iconGetter = new UninstallerIconGetter();
@@ -358,6 +362,28 @@ public class UninstallerPlus : IAsyncPlugin, IAsyncReloadable, IPluginI18n, ISet
     {
         Context.API.LogDebug(ClassName, $"Settings Panel: {Settings}");
         return new UserControl(); // TODO
+    }
+
+    #endregion
+
+    #region Settings
+
+    private void Settings_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        switch (e.PropertyName)
+        {
+            case nameof(Settings.FilterShowMicrosoft):
+            case nameof(Settings.AdvancedDisplayOrphans):
+            case nameof(Settings.FilterShowSystemComponents):
+            case nameof(Settings.FilterShowProtected):
+            case nameof(Settings.FilterShowTweaks):
+            case nameof(Settings.FilterShowUpdates):
+            case nameof(Settings.FilterShowWinFeatures):
+            case nameof(Settings.FilterShowStoreApps):
+                _ = UpdateTextAsync(CancellationToken.None);
+                break;
+
+        }
     }
 
     #endregion
