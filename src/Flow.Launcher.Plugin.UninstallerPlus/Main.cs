@@ -71,7 +71,8 @@ public class UninstallerPlus : IAsyncPlugin, IAsyncReloadable, IPluginI18n, ISet
 
         await _queryUpdateSemaphore.WaitAsync(token);
 
-        if (string.IsNullOrWhiteSpace(query.Search))
+        var searchTerm = query.Search;
+        if (string.IsNullOrWhiteSpace(searchTerm))
         {
             foreach (var uninstaller in FilteredUninstallers)
             {
@@ -93,7 +94,28 @@ public class UninstallerPlus : IAsyncPlugin, IAsyncReloadable, IPluginI18n, ISet
         }
         else
         {
-            // TODO
+            foreach (var uninstaller in FilteredUninstallers)
+            {
+                var match = Context.API.FuzzySearch(searchTerm, uninstaller.DisplayName);
+
+                if (!match.IsSearchPrecisionScoreMet()) continue;
+
+                var result = new Result
+                {
+                    Title = uninstaller.DisplayName,
+                    SubTitle = uninstaller.Publisher,
+                    /*IcoPath = _iconGetter.ColumnImageGetter(uninstaller)?.ToString() ?? string.Empty,*/
+                    TitleHighlightData = match.MatchData,
+                    Score = match.Score,
+                    Action = _ =>
+                    {
+                        _mainWindow.RunLoudUninstall(new[] { uninstaller }, AllUninstallers.ToList());
+
+                        return true;
+                    }
+                };
+                results.Add(result);
+            }
         }
 
         _queryUpdateSemaphore.Release();
