@@ -3,6 +3,7 @@ using Klocman.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Controls;
@@ -80,13 +81,9 @@ public class UninstallerPlus : IAsyncPlugin, IAsyncReloadable, IPluginI18n, ISet
                     SubTitle = uninstaller.Publisher,
                     /*IcoPath = _iconGetter.ColumnImageGetter(uninstaller)?.ToString() ?? string.Empty,*/
                     Score = 0,
-                    AsyncAction = async c =>
+                    Action = _ =>
                     {
-                        await _queryUpdateSemaphore.WaitAsync(_cancellationTokenSource.Token);
-
-                        _mainWindow.RunLoudUninstall(new[] { uninstaller }, AllUninstallers);
-
-                        _queryUpdateSemaphore.Release();
+                        _mainWindow.RunLoudUninstall(new[] { uninstaller }, AllUninstallers.ToList());
 
                         return true;
                     }
