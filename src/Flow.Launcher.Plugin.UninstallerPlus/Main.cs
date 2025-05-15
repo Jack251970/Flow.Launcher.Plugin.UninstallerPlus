@@ -380,7 +380,7 @@ public class UninstallerPlus : IAsyncPlugin, IAsyncReloadable, IPluginI18n, ISet
             case nameof(Settings.FilterShowUpdates):
             case nameof(Settings.FilterShowWinFeatures):
             case nameof(Settings.FilterShowStoreApps):
-                _ = UpdateTextAsync(CancellationToken.None);
+                _ = UpdateTextAsync(_cancellationTokenSource.Token);
                 break;
 
         }
