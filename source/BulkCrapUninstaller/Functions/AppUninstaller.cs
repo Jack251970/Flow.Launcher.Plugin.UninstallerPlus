@@ -179,7 +179,6 @@ namespace BulkCrapUninstaller.Functions
             IEnumerable<ApplicationUninstallerEntry> allUninstallers, bool quiet)
         {
             if (!TryGetUninstallLock()) return;
-            var listRefreshNeeded = false;
 
             try
             {
@@ -192,7 +191,11 @@ namespace BulkCrapUninstaller.Functions
                     if (
                         MessageBoxes.ProtectedItemsWarningQuestion(protectedTargets.Select(x => x.DisplayName).ToArray()) ==
                         MessageBoxes.PressedButton.Cancel)
+                    {
+                        ReleaseUninstallLock();
+                        SystemRestore.EndSysRestore();
                         return;
+                    } 
 
                     targetList.RemoveAll(protectedTargets);
                 }
@@ -203,74 +206,99 @@ namespace BulkCrapUninstaller.Functions
 
                     BulkUninstallEntry[] taskEntries;
 
-                    using (var wizard = new BeginUninstallTaskWizard())
+                    var wizard = new BeginUninstallTaskWizard(BeginUninstallTaskWizardAction);
+
+                    wizard.Initialize(targetList, allUninstallerList.ToList(), quiet);
+
+                    wizard.StartPosition = FormStartPosition.CenterParent;
+
+                    wizard.Show();
+
+                    void BeginUninstallTaskWizardAction(BeginUninstallTaskWizard wizard)
                     {
-                        wizard.Initialize(targetList, allUninstallerList.ToList(), quiet);
+                        var listRefreshNeeded = false;
 
-                        wizard.StartPosition = FormStartPosition.CenterParent;
-                        if (wizard.ShowDialog(MessageBoxes.DefaultOwner) != DialogResult.OK || wizard.Results.Length == 0)
-                            return;
-
-                        taskEntries = wizard.Results;
-                    }
-
-                    _visibleCallback(false);
-
-                    // No turning back at this point (kind of)
-                    listRefreshNeeded = true;
-
-                    static bool IsAdministrator()
-                    {
-                        using (var identity = System.Security.Principal.WindowsIdentity.GetCurrent())
-                        {
-                            var principal = new System.Security.Principal.WindowsPrincipal(identity);
-                            return principal.IsInRole(System.Security.Principal.WindowsBuiltInRole.Administrator);
-                        }
-                    }
-
-                    if (_settings.CreateRestorePoint && IsAdministrator())
-                    {
                         try
                         {
-                            SystemRestore.BeginSysRestore(taskEntries.Length, false);
+                            if (wizard.Results.Length == 0)
+                                return;
+
+                            taskEntries = wizard.Results;
+
+                            _visibleCallback(false);
+
+                            // No turning back at this point (kind of)
+                            listRefreshNeeded = true;
+
+                            static bool IsAdministrator()
+                            {
+                                using (var identity = System.Security.Principal.WindowsIdentity.GetCurrent())
+                                {
+                                    var principal = new System.Security.Principal.WindowsPrincipal(identity);
+                                    return principal.IsInRole(System.Security.Principal.WindowsBuiltInRole.Administrator);
+                                }
+                            }
+
+                            if (_settings.CreateRestorePoint && IsAdministrator())
+                            {
+                                try
+                                {
+                                    SystemRestore.BeginSysRestore(taskEntries.Length, false);
+                                }
+                                catch (Exception exception)
+                                {
+                                    PremadeDialogs.GenericError(exception);
+                                }
+                            }
+
+                            if (_settings.ExternalEnable && _settings.ExternalPreCommands.IsNotEmpty())
+                            {
+                                LoadingDialog.ShowDialog(
+                                    MessageBoxes.DefaultOwner, Localisable.LoadingDialogTitlePreUninstallCommands,
+                                    controller => { RunExternalCommands(_settings.ExternalPreCommands, controller); });
+                            }
+
+                            var status = UninstallManager.CreateBulkUninstallTask(taskEntries, GetConfiguration(quiet));
+                            status.OneLoudLimit = _settings.UninstallConcurrentOneLoud;
+                            status.ConcurrentUninstallerCount = _settings.UninstallConcurrency
+                                ? _settings.UninstallConcurrentMaxCount
+                                : 1;
+                            status.Start();
+
+                            UninstallProgressWindow.ShowUninstallDialog(status, entries => SearchForAndRemoveJunk(entries, allUninstallerList));
+
+                            var junkRemoveTargetsQuery = from bulkUninstallEntry in status.AllUninstallersList
+                                                         where bulkUninstallEntry.CurrentStatus == UninstallStatus.Completed
+                                                               || bulkUninstallEntry.CurrentStatus == UninstallStatus.Invalid
+                                                               || (bulkUninstallEntry.CurrentStatus == UninstallStatus.Skipped
+                                                                   && !bulkUninstallEntry.UninstallerEntry.RegKeyStillExists())
+                                                         select bulkUninstallEntry.UninstallerEntry;
+
+                            if (MessageBoxes.LookForJunkQuestion())
+                                SearchForAndRemoveJunk(junkRemoveTargetsQuery, allUninstallerList);
+
+                            if (_settings.ExternalEnable && _settings.ExternalPostCommands.IsNotEmpty())
+                            {
+                                LoadingDialog.ShowDialog(
+                                    MessageBoxes.DefaultOwner, Localisable.LoadingDialogTitlePostUninstallCommands,
+                                    controller => { RunExternalCommands(_settings.ExternalPostCommands, controller); });
+                            }
                         }
-                        catch (Exception exception)
+                        catch (ObjectDisposedException ex)
                         {
-                            PremadeDialogs.GenericError(exception);
+                            // ODE at CreateHandle can be caused by closing main window in the middle of the process
+                            // It gets thrown at ShowDialog, it's safe to cancel the process at these points
+                            if (ex.TargetSite?.Name != "CreateHandle") throw;
                         }
-                    }
-
-                    if (_settings.ExternalEnable && _settings.ExternalPreCommands.IsNotEmpty())
-                    {
-                        LoadingDialog.ShowDialog(
-                            MessageBoxes.DefaultOwner, Localisable.LoadingDialogTitlePreUninstallCommands,
-                            controller => { RunExternalCommands(_settings.ExternalPreCommands, controller); });
-                    }
-
-                    var status = UninstallManager.CreateBulkUninstallTask(taskEntries, GetConfiguration(quiet));
-                    status.OneLoudLimit = _settings.UninstallConcurrentOneLoud;
-                    status.ConcurrentUninstallerCount = _settings.UninstallConcurrency
-                        ? _settings.UninstallConcurrentMaxCount
-                        : 1;
-                    status.Start();
-
-                    UninstallProgressWindow.ShowUninstallDialog(status, entries => SearchForAndRemoveJunk(entries, allUninstallerList));
-
-                    var junkRemoveTargetsQuery = from bulkUninstallEntry in status.AllUninstallersList
-                                                 where bulkUninstallEntry.CurrentStatus == UninstallStatus.Completed
-                                                       || bulkUninstallEntry.CurrentStatus == UninstallStatus.Invalid
-                                                       || (bulkUninstallEntry.CurrentStatus == UninstallStatus.Skipped
-                                                           && !bulkUninstallEntry.UninstallerEntry.RegKeyStillExists())
-                                                 select bulkUninstallEntry.UninstallerEntry;
-
-                    if (MessageBoxes.LookForJunkQuestion())
-                        SearchForAndRemoveJunk(junkRemoveTargetsQuery, allUninstallerList);
-
-                    if (_settings.ExternalEnable && _settings.ExternalPostCommands.IsNotEmpty())
-                    {
-                        LoadingDialog.ShowDialog(
-                            MessageBoxes.DefaultOwner, Localisable.LoadingDialogTitlePostUninstallCommands,
-                            controller => { RunExternalCommands(_settings.ExternalPostCommands, controller); });
+                        finally
+                        {
+                            ReleaseUninstallLock();
+                            SystemRestore.EndSysRestore();
+                            _lockApplication(false);
+                            _visibleCallback(true);
+                            if (listRefreshNeeded)
+                                _initiateListRefresh();
+                        }
                     }
                 }
                 else
@@ -283,15 +311,6 @@ namespace BulkCrapUninstaller.Functions
                 // ODE at CreateHandle can be caused by closing main window in the middle of the process
                 // It gets thrown at ShowDialog, it's safe to cancel the process at these points
                 if (ex.TargetSite?.Name != "CreateHandle") throw;
-            }
-            finally
-            {
-                SystemRestore.EndSysRestore();
-                ReleaseUninstallLock();
-                _lockApplication(false);
-                _visibleCallback(true);
-                if (listRefreshNeeded)
-                    _initiateListRefresh();
             }
         }
 

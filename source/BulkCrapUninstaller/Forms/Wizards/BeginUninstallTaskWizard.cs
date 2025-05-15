@@ -20,9 +20,12 @@ namespace BulkCrapUninstaller.Forms
         private int _previousPageNumber;
         private bool _quiet;
         private ICollection<ApplicationUninstallerEntry> _selectedUninstallers;
+        private readonly Action<BeginUninstallTaskWizard> _action;
 
-        public BeginUninstallTaskWizard()
+        public BeginUninstallTaskWizard(Action<BeginUninstallTaskWizard> action)
         {
+            _action = action;
+
             InitializeComponent();
 
             Icon = Resources.Icon_Logo;
@@ -48,6 +51,7 @@ namespace BulkCrapUninstaller.Forms
             Results = uninstallConfirmation1.GetResults().ToArray();
 
             DialogResult = DialogResult.OK;
+            _action?.Invoke(this);
             Close();
         }
 
