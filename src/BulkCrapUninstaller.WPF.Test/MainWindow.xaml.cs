@@ -34,7 +34,7 @@ public partial class MainWindow : Window
     private const string MicrosoftPublisher = "Microsoft";
     private const string TweakRateId = "tweak";
 
-    private readonly Settings _settings = new Settings();
+    private readonly Settings _settings = new();
     
     private const int QueryUpdateSemaphoreMaxCount = 1;
     private readonly SemaphoreSlim _queryUpdateSemaphore = new(1, QueryUpdateSemaphoreMaxCount);
