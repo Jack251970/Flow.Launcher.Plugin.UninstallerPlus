@@ -252,6 +252,7 @@ public class UninstallerPlus : IAsyncPlugin, IAsyncReloadable, IPluginI18n, ISet
 
         _queryUpdateSemaphore.Release();
 
+        Context.API.LogDebug(ClassName, $"Loaded {AllUninstallers.Count} uninstallers");
         _ = UpdateTextAsync(token);
     }
 
@@ -273,6 +274,8 @@ public class UninstallerPlus : IAsyncPlugin, IAsyncReloadable, IPluginI18n, ISet
         }, token).ConfigureAwait(false);
 
         _queryUpdateSemaphore.Release();
+
+        Context.API.LogDebug(ClassName, $"Filtered {FilteredUninstallers.Count} uninstallers");
     }
 
     #endregion
