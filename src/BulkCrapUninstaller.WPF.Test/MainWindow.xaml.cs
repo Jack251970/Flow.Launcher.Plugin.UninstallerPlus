@@ -3,6 +3,9 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Text;
 using System.Windows;
+using System.Windows.Interop;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using UninstallTools;
 using UninstallTools.Controls;
@@ -223,9 +226,23 @@ public partial class MainWindow : Window
         await InvokeAsync(() =>
         {
             UninstallerListTextBlock.Text = uninstallerListText;
+            Image.Source = GetIcon(FilteredUninstallers[0]);
         }, DispatcherPriority.Normal, _cancellationTokenSource.Token);
 
         _queryUpdateSemaphore.Release();
+
+        // Local function
+        static ImageSource GetIcon(ApplicationUninstallerEntry uninstaller)
+        {
+            var icon = uninstaller.GetIcon();
+            if (icon != null)
+            {
+                var bitmap = icon.ToBitmap();
+                return Imaging.CreateBitmapSourceFromHIcon(bitmap.GetHicon(), Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+            }
+
+            return null!;
+        }
     }
 
     private bool ListViewFilter(ApplicationUninstallerEntry entry)
