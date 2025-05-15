@@ -46,8 +46,7 @@ public class UninstallerPlus : IAsyncPlugin, IAsyncReloadable, IPluginI18n, ISet
     private const string MicrosoftPublisher = "Microsoft";
     private const string TweakRateId = "tweak";
 
-    private const int QueryUpdateSemaphoreMaxCount = 1;
-    private readonly SemaphoreSlim _queryUpdateSemaphore = new(1, QueryUpdateSemaphoreMaxCount);
+    private readonly SemaphoreSlim _queryUpdateSemaphore = new(1, 1);
 
     private MainWindow _mainWindow = null!;
 
@@ -253,6 +252,7 @@ public class UninstallerPlus : IAsyncPlugin, IAsyncReloadable, IPluginI18n, ISet
         _queryUpdateSemaphore.Release();
 
         Context.API.LogDebug(ClassName, $"Loaded {AllUninstallers.Count} uninstallers");
+
         _ = UpdateTextAsync(token);
     }
 
@@ -364,7 +364,7 @@ public class UninstallerPlus : IAsyncPlugin, IAsyncReloadable, IPluginI18n, ISet
     public Control CreateSettingPanel()
     {
         Context.API.LogDebug(ClassName, $"Settings Panel: {Settings}");
-        return new UserControl(); // TODO
+        return new SettingsPanel(Settings);
     }
 
     #endregion
@@ -385,7 +385,6 @@ public class UninstallerPlus : IAsyncPlugin, IAsyncReloadable, IPluginI18n, ISet
             case nameof(Settings.FilterShowStoreApps):
                 _ = UpdateTextAsync(_cancellationTokenSource.Token);
                 break;
-
         }
     }
 

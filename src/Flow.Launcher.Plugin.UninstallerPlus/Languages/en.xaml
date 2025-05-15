@@ -8,4 +8,14 @@
     <system:String x:Key="flowlauncher_plugin_uninstallerplus_plugin_name">Uninstaller+</system:String>
     <system:String x:Key="flowlauncher_plugin_uninstallerplus_plugin_description">Easily uninstall desktop and Microsoft store programs based on Bulk-Crap-Uninstaller</system:String>
 
+    <!--  Settings  -->
+    <system:String x:Key="flowlauncher_plugin_uninstallerplus_filter_show_microsoft">Show programs published by Microsoft</system:String>
+    <system:String x:Key="flowlauncher_plugin_uninstallerplus_advanced_display_orphans">Show unregistered programs</system:String>
+    <system:String x:Key="flowlauncher_plugin_uninstallerplus_filter_show_system_components">Show system components</system:String>
+    <system:String x:Key="flowlauncher_plugin_uninstallerplus_filter_show_protected">Show protected programs</system:String>
+    <system:String x:Key="flowlauncher_plugin_uninstallerplus_filter_show_tweaks">Show tweaks</system:String>
+    <system:String x:Key="flowlauncher_plugin_uninstallerplus_filter_show_updates">Show updates</system:String>
+    <system:String x:Key="flowlauncher_plugin_uninstallerplus_filter_show_win_features">Show Windows features</system:String>
+    <system:String x:Key="flowlauncher_plugin_uninstallerplus_filter_show_store_apps">Show Windows store programs</system:String>
+
 </ResourceDictionary>

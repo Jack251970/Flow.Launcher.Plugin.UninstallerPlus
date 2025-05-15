@@ -8,4 +8,14 @@
     <system:String x:Key="flowlauncher_plugin_uninstallerplus_plugin_name">卸载器+</system:String>
     <system:String x:Key="flowlauncher_plugin_uninstallerplus_plugin_description">基于Bulk-Crap-Uninstaller轻松卸载桌面与商店应用程序</system:String>
 
+    <!--  Settings  -->
+    <system:String x:Key="flowlauncher_plugin_uninstallerplus_filter_show_microsoft">显示由Microsoft发布的程序</system:String>
+    <system:String x:Key="flowlauncher_plugin_uninstallerplus_advanced_display_orphans">显示未注册的程序</system:String>
+    <system:String x:Key="flowlauncher_plugin_uninstallerplus_filter_show_system_components">显示系统组件</system:String>
+    <system:String x:Key="flowlauncher_plugin_uninstallerplus_filter_show_protected">显示受保护的程序</system:String>
+    <system:String x:Key="flowlauncher_plugin_uninstallerplus_filter_show_tweaks">显示系统优化项</system:String>
+    <system:String x:Key="flowlauncher_plugin_uninstallerplus_filter_show_updates">显示更新项</system:String>
+    <system:String x:Key="flowlauncher_plugin_uninstallerplus_filter_show_win_features">显示Windows功能</system:String>
+    <system:String x:Key="flowlauncher_plugin_uninstallerplus_filter_show_store_apps">显示Windows商店程序</system:String>
+
 </ResourceDictionary>
