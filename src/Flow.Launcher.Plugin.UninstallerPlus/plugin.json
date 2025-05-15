@@ -1,0 +1,12 @@
+{
+  "ID": "dd2fd217-e332-4fbd-9012-4940e08d41a7",
+  "ActionKeyword": "uni",
+  "Name": "Uninstaller+",
+  "Description": "Easily uninstall desktop and Microsoft store programs based on Bulk-Crap-Uninstaller",
+  "Author": "Jack251970",
+  "Version": "1.0.0",
+  "Language": "csharp",
+  "Website": "https://github.com/Jack251970/Flow.Launcher.Plugin.UninstallerPlus",
+  "IcoPath": "Images/uninstall.png",
+  "ExecuteFileName": "Flow.Launcher.Plugin.UninstallerPlus.dll"
+}

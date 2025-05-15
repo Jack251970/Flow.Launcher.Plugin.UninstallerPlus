@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" ?>
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:system="clr-namespace:System;assembly=mscorlib">
+
+    <!--  General  -->
+    <system:String x:Key="flowlauncher_plugin_uninstallerplus_plugin_name">卸载器+</system:String>
+    <system:String x:Key="flowlauncher_plugin_uninstallerplus_plugin_description">基于Bulk-Crap-Uninstaller轻松卸载桌面与商店应用程序</system:String>
+
+</ResourceDictionary>
