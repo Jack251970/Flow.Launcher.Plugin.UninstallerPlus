@@ -42,6 +42,18 @@ namespace UninstallTools.Factory
             var results = new List<ApplicationUninstallerEntry>();
             if (!IsHelperAvailable()) return results;
 
+#if WPF_TEST
+            static bool IsAdministrator()
+            {
+                using (var identity = System.Security.Principal.WindowsIdentity.GetCurrent())
+                {
+                    var principal = new System.Security.Principal.WindowsPrincipal(identity);
+                    return principal.IsInRole(System.Security.Principal.WindowsBuiltInRole.Administrator);
+                }
+            }
+            if (!IsAdministrator()) return results;
+#endif
+
             var result = FactoryTools.StartHelperAndReadOutput(HelperPath, "list");
 
             if (string.IsNullOrEmpty(result)) return results;
