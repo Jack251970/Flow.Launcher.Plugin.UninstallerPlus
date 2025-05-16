@@ -79,8 +79,9 @@ public class UninstallerPlus : IAsyncPlugin, IAsyncReloadable, IPluginI18n, ISet
                 var result = new Result
                 {
                     Title = uninstaller.DisplayName,
+                    AutoCompleteText = uninstaller.DisplayName,
                     SubTitle = uninstaller.Publisher,
-                    /*IcoPath = _iconGetter.ColumnImageGetter(uninstaller)?.ToString() ?? string.Empty,*/
+                    IcoPath = uninstaller.DisplayIcon,
                     Score = 0,
                     Action = _ =>
                     {
@@ -103,8 +104,9 @@ public class UninstallerPlus : IAsyncPlugin, IAsyncReloadable, IPluginI18n, ISet
                 var result = new Result
                 {
                     Title = uninstaller.DisplayName,
+                    AutoCompleteText = uninstaller.DisplayName,
                     SubTitle = uninstaller.Publisher,
-                    /*IcoPath = _iconGetter.ColumnImageGetter(uninstaller)?.ToString() ?? string.Empty,*/
+                    IcoPath = uninstaller.DisplayIcon,
                     TitleHighlightData = match.MatchData,
                     Score = match.Score,
                     Action = _ =>
