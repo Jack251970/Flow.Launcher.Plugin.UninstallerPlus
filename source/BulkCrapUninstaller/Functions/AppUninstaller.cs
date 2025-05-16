@@ -206,7 +206,7 @@ namespace BulkCrapUninstaller.Functions
 
                     BulkUninstallEntry[] taskEntries;
 
-                    var wizard = new BeginUninstallTaskWizard(BeginUninstallTaskWizardAction);
+                    var wizard = new BeginUninstallTaskWizard(BeginUninstallTaskWizardAction, BeginUninstallTaskWizardCloseAction);
 
                     wizard.Initialize(targetList, allUninstallerList.ToList(), quiet);
 
@@ -214,14 +214,14 @@ namespace BulkCrapUninstaller.Functions
 
                     wizard.Show();
 
-                    void BeginUninstallTaskWizardAction(BeginUninstallTaskWizard wizard)
+                    bool BeginUninstallTaskWizardAction(BeginUninstallTaskWizard wizard)
                     {
                         var listRefreshNeeded = false;
 
                         try
                         {
                             if (wizard.Results.Length == 0)
-                                return;
+                                return false;
 
                             taskEntries = wizard.Results;
 
@@ -288,17 +288,34 @@ namespace BulkCrapUninstaller.Functions
                         {
                             // ODE at CreateHandle can be caused by closing main window in the middle of the process
                             // It gets thrown at ShowDialog, it's safe to cancel the process at these points
+                            ReleaseUninstallLock();
+                            SystemRestore.EndSysRestore();
+                            _lockApplication(false);
+                            _visibleCallback(true);
                             if (ex.TargetSite?.Name != "CreateHandle") throw;
                         }
-                        finally
+                        catch (Exception)
                         {
                             ReleaseUninstallLock();
                             SystemRestore.EndSysRestore();
                             _lockApplication(false);
                             _visibleCallback(true);
-                            if (listRefreshNeeded)
-                                _initiateListRefresh();
                         }
+
+                        return listRefreshNeeded;
+                    }
+
+                    void BeginUninstallTaskWizardCloseAction(bool listRefreshNeeded, bool dialogResultsOK)
+                    {
+                        ReleaseUninstallLock();
+                        if (dialogResultsOK)
+                            SystemRestore.EndSysRestore();
+                        else
+                            SystemRestore.CancelSysRestore();
+                        _lockApplication(false);
+                        _visibleCallback(true);
+                        if (listRefreshNeeded)
+                            _initiateListRefresh();
                     }
                 }
                 else
@@ -310,7 +327,18 @@ namespace BulkCrapUninstaller.Functions
             {
                 // ODE at CreateHandle can be caused by closing main window in the middle of the process
                 // It gets thrown at ShowDialog, it's safe to cancel the process at these points
+                ReleaseUninstallLock();
+                SystemRestore.EndSysRestore();
+                _lockApplication(false);
+                _visibleCallback(true);
                 if (ex.TargetSite?.Name != "CreateHandle") throw;
+            }
+            catch (Exception)
+            {
+                ReleaseUninstallLock();
+                SystemRestore.EndSysRestore();
+                _lockApplication(false);
+                _visibleCallback(true);
             }
         }
 

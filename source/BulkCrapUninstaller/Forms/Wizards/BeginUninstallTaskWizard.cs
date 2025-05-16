@@ -20,11 +20,14 @@ namespace BulkCrapUninstaller.Forms
         private int _previousPageNumber;
         private bool _quiet;
         private ICollection<ApplicationUninstallerEntry> _selectedUninstallers;
-        private readonly Action<BeginUninstallTaskWizard> _action;
+        private bool _listRefreshNeeded;
+        private readonly Func<BeginUninstallTaskWizard, bool> _action;
+        private readonly Action<bool, bool> _closedAction;
 
-        public BeginUninstallTaskWizard(Action<BeginUninstallTaskWizard> action)
+        public BeginUninstallTaskWizard(Func<BeginUninstallTaskWizard, bool> action, Action<bool, bool> closedAction)
         {
             _action = action;
+            _closedAction = closedAction;
 
             InitializeComponent();
 
@@ -51,7 +54,7 @@ namespace BulkCrapUninstaller.Forms
             Results = uninstallConfirmation1.GetResults().ToArray();
 
             DialogResult = DialogResult.OK;
-            _action?.Invoke(this);
+            _listRefreshNeeded = _action.Invoke(this);
             Close();
         }
 
@@ -210,8 +213,7 @@ namespace BulkCrapUninstaller.Forms
 
         private void BeginUninstallTaskWizard_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if(DialogResult != DialogResult.OK)
-                SystemRestore.CancelSysRestore();
+            _closedAction.Invoke(_listRefreshNeeded, DialogResult == DialogResult.OK);
         }
     }
 }
