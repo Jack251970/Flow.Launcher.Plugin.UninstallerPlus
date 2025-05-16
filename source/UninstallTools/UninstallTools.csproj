@@ -7,8 +7,6 @@
 		<UseWindowsForms>true</UseWindowsForms>
 		<ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
 		<Platforms>AnyCPU;x64;x86</Platforms>
-    <!-- Workaround for changing part of codes -->
-    <DefineConstants>WPF_TEST;$(DefineConstants)</DefineConstants>
 	</PropertyGroup>
 	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
 		<RuntimeIdentifier></RuntimeIdentifier>

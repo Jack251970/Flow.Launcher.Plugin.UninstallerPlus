@@ -73,6 +73,8 @@ namespace BulkCrapUninstaller.Forms
 
         public MainWindow()
         {
+            UninstallToolsGlobalConfig.Initialize();
+
             Opacity = 0;
             Application.DoEvents();
 
