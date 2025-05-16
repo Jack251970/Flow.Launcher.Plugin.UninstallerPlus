@@ -71,7 +71,7 @@ For full functionality, we recommend running Flow Launcher as administrator duri
 * Disable `Start Flow Launcher on system startup`
 * Enable `Start Flow Launcher on system startup`
 
-Then check it succeeds.
+Then we can verify if it succeeded:
 
 * Open `Task Scheduler`
 * Find the logon task with name `Flow.Launcher Startup`
