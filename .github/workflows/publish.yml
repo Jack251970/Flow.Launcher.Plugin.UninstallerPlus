@@ -1,0 +1,63 @@
+name: publish
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "master" ]
+    tags:
+      - '*'
+
+jobs:
+
+  build:
+
+    permissions:
+      contents: write
+    
+    runs-on: windows-latest
+
+    env:
+      Project_Path: build\Build.csproj
+
+    steps:
+
+      # Checkout codes
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Install the .NET Core workload
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            6.0.x
+            7.0.x
+            8.0.x
+
+      # Restore dependencies
+      - name: Restore dependencies
+        run: dotnet restore ${{ env.Project_Path }}
+
+      # Build the project
+      - name: Build
+        run: dotnet build ${{ env.Project_Path }} --configuration Release --no-restore
+
+      # Run the build task
+      - name: Run build task
+        run: dotnet run --project ${{ env.Project_Path }}
+
+      # Get package version
+      - name: Get Package Version
+        id: version
+        uses: notiz-dev/github-action-json-property@release
+        with: 
+          path: "src/Flow.Launcher.Plugin.UninstallerPlus/plugin.json"
+          prop_path: "Version"
+
+      # Publish to GitHub releases
+      - name: Publish
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            output/Uninstaller+*.zip
+          tag_name: "v${{ steps.version.outputs.prop }}"
