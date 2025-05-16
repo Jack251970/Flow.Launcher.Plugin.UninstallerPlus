@@ -14,7 +14,7 @@ using UninstallTools.Factory;
 
 namespace Flow.Launcher.Plugin.UninstallerPlus;
 
-public class UninstallerPlus : IAsyncPlugin, IAsyncReloadable, IPluginI18n, ISettingProvider, IDisposable
+public class UninstallerPlus : IAsyncPlugin, IAsyncReloadable, IContextMenu, IPluginI18n, ISettingProvider, IDisposable
 {
     internal static PluginInitContext Context { get; private set; } = null!;
 
@@ -81,6 +81,7 @@ public class UninstallerPlus : IAsyncPlugin, IAsyncReloadable, IPluginI18n, ISet
                     Title = uninstaller.DisplayName,
                     AutoCompleteText = uninstaller.DisplayName,
                     SubTitle = uninstaller.Publisher,
+                    ContextData = uninstaller,
                     IcoPath = uninstaller.DisplayIcon,
                     Score = 0,
                     Action = _ =>
@@ -106,13 +107,13 @@ public class UninstallerPlus : IAsyncPlugin, IAsyncReloadable, IPluginI18n, ISet
                     Title = uninstaller.DisplayName,
                     AutoCompleteText = uninstaller.DisplayName,
                     SubTitle = uninstaller.Publisher,
+                    ContextData = uninstaller,
                     IcoPath = uninstaller.DisplayIcon,
                     TitleHighlightData = match.MatchData,
                     Score = match.Score,
                     Action = _ =>
                     {
                         _mainWindow.RunLoudUninstall(new[] { uninstaller }, AllUninstallers.ToList());
-
                         return true;
                     }
                 };
@@ -360,6 +361,73 @@ public class UninstallerPlus : IAsyncPlugin, IAsyncReloadable, IPluginI18n, ISet
     public void OnCultureInfoChanged(CultureInfo cultureInfo)
     {
 
+    }
+
+    #endregion
+
+    #region IContextMenu Interface
+
+    public List<Result> LoadContextMenus(Result selectedResult)
+    {
+        if (selectedResult.ContextData is not ApplicationUninstallerEntry uninstaller)
+        {
+            return new List<Result>();
+        }
+
+        var results = new List<Result>();
+
+        var uninstallResult = new Result
+        {
+            Title = Context.API.GetTranslation("flowlauncher_plugin_uninstallerplus_context_menu_uninstall"),
+            IcoPath = "Images/uninstall.png",
+            Action = _ =>
+            {
+                _mainWindow.RunLoudUninstall(new[] { uninstaller }, AllUninstallers.ToList());
+                return true;
+            }
+        };
+        results.Add(uninstallResult);
+
+        var quietlyUninstallResult = new Result
+        {
+            Title = Context.API.GetTranslation("flowlauncher_plugin_uninstallerplus_context_menu_uninstall_quietly"),
+            IcoPath = "Images/uninstall.png",
+            Action = _ =>
+            {
+                _mainWindow.RunQuietUninstall(new[] { uninstaller }, AllUninstallers.ToList());
+                return true;
+            }
+        };
+        results.Add(quietlyUninstallResult);
+
+        if (!string.IsNullOrEmpty(uninstaller.ModifyPath))
+        {
+            var modifyResult = new Result
+            {
+                Title = Context.API.GetTranslation("flowlauncher_plugin_uninstallerplus_context_menu_modify"),
+                IcoPath = "Images/modify.png",
+                Action = _ =>
+                {
+                    _mainWindow.RunModify(new[] { uninstaller });
+                    return true;
+                }
+            };
+            results.Add(modifyResult);
+        }
+
+        var manualUninstallResult = new Result
+        {
+            Title = Context.API.GetTranslation("flowlauncher_plugin_uninstallerplus_context_menu_uninstall_manually"),
+            IcoPath = "Images/uninstall.png",
+            Action = _ =>
+            {
+                _mainWindow.RunManualUninstall(new[] { uninstaller }, AllUninstallers.ToList());
+                return true;
+            }
+        };
+        results.Add(manualUninstallResult);
+
+        return results;
     }
 
     #endregion
