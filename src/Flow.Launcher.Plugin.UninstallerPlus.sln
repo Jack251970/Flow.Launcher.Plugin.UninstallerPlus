@@ -18,6 +18,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetSettingBinder", "..\sour
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Build", "..\build\Build.csproj", "{4F1A5CD8-F08F-6B1C-4564-8476E15A785B}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "HelperTools", "..\source\HelperTools\HelperTools.shproj", "{73A9796D-334C-400C-87AC-1DFDD613266E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -62,5 +64,9 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FCEF4E55-DC24-404A-9AC2-B8766A1305D8}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		..\source\HelperTools\HelperTools.projitems*{73a9796d-334c-400c-87ac-1dfdd613266e}*SharedItemsImports = 13
+		..\source\HelperTools\HelperTools.projitems*{f4a74902-99e6-8896-7289-2d705970b554}*SharedItemsImports = 5
 	EndGlobalSection
 EndGlobal

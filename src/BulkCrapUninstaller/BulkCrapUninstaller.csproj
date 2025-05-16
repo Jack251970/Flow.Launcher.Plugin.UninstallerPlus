@@ -295,8 +295,6 @@
 		</EmbeddedResource>
 	</ItemGroup>
   
-	<!--
-  <Import Project="..\HelperTools\HelperTools.projitems" Label="Shared" />
-  -->
+  <Import Project="..\..\source\HelperTools\HelperTools.projitems" Label="Shared" />
   
 </Project>
