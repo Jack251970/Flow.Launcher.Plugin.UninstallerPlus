@@ -136,6 +136,9 @@ public class UninstallerPlus : IAsyncPlugin, IAsyncReloadable, IPluginI18n, ISet
         // Init settings property changed event
         Settings.PropertyChanged += Settings_PropertyChanged;
 
+        // Init plugin context
+        UninstallToolsGlobalConfig.Initialize(context.CurrentPluginMetadata.PluginDirectory);
+
         // Init Bulk-Crap-Uninstaller instances
         _iconGetter = new UninstallerIconGetter();
         _mainWindow = new MainWindow(InitiateListRefresh);
