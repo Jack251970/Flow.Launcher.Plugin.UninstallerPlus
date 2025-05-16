@@ -112,12 +112,12 @@ public class PublishTask : FrostingTask<BuildContext>
                 versionFile = f;
             }
 
-            /*if (GetSuffix(fStr) == ".pdb")
+            if (GetSuffix(fStr) == ".pdb")
             {
                 context.DeleteFile(f);
                 files.Remove(f);
                 continue;
-            }*/
+            }
 
             context.Information($"Added: {f} - {fFolder}");
         }
