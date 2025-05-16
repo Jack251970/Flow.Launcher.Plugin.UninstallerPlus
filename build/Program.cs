@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using Cake.Common;
 using Cake.Common.Diagnostics;
 using Cake.Common.IO;
@@ -12,7 +13,6 @@ using Cake.Compression;
 using Cake.Core;
 using Cake.Core.IO;
 using Cake.Frosting;
-using Newtonsoft.Json;
 
 namespace Build;
 
@@ -22,7 +22,6 @@ public static class Program
     {
         return new CakeHost()
             .UseContext<BuildContext>()
-            // .UseLifetime<BuildLifetime>()
             .Run(args);
     }
 }
@@ -110,20 +109,13 @@ public class PublishTask : FrostingTask<BuildContext>
 
             if (fStr.EndsWith("plugin.json"))
             {
-                context.Information($"Added: {f} - {fFolder}");
                 versionFile = f;
-                continue;
             }
 
-            if (GetLastFolder(fStr) == "Images")
+            if (GetSuffix(fStr) == ".pdb")
             {
-                context.Information($"Added: {f} - {fFolder}");
-                continue;
-            }
-
-            if (GetLastFolder(fStr) == "Languages")
-            {
-                context.Information($"Added: {f} - {fFolder}");
+                context.DeleteFile(f);
+                files.Remove(f);
                 continue;
             }
 
@@ -132,7 +124,7 @@ public class PublishTask : FrostingTask<BuildContext>
 
         if (versionFile != null)
         {
-            VersionInfo? versionInfoObj = JsonConvert.DeserializeObject<VersionInfo>(
+            VersionInfo? versionInfoObj = JsonSerializer.Deserialize<VersionInfo>(
                 File.ReadAllText(versionFile.ToString()!)
             );
             if (versionInfoObj != null)
@@ -141,8 +133,12 @@ public class PublishTask : FrostingTask<BuildContext>
             }
             else
             {
-                Console.WriteLine("Get version info from plugin.json failed!");
+                context.Error($"Get version info from plugin.json failed!");
             }
+        }
+        else
+        {
+            context.Error($"plugin.json not found in {srcDir}");
         }
 
         context.ZipCompress(
@@ -182,6 +178,12 @@ public class PublishTask : FrostingTask<BuildContext>
 
         // If no valid folder is found, return an empty string
         return string.Empty;
+    }
+
+    private static string GetSuffix(string file)
+    {
+        // Get the file name without the directory path
+        return System.IO.Path.GetExtension(file) ?? string.Empty;
     }
 }
 
