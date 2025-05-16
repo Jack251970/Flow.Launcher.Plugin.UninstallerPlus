@@ -220,6 +220,10 @@ namespace BulkCrapUninstaller.Functions
 
                     wizard.Show();
 
+                    MessageBoxes.DefaultOwner = wizard;
+                    LoadingDialog.DefaultOwner = wizard;
+                    PremadeDialogs.DefaultOwner = wizard;
+
                     bool BeginUninstallTaskWizardAction(BeginUninstallTaskWizard wizard)
                     {
                         var listRefreshNeeded = false;
