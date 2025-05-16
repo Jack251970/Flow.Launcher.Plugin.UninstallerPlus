@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using BulkCrapUninstaller.Functions;
+#if !WPF_TEST
 using BulkCrapUninstaller.Functions.Tools;
+#endif
 using BulkCrapUninstaller.Properties;
 using Klocman.Extensions;
 using Klocman.IO;
@@ -20,15 +22,21 @@ namespace BulkCrapUninstaller.Forms
         private int _previousPageNumber;
         private bool _quiet;
         private ICollection<ApplicationUninstallerEntry> _selectedUninstallers;
+#if WPF_TEST
         private bool _listRefreshNeeded;
         private readonly Func<BeginUninstallTaskWizard, bool> _action;
         private readonly Action<bool, bool> _closedAction;
+#endif
 
+#if WPF_TEST
         public BeginUninstallTaskWizard(Func<BeginUninstallTaskWizard, bool> action, Action<bool, bool> closedAction)
         {
             _action = action;
             _closedAction = closedAction;
-
+#else
+        public BeginUninstallTaskWizard()
+        {
+#endif
             InitializeComponent();
 
             Icon = Resources.Icon_Logo;
@@ -54,7 +62,9 @@ namespace BulkCrapUninstaller.Forms
             Results = uninstallConfirmation1.GetResults().ToArray();
 
             DialogResult = DialogResult.OK;
+#if WPF_TEST
             _listRefreshNeeded = _action.Invoke(this);
+#endif
             Close();
         }
 
@@ -213,7 +223,12 @@ namespace BulkCrapUninstaller.Forms
 
         private void BeginUninstallTaskWizard_FormClosed(object sender, FormClosedEventArgs e)
         {
+#if WPF_TEST
             _closedAction.Invoke(_listRefreshNeeded, DialogResult == DialogResult.OK);
+#else
+            if(DialogResult != DialogResult.OK)
+                SystemRestore.CancelSysRestore();
+#endif
         }
     }
 }
