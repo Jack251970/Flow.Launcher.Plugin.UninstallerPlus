@@ -12,9 +12,8 @@
 - Uninstall Microsoft store programs
 - Uninstall system components
 - Uninstall Windows features and updates
-- Quietly uninstall programs
 - Create restore point after uninstallation
-- Clean program leftovers after uninstallation
+- Clean up program leftovers after uninstallation
 
 ## 🖼️ Screenshots
 
@@ -55,18 +54,38 @@
 
 The default action keyword is `uni`, you can change it in the Flow Launcher.
 
-### 1. Launcher Flow Launcher under Administrator Mode (Optional)
+### 1. Config Administrator Mode (Optional)
+
+This plugin requires administrator privileges to:
+
+* Load Microsoft Store programs
+* Create system restore points
+* Clean residual program files
+
+For full functionality, we recommend running Flow Launcher as administrator during automatic launches:
 
 * Exit Flow Launcher
 * Run Flow Launcher as administrator
-* Enable `Use logon task instead of task entry for faster startup experience` in general setting page
-* Disable `Start Flow Launcher on system startup` in general setting page
-* Enable `Start Flow Launcher on system startup` in general setting page
+* Open setting window and navigate to `General` page
+* Enable `Use logon task instead of task entry for faster startup experience`
+* Disable `Start Flow Launcher on system startup`
+* Enable `Start Flow Launcher on system startup`
+
+Then check it succeeds.
+
+* Open `Task Scheduler`
+* Find the logon task with name `Flow.Launcher Startup`
+* Check if `Security options` -> `Run with highest privileges` is on
+
+> [!WARNING]
+> Running as administrator may launch other applications with elevated privileges without UAC prompts.
+> So please use this with caution.
 
 ### 2. Uninstall Programs
 
-Search programs and click the them directly to open uninstallation window.
-Then follow its instructions to uninstall programs, clean program leftovers and do more things.
+Search for programs in Flow Launcher and click any result to open the uninstallation window.
+
+Follow the prompts to uninstall programs, create restore points and perform additional cleanup.
 
 ## 📚 Reference
 
