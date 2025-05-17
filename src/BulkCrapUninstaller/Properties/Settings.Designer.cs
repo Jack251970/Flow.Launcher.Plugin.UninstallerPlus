@@ -1,4 +1,5 @@
 ﻿using Klocman;
+using System.ComponentModel;
 using System.Configuration;
 
 namespace BulkCrapUninstaller.Properties;
@@ -12,22 +13,116 @@ public sealed partial class Settings : ApplicationSettingsBase
     public static Settings Default => defaultInstance ??= new();
 
     // For Functions/MessageBoxes.cs
-    public YesNoAsk BackupLeftovers { get; set; } = YesNoAsk.Ask;
-    public YesNoAsk MessagesRemoveJunk { get; set; } = YesNoAsk.Ask;
-    public bool MessagesAskRemoveLoudItems { get; set; } = true;
-    public YesNoAsk MessagesRestorePoints { get; set; } = YesNoAsk.Ask;
+    [global::System.Configuration.DefaultSettingValueAttribute("Ask")]
+    public global::Klocman.YesNoAsk BackupLeftovers
+    {
+        get
+        {
+            return ((global::Klocman.YesNoAsk)(this["BackupLeftovers"]));
+        }
+        set
+        {
+            this["BackupLeftovers"] = value;
+        }
+    }
+
+    [global::System.Configuration.DefaultSettingValueAttribute("Ask")]
+    public global::Klocman.YesNoAsk MessagesRemoveJunk
+    {
+        get
+        {
+            return ((global::Klocman.YesNoAsk)(this["MessagesRemoveJunk"]));
+        }
+        set
+        {
+            this["MessagesRemoveJunk"] = value;
+        }
+    }
+
+    [global::System.Configuration.DefaultSettingValueAttribute("True")]
+    public bool MessagesAskRemoveLoudItems
+    {
+        get
+        {
+            return ((bool)(this["MessagesAskRemoveLoudItems"]));
+        }
+        set
+        {
+            this["MessagesAskRemoveLoudItems"] = value;
+        }
+    }
+
+    [global::System.Configuration.DefaultSettingValueAttribute("Ask")]
+    public global::Klocman.YesNoAsk MessagesRestorePoints
+    {
+        get
+        {
+            return ((global::Klocman.YesNoAsk)(this["MessagesRestorePoints"]));
+        }
+        set
+        {
+            this["MessagesRestorePoints"] = value;
+        }
+    }
 
     // For Functions/AppUninstaller.cs
-    public bool ExternalEnable { get; set; } = false;
-    public string ExternalPreCommands { get; set; } = string.Empty;
-    public string ExternalPostCommands { get; set; } = string.Empty;
-    public bool MessagesShowAllBadJunk { get; set; } = false;
+    [global::System.Configuration.DefaultSettingValueAttribute("False")]
+    public bool ExternalEnable
+    {
+        get
+        {
+            return ((bool)(this["ExternalEnable"]));
+        }
+        set
+        {
+            this["ExternalEnable"] = value;
+        }
+    }
+
+    [global::System.Configuration.DefaultSettingValueAttribute("")]
+    public string ExternalPreCommands
+    {
+        get
+        {
+            return ((string)(this["ExternalPreCommands"]));
+        }
+        set
+        {
+            this["ExternalPreCommands"] = value;
+        }
+    }
+
+    [global::System.Configuration.DefaultSettingValueAttribute("../BleachBit/bleachbit_console.exe --clean system.tmp system.logs system.memory_d" +
+            "ump system.muicache system.prefetch system.recycle_bin")]
+    public string ExternalPostCommands
+    {
+        get
+        {
+            return ((string)(this["ExternalPostCommands"]));
+        }
+        set
+        {
+            this["ExternalPostCommands"] = value;
+        }
+    }
+
+    [global::System.Configuration.DefaultSettingValueAttribute("False")]
+    public bool MessagesShowAllBadJunk
+    {
+        get
+        {
+            return ((bool)(this["MessagesShowAllBadJunk"]));
+        }
+        set
+        {
+            this["MessagesShowAllBadJunk"] = value;
+        }
+    }
 
     // For Forms/Windows/JunkRemoveWindow.cs
     public string BackupLeftoversDirectory { get; set; } = string.Empty;
 
     // For Controls/Settings/UninstallationSettings.cs
-    [global::System.Configuration.UserScopedSettingAttribute()]
     [global::System.Configuration.DefaultSettingValueAttribute("True")]
     public bool UninstallPreventShutdown
     {
@@ -41,7 +136,6 @@ public sealed partial class Settings : ApplicationSettingsBase
         }
     }
 
-    [global::System.Configuration.UserScopedSettingAttribute()]
     [global::System.Configuration.DefaultSettingValueAttribute("True")]
     public bool CreateRestorePoint
     {
@@ -54,8 +148,7 @@ public sealed partial class Settings : ApplicationSettingsBase
             this["CreateRestorePoint"] = value;
         }
     }
-
-    [global::System.Configuration.UserScopedSettingAttribute()]
+    
     [global::System.Configuration.DefaultSettingValueAttribute("True")]
     public bool UninstallConcurrency
     {
@@ -68,8 +161,7 @@ public sealed partial class Settings : ApplicationSettingsBase
             this["UninstallConcurrency"] = value;
         }
     }
-
-    [global::System.Configuration.UserScopedSettingAttribute()]
+    
     [global::System.Configuration.DefaultSettingValueAttribute("True")]
     public bool UninstallConcurrentOneLoud
     {
@@ -82,8 +174,7 @@ public sealed partial class Settings : ApplicationSettingsBase
             this["UninstallConcurrentOneLoud"] = value;
         }
     }
-
-    [global::System.Configuration.UserScopedSettingAttribute()]
+    
     [global::System.Configuration.DefaultSettingValueAttribute("False")]
     public bool UninstallConcurrentDisableManualCollisionProtection
     {
@@ -96,8 +187,7 @@ public sealed partial class Settings : ApplicationSettingsBase
             this["UninstallConcurrentDisableManualCollisionProtection"] = value;
         }
     }
-
-    [global::System.Configuration.UserScopedSettingAttribute()]
+    
     [global::System.Configuration.DefaultSettingValueAttribute("2")]
     public int UninstallConcurrentMaxCount
     {
@@ -110,8 +200,7 @@ public sealed partial class Settings : ApplicationSettingsBase
             this["UninstallConcurrentMaxCount"] = value;
         }
     }
-
-    [global::System.Configuration.UserScopedSettingAttribute()]
+    
     [global::System.Configuration.DefaultSettingValueAttribute("True")]
     public bool AdvancedIntelligentUninstallerSorting
     {
@@ -125,7 +214,6 @@ public sealed partial class Settings : ApplicationSettingsBase
         }
     }
 
-    [global::System.Configuration.UserScopedSettingAttribute()]
     [global::System.Configuration.DefaultSettingValueAttribute("False")]
     public bool AdvancedDisableProtection
     {
@@ -138,8 +226,7 @@ public sealed partial class Settings : ApplicationSettingsBase
             this["AdvancedDisableProtection"] = value;
         }
     }
-
-    [global::System.Configuration.UserScopedSettingAttribute()]
+    
     [global::System.Configuration.DefaultSettingValueAttribute("False")]
     public bool AdvancedSimulate
     {
@@ -153,7 +240,6 @@ public sealed partial class Settings : ApplicationSettingsBase
         }
     }
 
-    [global::System.Configuration.UserScopedSettingAttribute()]
     [global::System.Configuration.DefaultSettingValueAttribute("True")]
     public bool QuietAutoKillStuck
     {
@@ -167,7 +253,6 @@ public sealed partial class Settings : ApplicationSettingsBase
         }
     }
 
-    [global::System.Configuration.UserScopedSettingAttribute()]
     [global::System.Configuration.DefaultSettingValueAttribute("True")]
     public bool QuietRetryFailedOnce
     {
@@ -181,7 +266,6 @@ public sealed partial class Settings : ApplicationSettingsBase
         }
     }
 
-    [global::System.Configuration.UserScopedSettingAttribute()]
     [global::System.Configuration.DefaultSettingValueAttribute("True")]
     public bool QuietAutomatization
     {
@@ -195,7 +279,6 @@ public sealed partial class Settings : ApplicationSettingsBase
         }
     }
 
-    [global::System.Configuration.UserScopedSettingAttribute()]
     [global::System.Configuration.DefaultSettingValueAttribute("True")]
     public bool QuietAutomatizationKillStuck
     {
@@ -209,7 +292,6 @@ public sealed partial class Settings : ApplicationSettingsBase
         }
     }
 
-    [global::System.Configuration.UserScopedSettingAttribute()]
     [global::System.Configuration.DefaultSettingValueAttribute("True")]
     public bool QuietUseDaemon
     {
