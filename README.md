@@ -10,8 +10,12 @@
 
 - Uninstall desktop programs
 - Uninstall Microsoft store programs
+- Uninstall Steam programs
 - Uninstall system components
 - Uninstall Windows features and updates
+- Quietly uninstall programs
+- Modify programs
+- Manually uninstall programs
 - Create restore point after uninstallation
 - Clean up program leftovers after uninstallation
 
@@ -60,7 +64,7 @@ This plugin requires administrator privileges to:
 
 * Load Microsoft Store programs
 * Create system restore points
-* Clean residual program files
+* Clean all program leftovers
 
 For full functionality, we recommend running Flow Launcher as administrator during automatic launches:
 
@@ -86,6 +90,14 @@ Then we can verify if it succeeded:
 Search for programs in Flow Launcher and click any result to open the uninstallation window.
 
 Follow the prompts to uninstall programs, create restore points and perform additional cleanup.
+
+### 3. Advance Options
+
+Right click programs to open context menu to:
+
+* Quietly uninstall programs
+* Modify programs
+* Manually uninstall programs
 
 ## 📚 Reference
 
