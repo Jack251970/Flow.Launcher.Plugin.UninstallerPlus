@@ -52,6 +52,7 @@ public partial class MainWindow : Window
         _mainWindow = new Forms.Windows.MainWindow(InitiateListRefresh, (e) => { Debugger.Break(); });
         UninstallToolsGlobalConfig.Initialize();
 
+        Settings.BackupLeftovers = Klocman.YesNoAsk.Yes;
         Settings.PropertyChanged += Settings_PropertyChanged;
 
         InitBCUSettings();
