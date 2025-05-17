@@ -21,6 +21,6 @@ namespace BulkCrapUninstaller.Properties
         private SettingBinder<Settings> _settingManager;
 
         public SettingBinder<Settings> SettingBinder
-            => _settingManager ?? (_settingManager = new SettingBinder<Settings>(this));
+            => _settingManager ??= new SettingBinder<Settings>(this);
     }
 }
