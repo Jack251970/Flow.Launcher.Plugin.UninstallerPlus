@@ -717,7 +717,7 @@ namespace BulkCrapUninstaller.Functions
 
                 void JunkRemoveWindowCloseAction(JunkRemoveWindow junkWindow)
                 {
-                    if (junkWindow.ShowDialog() != DialogResult.OK)
+                    if (junkWindow.DialogResult != DialogResult.OK)
                     {
                         FinallyAction();
                         return;
