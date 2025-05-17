@@ -14,6 +14,8 @@ namespace Klocman.Forms
         {
             InitializeComponent();
 
+            DialogResult = DialogResult.Cancel;
+
             processWaiterControl1.AllProcessesClosed += ProcessWaiterControl1_AllProcessesClosed;
             processWaiterControl1.CancelClicked += ProcessWaiterControl1_CancelClicked;
         }
