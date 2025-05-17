@@ -37,8 +37,8 @@ public partial class MainWindow : Window
     private const string MicrosoftPublisher = "Microsoft";
     private const string TweakRateId = "tweak";
 
-    private readonly Settings _settings = new();
-    private readonly BCUSettings _bCUSettings = BCUSettings.Default;
+    private static readonly Settings Settings = new();
+    private static readonly BCUSettings _bCUSettings = BCUSettings.Default;
 
     private const int QueryUpdateSemaphoreMaxCount = 1;
     private readonly SemaphoreSlim _queryUpdateSemaphore = new(1, QueryUpdateSemaphoreMaxCount);
@@ -52,25 +52,221 @@ public partial class MainWindow : Window
         _mainWindow = new Forms.Windows.MainWindow(InitiateListRefresh, (e) => { Debugger.Break(); });
         UninstallToolsGlobalConfig.Initialize();
 
+        Settings.PropertyChanged += Settings_PropertyChanged;
+
+        InitBCUSettings();
+        
         _bCUSettings.PropertyChanged += BCUSettings_PropertyChanged;
+    }
+
+    private static void InitBCUSettings()
+    {
+        _bCUSettings.BackupLeftovers = Settings.BackupLeftovers;
+        _bCUSettings.MessagesRemoveJunk = Settings.MessagesRemoveJunk;
+        _bCUSettings.MessagesAskRemoveLoudItems = Settings.MessagesAskRemoveLoudItems;
+        _bCUSettings.MessagesRestorePoints = Settings.MessagesRestorePoints;
+        _bCUSettings.ExternalEnable = Settings.ExternalEnable;
+        _bCUSettings.ExternalPreCommands = Settings.ExternalPreCommands;
+        _bCUSettings.ExternalPostCommands = Settings.ExternalPostCommands;
+        _bCUSettings.MessagesShowAllBadJunk = Settings.MessagesShowAllBadJunk;
+        _bCUSettings.BackupLeftoversDirectory = Settings.BackupLeftoversDirectory;
+        _bCUSettings.UninstallPreventShutdown = Settings.UninstallPreventShutdown;
+        _bCUSettings.CreateRestorePoint = Settings.CreateRestorePoint;
+        _bCUSettings.UninstallConcurrency = Settings.UninstallConcurrency;
+        _bCUSettings.UninstallConcurrentOneLoud = Settings.UninstallConcurrentOneLoud;
+        _bCUSettings.UninstallConcurrentDisableManualCollisionProtection = Settings.UninstallConcurrentDisableManualCollisionProtection;
+        _bCUSettings.UninstallConcurrentMaxCount = Settings.UninstallConcurrentMaxCount;
+        _bCUSettings.AdvancedIntelligentUninstallerSorting = Settings.AdvancedIntelligentUninstallerSorting;
+        _bCUSettings.AdvancedDisableProtection = Settings.AdvancedDisableProtection;
+        _bCUSettings.AdvancedSimulate = Settings.AdvancedSimulate;
+        _bCUSettings.QuietAutoKillStuck = Settings.QuietAutoKillStuck;
+        _bCUSettings.QuietRetryFailedOnce = Settings.QuietRetryFailedOnce;
+        _bCUSettings.QuietAutomatization = Settings.QuietAutomatization;
+        _bCUSettings.QuietAutomatizationKillStuck = Settings.QuietAutomatizationKillStuck;
+        _bCUSettings.QuietUseDaemon = Settings.QuietUseDaemon;
+    }
+
+    private void Settings_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        switch (e.PropertyName)
+        {
+            // Refresh filtered list
+            case nameof(Settings.FilterShowMicrosoft):
+            case nameof(Settings.AdvancedDisplayOrphans):
+            case nameof(Settings.FilterShowSystemComponents):
+            case nameof(Settings.FilterShowProtected):
+            case nameof(Settings.FilterShowTweaks):
+            case nameof(Settings.FilterShowUpdates):
+            case nameof(Settings.FilterShowWinFeatures):
+            case nameof(Settings.FilterShowStoreApps):
+                _ = UpdateTextAsync(_cancellationTokenSource.Token);
+                break;
+            // Synchronize Flow settings with BCU settings
+            case nameof(Settings.BackupLeftovers):
+                Debug.WriteLine("Settings BackupLeftovers changed to " + Settings.BackupLeftovers);
+                _bCUSettings.BackupLeftovers = Settings.BackupLeftovers;
+                break;
+            case nameof(Settings.MessagesRemoveJunk):
+                _bCUSettings.MessagesRemoveJunk = Settings.MessagesRemoveJunk;
+                break;
+            case nameof(Settings.MessagesAskRemoveLoudItems):
+                _bCUSettings.MessagesAskRemoveLoudItems = Settings.MessagesAskRemoveLoudItems;
+                break;
+            case nameof(Settings.MessagesRestorePoints):
+                _bCUSettings.MessagesRestorePoints = Settings.MessagesRestorePoints;
+                break;
+            case nameof(Settings.ExternalEnable):
+                _bCUSettings.ExternalEnable = Settings.ExternalEnable;
+                break;
+            case nameof(Settings.ExternalPreCommands):
+                _bCUSettings.ExternalPreCommands = Settings.ExternalPreCommands;
+                break;
+            case nameof(Settings.ExternalPostCommands):
+                _bCUSettings.ExternalPostCommands = Settings.ExternalPostCommands;
+                break;
+            case nameof(Settings.MessagesShowAllBadJunk):
+                _bCUSettings.MessagesShowAllBadJunk = Settings.MessagesShowAllBadJunk;
+                break;
+            case nameof(Settings.BackupLeftoversDirectory):
+                _bCUSettings.BackupLeftoversDirectory = Settings.BackupLeftoversDirectory;
+                break;
+            case nameof(Settings.UninstallPreventShutdown):
+                _bCUSettings.UninstallPreventShutdown = Settings.UninstallPreventShutdown;
+                break;
+            case nameof(Settings.CreateRestorePoint):
+                _bCUSettings.CreateRestorePoint = Settings.CreateRestorePoint;
+                break;
+            case nameof(Settings.UninstallConcurrency):
+                _bCUSettings.UninstallConcurrency = Settings.UninstallConcurrency;
+                break;
+            case nameof(Settings.UninstallConcurrentOneLoud):
+                _bCUSettings.UninstallConcurrentOneLoud = Settings.UninstallConcurrentOneLoud;
+                break;
+            case nameof(Settings.UninstallConcurrentDisableManualCollisionProtection):
+                _bCUSettings.UninstallConcurrentDisableManualCollisionProtection = Settings.UninstallConcurrentDisableManualCollisionProtection;
+                break;
+            case nameof(Settings.UninstallConcurrentMaxCount):
+                _bCUSettings.UninstallConcurrentMaxCount = Settings.UninstallConcurrentMaxCount;
+                break;
+            case nameof(Settings.AdvancedIntelligentUninstallerSorting):
+                _bCUSettings.AdvancedIntelligentUninstallerSorting = Settings.AdvancedIntelligentUninstallerSorting;
+                break;
+            case nameof(Settings.AdvancedDisableProtection):
+                _bCUSettings.AdvancedDisableProtection = Settings.AdvancedDisableProtection;
+                break;
+            case nameof(Settings.AdvancedSimulate):
+                _bCUSettings.AdvancedSimulate = Settings.AdvancedSimulate;
+                break;
+            case nameof(Settings.QuietAutoKillStuck):
+                _bCUSettings.QuietAutoKillStuck = Settings.QuietAutoKillStuck;
+                break;
+            case nameof(Settings.QuietRetryFailedOnce):
+                _bCUSettings.QuietRetryFailedOnce = Settings.QuietRetryFailedOnce;
+                break;
+            case nameof(Settings.QuietAutomatization):
+                _bCUSettings.QuietAutomatization = Settings.QuietAutomatization;
+                break;
+            case nameof(Settings.QuietAutomatizationKillStuck):
+                _bCUSettings.QuietAutomatizationKillStuck = Settings.QuietAutomatizationKillStuck;
+                break;
+            case nameof(Settings.QuietUseDaemon):
+                _bCUSettings.QuietUseDaemon = Settings.QuietUseDaemon;
+                break;
+        }
     }
 
     private void BCUSettings_PropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         switch (e.PropertyName)
         {
+            // Synchronize settings with Flow settings
             case nameof(BCUSettings.BackupLeftovers):
-                Debug.WriteLine("BackupLeftovers changed to " + _bCUSettings.BackupLeftovers);
+                Debug.WriteLine("BCUSettings BackupLeftovers changed to " + _bCUSettings.BackupLeftovers);
+                Settings.BackupLeftovers = _bCUSettings.BackupLeftovers;
+                break;
+            case nameof(BCUSettings.MessagesRemoveJunk):
+                Settings.MessagesRemoveJunk = _bCUSettings.MessagesRemoveJunk;
+                break;
+            case nameof(BCUSettings.MessagesAskRemoveLoudItems):
+                Settings.MessagesAskRemoveLoudItems = _bCUSettings.MessagesAskRemoveLoudItems;
+                break;
+            case nameof(BCUSettings.MessagesRestorePoints):
+                Settings.MessagesRestorePoints = _bCUSettings.MessagesRestorePoints;
+                break;
+            case nameof(BCUSettings.ExternalEnable):
+                Settings.ExternalEnable = _bCUSettings.ExternalEnable;
+                break;
+            case nameof(BCUSettings.ExternalPreCommands):
+                Settings.ExternalPreCommands = _bCUSettings.ExternalPreCommands;
+                break;
+            case nameof(BCUSettings.ExternalPostCommands):
+                Settings.ExternalPostCommands = _bCUSettings.ExternalPostCommands;
+                break;
+            case nameof(BCUSettings.MessagesShowAllBadJunk):
+                Settings.MessagesShowAllBadJunk = _bCUSettings.MessagesShowAllBadJunk;
+                break;
+            case nameof(BCUSettings.BackupLeftoversDirectory):
+                Settings.BackupLeftoversDirectory = _bCUSettings.BackupLeftoversDirectory;
+                break;
+            case nameof(BCUSettings.UninstallPreventShutdown):
+                Settings.UninstallPreventShutdown = _bCUSettings.UninstallPreventShutdown;
+                break;
+            case nameof(BCUSettings.CreateRestorePoint):
+                Settings.CreateRestorePoint = _bCUSettings.CreateRestorePoint;
+                break;
+            case nameof(BCUSettings.UninstallConcurrency):
+                Settings.UninstallConcurrency = _bCUSettings.UninstallConcurrency;
+                break;
+            case nameof(BCUSettings.UninstallConcurrentOneLoud):
+                Settings.UninstallConcurrentOneLoud = _bCUSettings.UninstallConcurrentOneLoud;
+                break;
+            case nameof(BCUSettings.UninstallConcurrentDisableManualCollisionProtection):
+                Settings.UninstallConcurrentDisableManualCollisionProtection = _bCUSettings.UninstallConcurrentDisableManualCollisionProtection;
+                break;
+            case nameof(BCUSettings.UninstallConcurrentMaxCount):
+                Settings.UninstallConcurrentMaxCount = _bCUSettings.UninstallConcurrentMaxCount;
+                break;
+            case nameof(BCUSettings.AdvancedIntelligentUninstallerSorting):
+                Settings.AdvancedIntelligentUninstallerSorting = _bCUSettings.AdvancedIntelligentUninstallerSorting;
+                break;
+            case nameof(BCUSettings.AdvancedDisableProtection):
+                Settings.AdvancedDisableProtection = _bCUSettings.AdvancedDisableProtection;
+                break;
+            case nameof(BCUSettings.AdvancedSimulate):
+                Settings.AdvancedSimulate = _bCUSettings.AdvancedSimulate;
+                break;
+            case nameof(BCUSettings.QuietAutoKillStuck):
+                Settings.QuietAutoKillStuck = _bCUSettings.QuietAutoKillStuck;
+                break;
+            case nameof(BCUSettings.QuietRetryFailedOnce):
+                Settings.QuietRetryFailedOnce = _bCUSettings.QuietRetryFailedOnce;
+                break;
+            case nameof(BCUSettings.QuietAutomatization):
+                Settings.QuietAutomatization = _bCUSettings.QuietAutomatization;
+                break;
+            case nameof(BCUSettings.QuietAutomatizationKillStuck):
+                Settings.QuietAutomatizationKillStuck = _bCUSettings.QuietAutomatizationKillStuck;
+                break;
+            case nameof(BCUSettings.QuietUseDaemon):
+                Settings.QuietUseDaemon = _bCUSettings.QuietUseDaemon;
                 break;
         }
     }
 
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
-        InitiateListRefresh();
+        // Test synchronization of settings & PropertyChanged event
+        Debug.WriteLine("");
         _bCUSettings.BackupLeftovers = Klocman.YesNoAsk.Yes;
         _bCUSettings.BackupLeftovers = Klocman.YesNoAsk.Ask;
         _bCUSettings.BackupLeftovers = Klocman.YesNoAsk.Ask;
+        Debug.WriteLine("");
+        Settings.BackupLeftovers = Klocman.YesNoAsk.Yes;
+        Settings.BackupLeftovers = Klocman.YesNoAsk.Ask;
+        Settings.BackupLeftovers = Klocman.YesNoAsk.Ask;
+
+        // Initialize the list of uninstallers
+        InitiateListRefresh();
     }
 
     private void Window_Closing(object sender, CancelEventArgs e)
@@ -273,42 +469,42 @@ public partial class MainWindow : Window
 
     private bool ListViewFilter(ApplicationUninstallerEntry entry)
     {
-        if (!_settings.FilterShowMicrosoft && !string.IsNullOrEmpty(entry.Publisher) && entry.Publisher.Contains(MicrosoftPublisher))
+        if (!Settings.FilterShowMicrosoft && !string.IsNullOrEmpty(entry.Publisher) && entry.Publisher.Contains(MicrosoftPublisher))
         {
             return false;
         }
 
-        if (!_settings.AdvancedDisplayOrphans && entry.IsOrphaned)
+        if (!Settings.AdvancedDisplayOrphans && entry.IsOrphaned)
         {
             return false;
         }
 
-        if (!_settings.FilterShowSystemComponents && entry.SystemComponent)
+        if (!Settings.FilterShowSystemComponents && entry.SystemComponent)
         {
             return false;
         }
 
-        if (!_settings.FilterShowProtected && entry.IsProtected)
+        if (!Settings.FilterShowProtected && entry.IsProtected)
         {
             return false;
         }
 
-        if (entry.RatingId != null && !_settings.FilterShowTweaks && entry.RatingId.StartsWith(TweakRateId, StringComparison.Ordinal))
+        if (entry.RatingId != null && !Settings.FilterShowTweaks && entry.RatingId.StartsWith(TweakRateId, StringComparison.Ordinal))
         {
             return false;
         }
 
-        if (!_settings.FilterShowUpdates && entry.IsUpdate)
+        if (!Settings.FilterShowUpdates && entry.IsUpdate)
         {
             return false;
         }
 
-        if (!_settings.FilterShowWinFeatures && entry.UninstallerKind == UninstallerType.WindowsFeature)
+        if (!Settings.FilterShowWinFeatures && entry.UninstallerKind == UninstallerType.WindowsFeature)
         {
             return false;
         }
 
-        if (!_settings.FilterShowStoreApps && entry.UninstallerKind == UninstallerType.StoreApp)
+        if (!Settings.FilterShowStoreApps && entry.UninstallerKind == UninstallerType.StoreApp)
         {
             return false;
         }
