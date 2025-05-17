@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./src/Flow.Launcher.Plugin.UninstallerPlus/Images/uninstall.png" width="90">
+  <img src="./src/Flow.Launcher.Plugin.UninstallerPlus/Images/icon.png" width="90">
 </p>
 
 # Flow Launcher UninstallerPlus Plugin

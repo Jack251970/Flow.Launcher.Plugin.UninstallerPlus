@@ -391,7 +391,7 @@ public class UninstallerPlus : IAsyncPlugin, IAsyncReloadable, IContextMenu, IPl
         var quietlyUninstallResult = new Result
         {
             Title = Context.API.GetTranslation("flowlauncher_plugin_uninstallerplus_context_menu_uninstall_quietly"),
-            IcoPath = "Images/uninstall.png",
+            IcoPath = "Images/quiet.png",
             Action = _ =>
             {
                 _mainWindow.RunQuietUninstall(new[] { uninstaller }, AllUninstallers.ToList());
@@ -418,7 +418,7 @@ public class UninstallerPlus : IAsyncPlugin, IAsyncReloadable, IContextMenu, IPl
         var manualUninstallResult = new Result
         {
             Title = Context.API.GetTranslation("flowlauncher_plugin_uninstallerplus_context_menu_uninstall_manually"),
-            IcoPath = "Images/uninstall.png",
+            IcoPath = "Images/manual.png",
             Action = _ =>
             {
                 _mainWindow.RunManualUninstall(new[] { uninstaller }, AllUninstallers.ToList());
