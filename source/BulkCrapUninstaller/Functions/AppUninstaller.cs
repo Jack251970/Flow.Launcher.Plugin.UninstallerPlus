@@ -1198,12 +1198,11 @@ namespace BulkCrapUninstaller.Functions
             return output;
         }
 
+#if !WPF_TEST
         public void Modify(IEnumerable<ApplicationUninstallerEntry> selectedUninstallers)
         {
             if (!TryGetUninstallLock()) return;
-#if !WPF_TEST
             var listRefreshNeeded = false;
-#endif
 
             try
             {
@@ -1214,9 +1213,6 @@ namespace BulkCrapUninstaller.Functions
                 if (results.Count != 1)
                 {
                     MessageBoxes.CanSelectOnlyOneItemInfo();
-#if WPF_TEST
-                    FinallyAction();
-#endif
                     return;
                 }
 
@@ -1225,22 +1221,72 @@ namespace BulkCrapUninstaller.Functions
                 if (!_settings.AdvancedDisableProtection && selected.IsProtected)
                 {
                     MessageBoxes.ProtectedItemError(selected.DisplayName);
-#if WPF_TEST
-                    FinallyAction();
-#endif
                     return;
                 }
 
                 if (string.IsNullOrEmpty(selected.ModifyPath))
                 {
                     MessageBoxes.ModifyCommandMissing();
-#if WPF_TEST
-                    FinallyAction();
-#endif
                     return;
                 }
 
+                if (!CheckForRunningProcessesBeforeUninstall(new[] { selected }, true))
+                    return;
+
+                try
+                {
+                    selected.Modify(_settings.AdvancedSimulate);
+                    listRefreshNeeded = true;
+                }
+                catch (Exception ex)
+                {
+                    PremadeDialogs.GenericError(ex);
+                }
+            }
+            finally
+            {
+                ReleaseUninstallLock();
+                _lockApplication(false);
+                if (listRefreshNeeded)
+                    _initiateListRefresh();
+            }
+        }
+#endif
+
 #if WPF_TEST
+        public void ModifyW(IEnumerable<ApplicationUninstallerEntry> selectedUninstallers)
+        {
+            if (!TryGetUninstallLock()) return;
+
+            try
+            {
+                _lockApplication(true);
+
+                var results = selectedUninstallers.Take(2).ToList();
+
+                if (results.Count != 1)
+                {
+                    MessageBoxes.CanSelectOnlyOneItemInfo();
+                    FinallyAction();
+                    return;
+                }
+
+                var selected = results.First();
+
+                if (!_settings.AdvancedDisableProtection && selected.IsProtected)
+                {
+                    MessageBoxes.ProtectedItemError(selected.DisplayName);
+                    FinallyAction();
+                    return;
+                }
+
+                if (string.IsNullOrEmpty(selected.ModifyPath))
+                {
+                    MessageBoxes.ModifyCommandMissing();
+                    FinallyAction();
+                    return;
+                }
+
                 var filters = new[] { selected }.SelectMany(e => new[] { e.InstallLocation, e.UninstallerLocation })
                 .Where(s => !string.IsNullOrEmpty(s)).Distinct().ToArray();
 
@@ -1291,22 +1337,7 @@ namespace BulkCrapUninstaller.Functions
                         }
                     }
                 }
-#else
-                if (!CheckForRunningProcessesBeforeUninstall(new[] { selected }, true))
-                    return;
-
-                try
-                {
-                    selected.Modify(_settings.AdvancedSimulate);
-                    listRefreshNeeded = true;
-                }
-                catch (Exception ex)
-                {
-                    PremadeDialogs.GenericError(ex);
-                }
-#endif
             }
-#if WPF_TEST
             catch (Exception)
             {
                 FinallyAction();
@@ -1317,15 +1348,7 @@ namespace BulkCrapUninstaller.Functions
                 ReleaseUninstallLock();
                 _lockApplication(false);
             }
-#else
-            finally
-            {
-                ReleaseUninstallLock();
-                _lockApplication(false);
-                if (listRefreshNeeded)
-                    _initiateListRefresh();
-            }
-#endif
         }
+#endif
     }
 }

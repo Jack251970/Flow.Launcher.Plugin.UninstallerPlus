@@ -35,7 +35,7 @@ public class MainWindow
 
     public void RunModify(IEnumerable<ApplicationUninstallerEntry> selectedUninstallers)
     {
-        _appUninstaller.Modify(selectedUninstallers);
+        _appUninstaller.ModifyW(selectedUninstallers);
     }
 
     public void RunManualUninstall(IEnumerable<ApplicationUninstallerEntry> selectedUninstallers,
