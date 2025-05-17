@@ -20,7 +20,7 @@ namespace Klocman.Forms
             processWaiterControl1.CancelClicked += ProcessWaiterControl1_CancelClicked;
         }
 
-        #region For WPF_TEST projects
+        #region For WPF_TEST
 
         private readonly Action<bool> _closedAction;
         private bool _initialized;
