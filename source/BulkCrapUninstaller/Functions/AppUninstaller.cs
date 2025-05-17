@@ -186,13 +186,12 @@ namespace BulkCrapUninstaller.Functions
             return idsToCheck.ToArray();
         }
 
+#if !WPF_TEST
         public void RunUninstall(IEnumerable<ApplicationUninstallerEntry> selectedUninstallers,
             IEnumerable<ApplicationUninstallerEntry> allUninstallers, bool quiet)
         {
             if (!TryGetUninstallLock()) return;
-#if !WPF_TEST
             var listRefreshNeeded = false;
-#endif
 
             try
             {
@@ -206,9 +205,6 @@ namespace BulkCrapUninstaller.Functions
                         MessageBoxes.ProtectedItemsWarningQuestion(protectedTargets.Select(x => x.DisplayName).ToArray()) ==
                         MessageBoxes.PressedButton.Cancel)
                     {
-#if WPF_TEST
-                        FinallyAction();
-#endif
                         return;
                     } 
 
@@ -221,7 +217,121 @@ namespace BulkCrapUninstaller.Functions
 
                     BulkUninstallEntry[] taskEntries;
 
+                    using (var wizard = new BeginUninstallTaskWizard())
+                    {
+                        wizard.Initialize(targetList, allUninstallerList.ToList(), quiet);
+
+                        wizard.StartPosition = FormStartPosition.CenterParent;
+                        if (wizard.ShowDialog(MessageBoxes.DefaultOwner) != DialogResult.OK || wizard.Results.Length == 0)
+                            return;
+
+                        taskEntries = wizard.Results;
+                    }
+
+                    _visibleCallback(false);
+
+                    // No turning back at this point (kind of)
+                    listRefreshNeeded = true;
+
+                    if (_settings.CreateRestorePoint)
+                    {
+                        try
+                        {
+                            SystemRestore.BeginSysRestore(taskEntries.Length, false);
+                        }
+                        catch (Exception exception)
+                        {
+                            PremadeDialogs.GenericError(exception);
+                        }
+                    }
+
+                    if (_settings.ExternalEnable && _settings.ExternalPreCommands.IsNotEmpty())
+                    {
+                        LoadingDialog.ShowDialog(
+                            MessageBoxes.DefaultOwner, Localisable.LoadingDialogTitlePreUninstallCommands,
+                            controller => { RunExternalCommands(_settings.ExternalPreCommands, controller); });
+                    }
+
+                    var status = UninstallManager.CreateBulkUninstallTask(taskEntries, GetConfiguration(quiet));
+                    status.OneLoudLimit = _settings.UninstallConcurrentOneLoud;
+                    status.ConcurrentUninstallerCount = _settings.UninstallConcurrency
+                        ? _settings.UninstallConcurrentMaxCount
+                        : 1;
+                    status.Start();
+
+                    UninstallProgressWindow.ShowUninstallDialog(status, entries => SearchForAndRemoveJunk(entries, allUninstallerList));
+
+                    var junkRemoveTargetsQuery = from bulkUninstallEntry in status.AllUninstallersList
+                                                 where bulkUninstallEntry.CurrentStatus == UninstallStatus.Completed
+                                                       || bulkUninstallEntry.CurrentStatus == UninstallStatus.Invalid
+                                                       || (bulkUninstallEntry.CurrentStatus == UninstallStatus.Skipped
+                                                           && !bulkUninstallEntry.UninstallerEntry.RegKeyStillExists())
+                                                 select bulkUninstallEntry.UninstallerEntry;
+
+                    if (MessageBoxes.LookForJunkQuestion())
+                        SearchForAndRemoveJunk(junkRemoveTargetsQuery, allUninstallerList);
+
+                    if (_settings.ExternalEnable && _settings.ExternalPostCommands.IsNotEmpty())
+                    {
+                        LoadingDialog.ShowDialog(
+                            MessageBoxes.DefaultOwner, Localisable.LoadingDialogTitlePostUninstallCommands,
+                            controller => { RunExternalCommands(_settings.ExternalPostCommands, controller); });
+                    }
+                }
+                else
+                {
+                    MessageBoxes.NoUninstallersSelectedInfo();
+                }
+            }
+            catch (ObjectDisposedException ex)
+            {
+                // ODE at CreateHandle can be caused by closing main window in the middle of the process
+                // It gets thrown at ShowDialog, it's safe to cancel the process at these points
+                if (ex.TargetSite?.Name != "CreateHandle") throw;
+            }
+            finally
+            {
+                SystemRestore.EndSysRestore();
+                ReleaseUninstallLock();
+                _lockApplication(false);
+                _visibleCallback(true);
+                if (listRefreshNeeded)
+                    _initiateListRefresh();
+            }
+        }
+#endif
+
 #if WPF_TEST
+        public void RunUninstallW(IEnumerable<ApplicationUninstallerEntry> selectedUninstallers,
+            IEnumerable<ApplicationUninstallerEntry> allUninstallers, bool quiet)
+        {
+            if (!TryGetUninstallLock()) return;
+
+            try
+            {
+                var targetList = new List<ApplicationUninstallerEntry>(selectedUninstallers);
+                var allUninstallerList = allUninstallers as IList<ApplicationUninstallerEntry> ?? allUninstallers.ToList();
+
+                if (!_settings.AdvancedDisableProtection)
+                {
+                    var protectedTargets = targetList.Where(x => x.IsProtected).ToList();
+                    if (
+                        MessageBoxes.ProtectedItemsWarningQuestion(protectedTargets.Select(x => x.DisplayName).ToArray()) ==
+                        MessageBoxes.PressedButton.Cancel)
+                    {
+                        FinallyAction();
+                        return;
+                    }
+
+                    targetList.RemoveAll(protectedTargets);
+                }
+
+                if (targetList.Any())
+                {
+                    _lockApplication(true);
+
+                    BulkUninstallEntry[] taskEntries;
+
                     var wizard = new BeginUninstallTaskWizard(BeginUninstallTaskWizardAction, BeginUninstallTaskWizardCloseAction);
 
                     wizard.Initialize(targetList, allUninstallerList.ToList(), quiet);
@@ -328,75 +438,12 @@ namespace BulkCrapUninstaller.Functions
                         if (listRefreshNeeded)
                             _initiateListRefresh();
                     }
-#else
-                    using (var wizard = new BeginUninstallTaskWizard())
-                    {
-                        wizard.Initialize(targetList, allUninstallerList.ToList(), quiet);
-
-                        wizard.StartPosition = FormStartPosition.CenterParent;
-                        if (wizard.ShowDialog(MessageBoxes.DefaultOwner) != DialogResult.OK || wizard.Results.Length == 0)
-                            return;
-
-                        taskEntries = wizard.Results;
-                    }
-
-                    _visibleCallback(false);
-
-                    // No turning back at this point (kind of)
-                    listRefreshNeeded = true;
-
-                    if (_settings.CreateRestorePoint)
-                    {
-                        try
-                        {
-                            SystemRestore.BeginSysRestore(taskEntries.Length, false);
-                        }
-                        catch (Exception exception)
-                        {
-                            PremadeDialogs.GenericError(exception);
-                        }
-                    }
-
-                    if (_settings.ExternalEnable && _settings.ExternalPreCommands.IsNotEmpty())
-                    {
-                        LoadingDialog.ShowDialog(
-                            MessageBoxes.DefaultOwner, Localisable.LoadingDialogTitlePreUninstallCommands,
-                            controller => { RunExternalCommands(_settings.ExternalPreCommands, controller); });
-                    }
-
-                    var status = UninstallManager.CreateBulkUninstallTask(taskEntries, GetConfiguration(quiet));
-                    status.OneLoudLimit = _settings.UninstallConcurrentOneLoud;
-                    status.ConcurrentUninstallerCount = _settings.UninstallConcurrency
-                        ? _settings.UninstallConcurrentMaxCount
-                        : 1;
-                    status.Start();
-
-                    UninstallProgressWindow.ShowUninstallDialog(status, entries => SearchForAndRemoveJunk(entries, allUninstallerList));
-
-                    var junkRemoveTargetsQuery = from bulkUninstallEntry in status.AllUninstallersList
-                                                 where bulkUninstallEntry.CurrentStatus == UninstallStatus.Completed
-                                                       || bulkUninstallEntry.CurrentStatus == UninstallStatus.Invalid
-                                                       || (bulkUninstallEntry.CurrentStatus == UninstallStatus.Skipped
-                                                           && !bulkUninstallEntry.UninstallerEntry.RegKeyStillExists())
-                                                 select bulkUninstallEntry.UninstallerEntry;
-
-                    if (MessageBoxes.LookForJunkQuestion())
-                        SearchForAndRemoveJunk(junkRemoveTargetsQuery, allUninstallerList);
-
-                    if (_settings.ExternalEnable && _settings.ExternalPostCommands.IsNotEmpty())
-                    {
-                        LoadingDialog.ShowDialog(
-                            MessageBoxes.DefaultOwner, Localisable.LoadingDialogTitlePostUninstallCommands,
-                            controller => { RunExternalCommands(_settings.ExternalPostCommands, controller); });
-                    }
-#endif
                 }
                 else
                 {
                     MessageBoxes.NoUninstallersSelectedInfo();
                 }
             }
-#if WPF_TEST
             catch (Exception)
             {
                 FinallyAction();
@@ -409,24 +456,8 @@ namespace BulkCrapUninstaller.Functions
                 _lockApplication(false);
                 _visibleCallback(true);
             }
-#else
-            catch (ObjectDisposedException ex)
-            {
-                // ODE at CreateHandle can be caused by closing main window in the middle of the process
-                // It gets thrown at ShowDialog, it's safe to cancel the process at these points
-                if (ex.TargetSite?.Name != "CreateHandle") throw;
-            }
-            finally
-            {
-                SystemRestore.EndSysRestore();
-                ReleaseUninstallLock();
-                _lockApplication(false);
-                _visibleCallback(true);
-                if (listRefreshNeeded)
-                    _initiateListRefresh();
-            }
-#endif
         }
+#endif
 
         public static IEnumerable<T> SortIntelligently<T>(IEnumerable<T> entries, Func<T, BulkUninstallEntry> entryGetter)
         {

@@ -2,7 +2,6 @@
 using BulkCrapUninstaller.Properties;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UninstallTools;
 
 namespace BulkCrapUninstaller.Forms.Windows;
@@ -25,13 +24,13 @@ public class MainWindow
     public void RunLoudUninstall(IEnumerable<ApplicationUninstallerEntry> selectedUninstallers,
         IEnumerable<ApplicationUninstallerEntry> allUninstallers)
     {
-        _appUninstaller.RunUninstall(selectedUninstallers, allUninstallers, false);
+        _appUninstaller.RunUninstallW(selectedUninstallers, allUninstallers, false);
     }
 
     public void RunQuietUninstall(IEnumerable<ApplicationUninstallerEntry> selectedUninstallers,
         IEnumerable<ApplicationUninstallerEntry> allUninstallers)
     {
-        _appUninstaller.RunUninstall(selectedUninstallers, allUninstallers, true);
+        _appUninstaller.RunUninstallW(selectedUninstallers, allUninstallers, true);
     }
 
     public void RunModify(IEnumerable<ApplicationUninstallerEntry> selectedUninstallers)
