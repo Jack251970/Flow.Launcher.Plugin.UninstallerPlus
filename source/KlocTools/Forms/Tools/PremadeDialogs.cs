@@ -86,7 +86,7 @@ namespace Klocman.Forms.Tools
 
         #region For WPF_TEST
 
-        public static void GenericError(Form owner, Exception ex)
+        public static void GenericErrorW(Form owner, Exception ex)
         {
             if (ex == null)
                 return;
@@ -94,9 +94,9 @@ namespace Klocman.Forms.Tools
             Console.WriteLine(@"Showing error message: " + ex);
 
             if (SendErrorAction != null)
-                SendErrorQuestion(owner, ex);
+                SendErrorQuestionW(owner, ex);
             else
-                GenericError(owner, ex.Message, GetExceptionDetailString(ex));
+                GenericErrorW(owner, ex.Message, GetExceptionDetailString(ex));
         }
 
         #endregion
@@ -173,7 +173,7 @@ namespace Klocman.Forms.Tools
 
         #region For WPF_TEST
 
-        public static void GenericError(Form owner, string errorType, string additionalInfo = null)
+        public static void GenericErrorW(Form owner, string errorType, string additionalInfo = null)
         {
             if (string.IsNullOrEmpty(errorType))
                 return;
@@ -241,7 +241,7 @@ namespace Klocman.Forms.Tools
 
         #region For WPF_TEST
 
-        private static void SendErrorQuestion(Form owner, Exception ex)
+        private static void SendErrorQuestionW(Form owner, Exception ex)
         {
             switch (CustomMessageBox.ShowDialog(owner,
                 new CmbBasicSettings(Localisation.PremadeDialogs_GenericError_Title,

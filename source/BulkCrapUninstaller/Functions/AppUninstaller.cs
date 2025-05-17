@@ -307,8 +307,7 @@ namespace BulkCrapUninstaller.Functions
         {
             try
             {
-                var targetList = new List<ApplicationUninstallerEntry>(selectedUninstallers);
-                var allUninstallerList = allUninstallers as IList<ApplicationUninstallerEntry> ?? allUninstallers.ToList();
+                IList<ApplicationUninstallerEntry> allUninstallerList = null;
 
                 var wizard = new BeginUninstallTaskWizard(BeginUninstallTaskWizardAction, BeginUninstallTaskWizardCloseAction)
                 {
@@ -323,11 +322,14 @@ namespace BulkCrapUninstaller.Functions
                     return;
                 }
 
+                var targetList = new List<ApplicationUninstallerEntry>(selectedUninstallers);
+                allUninstallerList = allUninstallers as IList<ApplicationUninstallerEntry> ?? allUninstallers.ToList();
+
                 if (!_settings.AdvancedDisableProtection)
                 {
                     var protectedTargets = targetList.Where(x => x.IsProtected).ToList();
                     if (
-                        MessageBoxes.ProtectedItemsWarningQuestion(wizard, protectedTargets.Select(x => x.DisplayName).ToArray()) ==
+                        MessageBoxes.ProtectedItemsWarningQuestionW(wizard, protectedTargets.Select(x => x.DisplayName).ToArray()) ==
                         MessageBoxes.PressedButton.Cancel)
                     {
                         FinallyAction();
@@ -340,7 +342,7 @@ namespace BulkCrapUninstaller.Functions
 
                 if (!targetList.Any())
                 {
-                    MessageBoxes.NoUninstallersSelectedInfo(wizard);
+                    MessageBoxes.NoUninstallersSelectedInfoW(wizard);
                     FinallyAction();
                     wizard.Close();
                     return;
@@ -385,7 +387,7 @@ namespace BulkCrapUninstaller.Functions
                             }
                             catch (Exception exception)
                             {
-                                PremadeDialogs.GenericError(wizard, exception);
+                                PremadeDialogs.GenericErrorW(wizard, exception);
                             }
                         }
 
@@ -412,7 +414,7 @@ namespace BulkCrapUninstaller.Functions
                                                                && !bulkUninstallEntry.UninstallerEntry.RegKeyStillExists())
                                                      select bulkUninstallEntry.UninstallerEntry;
 
-                        if (MessageBoxes.LookForJunkQuestion(wizard))
+                        if (MessageBoxes.LookForJunkQuestionW(wizard))
                             SearchForAndRemoveJunkW(wizard, junkRemoveTargetsQuery, allUninstallerList);
 
                         if (_settings.ExternalEnable && _settings.ExternalPostCommands.IsNotEmpty())
@@ -607,7 +609,7 @@ namespace BulkCrapUninstaller.Functions
 
             if (error != null)
             {
-                PremadeDialogs.GenericError(owner, error);
+                PremadeDialogs.GenericErrorW(owner, error);
                 return false;
             }
 
@@ -634,7 +636,7 @@ namespace BulkCrapUninstaller.Functions
                 if (!Settings.Default.AdvancedDisableProtection && protectedItems.Any())
                 {
                     var affectedKeyNames = protectedItems.Select(x => x.DisplayName).ToArray();
-                    if (MessageBoxes.ProtectedItemsWarningQuestion(junkWindow, affectedKeyNames) == MessageBoxes.PressedButton.Cancel)
+                    if (MessageBoxes.ProtectedItemsWarningQuestionW(junkWindow, affectedKeyNames) == MessageBoxes.PressedButton.Cancel)
                     {
                         junkWindow.Close();
                         return;
@@ -645,7 +647,7 @@ namespace BulkCrapUninstaller.Functions
 
                 if (!items.Any())
                 {
-                    MessageBoxes.NoUninstallersSelectedInfo(junkWindow);
+                    MessageBoxes.NoUninstallersSelectedInfoW(junkWindow);
                     junkWindow.Close();
                     return;
                 }
@@ -697,7 +699,7 @@ namespace BulkCrapUninstaller.Functions
 
                 if (error != null)
                 {
-                    PremadeDialogs.GenericError(junkWindow, error);
+                    PremadeDialogs.GenericErrorW(junkWindow, error);
                     junkWindow.Close();
                     FinallyAction();
                     return;
@@ -705,7 +707,7 @@ namespace BulkCrapUninstaller.Functions
 
                 if (!junk.Any(x => _settings.MessagesShowAllBadJunk || x.Confidence.GetRawConfidence() >= 0))
                 {
-                    MessageBoxes.NoJunkFoundInfo(junkWindow);
+                    MessageBoxes.NoJunkFoundInfoW(junkWindow);
                     junkWindow.Close();
                     FinallyAction();
                     return;
@@ -845,7 +847,7 @@ namespace BulkCrapUninstaller.Functions
         {
             if (!junk.Any(x => _settings.MessagesShowAllBadJunk || x.Confidence.GetRawConfidence() >= 0))
             {
-                MessageBoxes.NoJunkFoundInfo(owner);
+                MessageBoxes.NoJunkFoundInfoW(owner);
                 return false;
             }
 
@@ -1153,7 +1155,7 @@ namespace BulkCrapUninstaller.Functions
                 return true;
             }
 
-            MessageBoxes.UninstallAlreadyRunning(owner);
+            MessageBoxes.UninstallAlreadyRunningW(owner);
             return false;
         }
 #endif
@@ -1264,85 +1266,90 @@ namespace BulkCrapUninstaller.Functions
 #if WPF_TEST
         public void ModifyW(IEnumerable<ApplicationUninstallerEntry> selectedUninstallers)
         {
-            if (!TryGetUninstallLockW(null)) return;
-
             try
             {
+                ApplicationUninstallerEntry selected = null;
+
+                var waiter = new ProcessWaiter(Resources.Icon_Logo, ProcessWaiterCloseAction)
+                {
+                    StartPosition = FormStartPosition.CenterScreen
+                };
+
+                waiter.Show();
+
+                if (!TryGetUninstallLockW(waiter))
+                {
+                    waiter.Close();
+                    return;
+                }
+
                 _lockApplication(true);
 
                 var results = selectedUninstallers.Take(2).ToList();
 
                 if (results.Count != 1)
                 {
-                    MessageBoxes.CanSelectOnlyOneItemInfo();
+                    MessageBoxes.CanSelectOnlyOneItemInfoW(waiter);
                     FinallyAction();
+                    waiter.Close();
                     return;
                 }
 
-                var selected = results.First();
+                selected = results.First();
 
                 if (!_settings.AdvancedDisableProtection && selected.IsProtected)
                 {
-                    MessageBoxes.ProtectedItemError(selected.DisplayName);
+                    MessageBoxes.ProtectedItemErrorW(waiter, selected.DisplayName);
                     FinallyAction();
+                    waiter.Close();
                     return;
                 }
 
                 if (string.IsNullOrEmpty(selected.ModifyPath))
                 {
-                    MessageBoxes.ModifyCommandMissing();
+                    MessageBoxes.ModifyCommandMissingW(waiter);
                     FinallyAction();
+                    waiter.Close();
                     return;
                 }
 
                 var filters = new[] { selected }.SelectMany(e => new[] { e.InstallLocation, e.UninstallerLocation })
-                .Where(s => !string.IsNullOrEmpty(s)).Distinct().ToArray();
+                    .Where(s => !string.IsNullOrEmpty(s)).Distinct().ToArray();
 
                 var idsToCheck = GetRelatedProcessIds(filters, true);
 
-                if (idsToCheck.Length > 0)
+                if (idsToCheck.Length <= 0)
                 {
-                    var waiter = new ProcessWaiter(Resources.Icon_Logo, ProcessWaiterCloseAction)
+                    FinallyAction();
+                    waiter.Close();
+                    return;
+                }
+
+                waiter.Initialize(idsToCheck.ToArray(), false);
+
+                void ProcessWaiterCloseAction(ProcessWaiter waiter)
+                {
+                    if (waiter.DialogResult != DialogResult.OK)
                     {
-                        StartPosition = FormStartPosition.CenterScreen
-                    };
+                        FinallyAction();
+                        return;
+                    }
 
-                    MessageBoxes.DefaultOwner = waiter;
-                    LoadingDialog.DefaultOwner = waiter;
-                    PremadeDialogs.DefaultOwner = waiter;
+                    var listRefreshNeeded = false;
 
-                    waiter.Show();
-
-                    waiter.Initialize(idsToCheck.ToArray(), false);
-
-                    void ProcessWaiterCloseAction(bool dialogResultsOK)
+                    try
                     {
-                        MessageBoxes.DefaultOwner = null;
-                        LoadingDialog.DefaultOwner = null;
-                        PremadeDialogs.DefaultOwner = null;
-
-                        if (!dialogResultsOK)
-                        {
-                            FinallyAction();
-                            return;
-                        }
-
-                        var listRefreshNeeded = false;
-
-                        try
-                        {
-                            selected.Modify(_settings.AdvancedSimulate);
-                        }
-                        catch (Exception ex)
-                        {
-                            PremadeDialogs.GenericError(ex);
-                        }
-                        finally
-                        {
-                            FinallyAction();
-                            if (listRefreshNeeded)
-                                _initiateListRefresh();
-                        }
+                        selected.Modify(_settings.AdvancedSimulate);
+                    }
+                    catch (Exception ex)
+                    {
+                        PremadeDialogs.GenericErrorW(waiter, ex);
+                    }
+                    finally
+                    {
+                        FinallyAction();
+                        if (listRefreshNeeded)
+                            _initiateListRefresh();
                     }
                 }
             }

@@ -19,6 +19,7 @@ namespace BulkCrapUninstaller.Functions.Tools
         /// </summary>
         private static long _currentRestoreId;
 
+#if !WPF_TEST
         /// <summary>
         ///     Ask the user to begin system restore and do so if he accepts. Returns false if user decides to cancel the
         ///     operation.
@@ -55,13 +56,14 @@ namespace BulkCrapUninstaller.Functions.Tools
             }
             return true;
         }
+#endif
 
 #if WPF_TEST
         public static bool BeginSysRestoreW(Form owner, int count, bool displayMessage = true)
         {
             if (SysRestore.SysRestoreAvailable())
             {
-                switch (displayMessage ? MessageBoxes.SysRestoreBeginQuestion(owner) : MessageBoxes.PressedButton.Yes)
+                switch (displayMessage ? MessageBoxes.SysRestoreBeginQuestionW(owner) : MessageBoxes.PressedButton.Yes)
                 {
                     case MessageBoxes.PressedButton.Yes:
                         var error = LoadingDialog.ShowDialog(owner, Localisable.LoadingDialogTitleCreatingRestorePoint, x =>
@@ -76,7 +78,7 @@ namespace BulkCrapUninstaller.Functions.Tools
                         });
 
                         return error == null ||
-                               MessageBoxes.SysRestoreContinueAfterError(owner, error.Message) ==
+                               MessageBoxes.SysRestoreContinueAfterErrorW(owner, error.Message) ==
                                MessageBoxes.PressedButton.Yes;
 
                     default:

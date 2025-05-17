@@ -184,7 +184,11 @@ namespace BulkCrapUninstaller.Forms
 
                         if (!selectedTaskEntries.Any())
                         {
+#if WPF_TEST
+                            MessageBoxes.NoUninstallersSelectedInfoW(this);
+#else
                             MessageBoxes.NoUninstallersSelectedInfo();
+#endif
 
                             PageNumber = 1;
                             return;

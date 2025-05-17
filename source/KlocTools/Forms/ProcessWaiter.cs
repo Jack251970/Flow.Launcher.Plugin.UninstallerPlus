@@ -22,10 +22,10 @@ namespace Klocman.Forms
 
         #region For WPF_TEST
 
-        private readonly Action<bool> _closedAction;
+        private readonly Action<ProcessWaiter> _closedAction;
         private bool _initialized;
 
-        public ProcessWaiter(System.Drawing.Icon icon, Action<bool> closeAction)
+        public ProcessWaiter(System.Drawing.Icon icon, Action<ProcessWaiter> closeAction)
         {
             _closedAction = closeAction;
             FormClosed += JunkRemoveWindow_FormClosed;
@@ -43,7 +43,7 @@ namespace Klocman.Forms
         {
             if (_initialized)
             {
-                _closedAction.Invoke(DialogResult == DialogResult.OK);
+                _closedAction.Invoke(this);
             }
         }
 
