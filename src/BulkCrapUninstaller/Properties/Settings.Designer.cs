@@ -1,4 +1,5 @@
 ﻿using Klocman;
+using System;
 using System.ComponentModel;
 using System.Configuration;
 using System.Runtime.CompilerServices;
@@ -17,6 +18,68 @@ public sealed partial class Settings : ApplicationSettingsBase
     private void OnPropertyChanged([CallerMemberName] string propertyName = null)
     {
         OnPropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    // Provides indexer access to each setting by name, for compatibility with Klocman.Binding.Settings.SettingBinder
+    public override object this[string propertyName]
+    {
+        get => propertyName switch
+        {
+            nameof(BackupLeftovers) => BackupLeftovers,
+            nameof(MessagesRemoveJunk) => MessagesRemoveJunk,
+            nameof(MessagesAskRemoveLoudItems) => MessagesAskRemoveLoudItems,
+            nameof(MessagesRestorePoints) => MessagesRestorePoints,
+            nameof(ExternalEnable) => ExternalEnable,
+            nameof(ExternalPreCommands) => ExternalPreCommands,
+            nameof(ExternalPostCommands) => ExternalPostCommands,
+            nameof(MessagesShowAllBadJunk) => MessagesShowAllBadJunk,
+            nameof(BackupLeftoversDirectory) => BackupLeftoversDirectory,
+            nameof(UninstallPreventShutdown) => UninstallPreventShutdown,
+            nameof(CreateRestorePoint) => CreateRestorePoint,
+            nameof(UninstallConcurrency) => UninstallConcurrency,
+            nameof(UninstallConcurrentOneLoud) => UninstallConcurrentOneLoud,
+            nameof(UninstallConcurrentDisableManualCollisionProtection) => UninstallConcurrentDisableManualCollisionProtection,
+            nameof(UninstallConcurrentMaxCount) => UninstallConcurrentMaxCount,
+            nameof(AdvancedIntelligentUninstallerSorting) => AdvancedIntelligentUninstallerSorting,
+            nameof(AdvancedDisableProtection) => AdvancedDisableProtection,
+            nameof(AdvancedSimulate) => AdvancedSimulate,
+            nameof(QuietAutoKillStuck) => QuietAutoKillStuck,
+            nameof(QuietRetryFailedOnce) => QuietRetryFailedOnce,
+            nameof(QuietAutomatization) => QuietAutomatization,
+            nameof(QuietAutomatizationKillStuck) => QuietAutomatizationKillStuck,
+            nameof(QuietUseDaemon) => QuietUseDaemon,
+            _ => throw new SettingsPropertyNotFoundException($"Property {propertyName} not found."),
+        };
+        set
+        {
+            switch (propertyName)
+            {
+                case nameof(BackupLeftovers): BackupLeftovers = (YesNoAsk)value; break;
+                case nameof(MessagesRemoveJunk): MessagesRemoveJunk = (YesNoAsk)value; break;
+                case nameof(MessagesAskRemoveLoudItems): MessagesAskRemoveLoudItems = Convert.ToBoolean(value); break;
+                case nameof(MessagesRestorePoints): MessagesRestorePoints = (YesNoAsk)value; break;
+                case nameof(ExternalEnable): ExternalEnable = Convert.ToBoolean(value); break;
+                case nameof(ExternalPreCommands): ExternalPreCommands = Convert.ToString(value); break;
+                case nameof(ExternalPostCommands): ExternalPostCommands = Convert.ToString(value); break;
+                case nameof(MessagesShowAllBadJunk): MessagesShowAllBadJunk = Convert.ToBoolean(value); break;
+                case nameof(BackupLeftoversDirectory): BackupLeftoversDirectory = Convert.ToString(value); break;
+                case nameof(UninstallPreventShutdown): UninstallPreventShutdown = Convert.ToBoolean(value); break;
+                case nameof(CreateRestorePoint): CreateRestorePoint = Convert.ToBoolean(value); break;
+                case nameof(UninstallConcurrency): UninstallConcurrency = Convert.ToBoolean(value); break;
+                case nameof(UninstallConcurrentOneLoud): UninstallConcurrentOneLoud = Convert.ToBoolean(value); break;
+                case nameof(UninstallConcurrentDisableManualCollisionProtection): UninstallConcurrentDisableManualCollisionProtection = Convert.ToBoolean(value); break;
+                case nameof(UninstallConcurrentMaxCount): UninstallConcurrentMaxCount = Convert.ToInt32(value); break;
+                case nameof(AdvancedIntelligentUninstallerSorting): AdvancedIntelligentUninstallerSorting = Convert.ToBoolean(value); break;
+                case nameof(AdvancedDisableProtection): AdvancedDisableProtection = Convert.ToBoolean(value); break;
+                case nameof(AdvancedSimulate): AdvancedSimulate = Convert.ToBoolean(value); break;
+                case nameof(QuietAutoKillStuck): QuietAutoKillStuck = Convert.ToBoolean(value); break;
+                case nameof(QuietRetryFailedOnce): QuietRetryFailedOnce = Convert.ToBoolean(value); break;
+                case nameof(QuietAutomatization): QuietAutomatization = Convert.ToBoolean(value); break;
+                case nameof(QuietAutomatizationKillStuck): QuietAutomatizationKillStuck = Convert.ToBoolean(value); break;
+                case nameof(QuietUseDaemon): QuietUseDaemon = Convert.ToBoolean(value); break;
+                default: throw new SettingsPropertyNotFoundException($"Property {propertyName} not found.");
+            }
+        }
     }
 
     #region Uninstallation Settings
