@@ -1,5 +1,6 @@
 ﻿using BulkCrapUninstaller.Functions;
 using BulkCrapUninstaller.Properties;
+using Klocman.Forms.Tools;
 using System;
 using System.Collections.Generic;
 using UninstallTools;
@@ -16,9 +17,10 @@ public class MainWindow
 
     private readonly AppUninstaller _appUninstaller;
 
-    public MainWindow(Action listRefreshCallback)
+    public MainWindow(Action listRefreshCallback, Action<Exception> sendErrorAction)
     {
         _appUninstaller = new AppUninstaller(listRefreshCallback, b => { }, b => { });
+        PremadeDialogs.SendErrorAction = sendErrorAction;
     }
 
     public void RunLoudUninstall(IEnumerable<ApplicationUninstallerEntry> selectedUninstallers,
