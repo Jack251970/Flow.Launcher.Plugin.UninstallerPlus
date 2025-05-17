@@ -9,6 +9,7 @@ using System.Windows.Threading;
 using UninstallTools;
 using UninstallTools.Controls;
 using UninstallTools.Factory;
+using BCUSettings = BulkCrapUninstaller.Properties.Settings;
 
 namespace BulkCrapUninstaller.WPF.Test;
 
@@ -37,6 +38,7 @@ public partial class MainWindow : Window
     private const string TweakRateId = "tweak";
 
     private readonly Settings _settings = new();
+    private readonly BCUSettings _bCUSettings = new();
     
     private const int QueryUpdateSemaphoreMaxCount = 1;
     private readonly SemaphoreSlim _queryUpdateSemaphore = new(1, QueryUpdateSemaphoreMaxCount);
@@ -49,6 +51,18 @@ public partial class MainWindow : Window
         _iconGetter = new UninstallerIconGetter();
         _mainWindow = new Forms.Windows.MainWindow(InitiateListRefresh, (e) => { Debugger.Break(); });
         UninstallToolsGlobalConfig.Initialize();
+
+        _bCUSettings.PropertyChanged += BCUSettings_PropertyChanged;
+    }
+
+    private void BCUSettings_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        switch (e.PropertyName)
+        {
+            case nameof(BCUSettings.UninstallPreventShutdown):
+                Debug.WriteLine("UninstallPreventShutdown changed to " + _bCUSettings.UninstallPreventShutdown);
+                break;
+        }
     }
 
     private void Window_Loaded(object sender, RoutedEventArgs e)
