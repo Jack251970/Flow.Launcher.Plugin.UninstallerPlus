@@ -13,4 +13,11 @@
     <ProjectReference Include="..\BulkCrapUninstaller\BulkCrapUninstaller.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="..\Flow.Launcher.Plugin.UninstallerPlus\Resources\**\*">
+      <Link>%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
