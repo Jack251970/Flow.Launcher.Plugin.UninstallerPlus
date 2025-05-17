@@ -196,8 +196,7 @@ namespace BulkCrapUninstaller.Functions
                         MessageBoxes.PressedButton.Cancel)
                     {
 #if WPF_TEST
-                        ReleaseUninstallLock();
-                        SystemRestore.EndSysRestore();
+                        FinallyAction();
 #endif
                         return;
                     } 
@@ -216,7 +215,7 @@ namespace BulkCrapUninstaller.Functions
 
                     wizard.Initialize(targetList, allUninstallerList.ToList(), quiet);
 
-                    wizard.StartPosition = FormStartPosition.CenterParent;
+                    wizard.StartPosition = FormStartPosition.CenterScreen;
 
                     wizard.Show();
 
@@ -294,22 +293,9 @@ namespace BulkCrapUninstaller.Functions
                                     controller => { RunExternalCommands(_settings.ExternalPostCommands, controller); });
                             }
                         }
-                        catch (ObjectDisposedException ex)
-                        {
-                            // ODE at CreateHandle can be caused by closing main window in the middle of the process
-                            // It gets thrown at ShowDialog, it's safe to cancel the process at these points
-                            ReleaseUninstallLock();
-                            SystemRestore.EndSysRestore();
-                            _lockApplication(false);
-                            _visibleCallback(true);
-                            if (ex.TargetSite?.Name != "CreateHandle") throw;
-                        }
                         catch (Exception)
                         {
-                            ReleaseUninstallLock();
-                            SystemRestore.EndSysRestore();
-                            _lockApplication(false);
-                            _visibleCallback(true);
+                            // Ignored
                         }
 
                         return listRefreshNeeded;
@@ -396,17 +382,12 @@ namespace BulkCrapUninstaller.Functions
                 }
             }
 #if WPF_TEST
-            catch (ObjectDisposedException ex)
-            {
-                // ODE at CreateHandle can be caused by closing main window in the middle of the process
-                // It gets thrown at ShowDialog, it's safe to cancel the process at these points
-                ReleaseUninstallLock();
-                SystemRestore.EndSysRestore();
-                _lockApplication(false);
-                _visibleCallback(true);
-                if (ex.TargetSite?.Name != "CreateHandle") throw;
-            }
             catch (Exception)
+            {
+                FinallyAction();
+            }
+
+            void FinallyAction()
             {
                 ReleaseUninstallLock();
                 SystemRestore.EndSysRestore();
