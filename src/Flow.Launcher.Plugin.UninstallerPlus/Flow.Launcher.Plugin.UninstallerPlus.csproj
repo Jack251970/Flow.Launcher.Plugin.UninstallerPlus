@@ -51,7 +51,6 @@
       <Link>%(Filename)%(Extension)</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    
   </ItemGroup>
 
   <ItemGroup>
