@@ -203,6 +203,23 @@ namespace BulkCrapUninstaller.Functions
                     SystemIcons.Information, Buttons.ButtonOk));
         }
 
+        #region For WPF_TEST
+
+        internal static void NoJunkFoundInfo(Form owner)
+        {
+            // If automatically searching for junk do not show this message
+            if (Settings.Default.MessagesRemoveJunk == YesNoAsk.Yes)
+                return;
+
+            CustomMessageBox.ShowDialog(owner,
+                new CmbBasicSettings(Localisable.MessageBoxes_Title_Leftover_removal,
+                    Localisable.MessageBoxes_NoJunkFoundInfo_Message,
+                    Localisable.MessageBoxes_NoJunkFoundInfo_Details,
+                    SystemIcons.Information, Buttons.ButtonOk));
+        }
+
+        #endregion
+
         internal static void NoNetworkConnected()
         {
             CustomMessageBox.ShowDialog(DefaultOwner,
@@ -227,6 +244,19 @@ namespace BulkCrapUninstaller.Functions
                     Localisable.MessageBoxes_NoUninstallersSelectedInfo_Details,
                     SystemIcons.Warning, Buttons.ButtonOk));
         }
+
+        #region For WPF_TEST
+
+        internal static void NoUninstallersSelectedInfo(Form owner)
+        {
+            CustomMessageBox.ShowDialog(owner,
+                new CmbBasicSettings(Localisable.MessageBoxes_NoUninstallersSelectedInfo_Title,
+                    Localisable.MessageBoxes_NoUninstallersSelectedInfo_Message,
+                    Localisable.MessageBoxes_NoUninstallersSelectedInfo_Details,
+                    SystemIcons.Warning, Buttons.ButtonOk));
+        }
+
+        #endregion
 
         internal static bool OpenDirectoriesMessageBox(int sourceDirCount)
         {
@@ -335,6 +365,31 @@ namespace BulkCrapUninstaller.Functions
                     return PressedButton.Cancel;
             }
         }
+
+        #region For WPF_TEST
+
+        internal static PressedButton ProtectedItemsWarningQuestion(Form owner, string[] affectedKeyNames)
+        {
+            if (!affectedKeyNames.Any())
+                return PressedButton.Yes;
+
+            switch (
+                CustomMessageBox.ShowDialog(owner,
+                    new CmbBasicSettings(Localisable.MessageBoxes_Title_Modify_protected_items,
+                        Localisable.MessageBoxes_ProtectedItemsWarningQuestion_Message,
+                        string.Format(CultureInfo.InvariantCulture, Localisable.MessageBoxes_ProtectedItemsWarningQuestion_Details,
+                            string.Join("\n", affectedKeyNames)),
+                        SystemIcons.Warning, Buttons.ButtonRemove, Buttons.ButtonCancel)))
+            {
+                case CustomMessageBox.PressedButton.Middle:
+                    return PressedButton.Yes;
+
+                default:
+                    return PressedButton.Cancel;
+            }
+        }
+
+        #endregion
 
         internal static PressedButton QuietUninstallersNotAvailableQuestion(string[] nonQuiet)
         {
@@ -536,6 +591,15 @@ namespace BulkCrapUninstaller.Functions
         {
             PremadeDialogs.GenericError(Localisable.MessageBoxes_UninstallAlreadyRunning_Message);
         }
+
+        #region For WPF_TEST
+
+        internal static void UninstallAlreadyRunning(Form owner)
+        {
+            PremadeDialogs.GenericError(owner, Localisable.MessageBoxes_UninstallAlreadyRunning_Message);
+        }
+
+        #endregion
 
         internal static void UninstallMsiGuidMissing()
         {

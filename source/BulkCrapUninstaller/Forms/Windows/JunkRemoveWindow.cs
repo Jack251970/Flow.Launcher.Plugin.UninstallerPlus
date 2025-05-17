@@ -35,10 +35,10 @@ namespace BulkCrapUninstaller.Forms
         private TypedObjectListView<IJunkResult> _listViewWrapper;
 
 #if WPF_TEST
-        private readonly Action<IEnumerable<IJunkResult>, bool> _closedAction;
+        private readonly Action<JunkRemoveWindow> _closedAction;
         private bool _initialized;
 
-        public JunkRemoveWindow(Action<IEnumerable<IJunkResult>, bool> closedAction)
+        public JunkRemoveWindow(Action<JunkRemoveWindow> closedAction)
         {
             _closedAction = closedAction;
             FormClosed += JunkRemoveWindow_FormClosed;
@@ -52,7 +52,7 @@ namespace BulkCrapUninstaller.Forms
         {
             if (_initialized)
             {
-                _closedAction.Invoke(SelectedJunk, DialogResult == DialogResult.OK);
+                _closedAction.Invoke(this);
             }
         }
 

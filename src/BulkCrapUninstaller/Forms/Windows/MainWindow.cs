@@ -42,24 +42,6 @@ public class MainWindow
     public void RunManualUninstall(IEnumerable<ApplicationUninstallerEntry> selectedUninstallers,
         IEnumerable<ApplicationUninstallerEntry> allUninstallers)
     {
-        var items = selectedUninstallers.ToArray();
-        var protectedItems = items.Where(x => x.IsProtected).ToArray();
-
-        if (!Settings.Default.AdvancedDisableProtection && protectedItems.Any())
-        {
-            var affectedKeyNames = protectedItems.Select(x => x.DisplayName).ToArray();
-            if (MessageBoxes.ProtectedItemsWarningQuestion(affectedKeyNames) == MessageBoxes.PressedButton.Cancel)
-                return;
-
-            items = selectedUninstallers.Where(x => !x.IsProtected).ToArray();
-        }
-
-        if (!items.Any())
-        {
-            MessageBoxes.NoUninstallersSelectedInfo();
-            return;
-        }
-
-        _appUninstaller.AdvancedUninstallW(items, allUninstallers);
+        _appUninstaller.AdvancedUninstallW(selectedUninstallers, allUninstallers);
     }
 }

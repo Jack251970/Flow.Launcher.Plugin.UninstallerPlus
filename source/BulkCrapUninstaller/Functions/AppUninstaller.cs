@@ -100,6 +100,17 @@ namespace BulkCrapUninstaller.Functions
             return CheckForRunningProcesses(filters, false);
         }
 
+#if WPF_TEST
+        private static bool CheckForRunningProcessesBeforeCleanup(Form owner, IEnumerable<IJunkResult> entries)
+        {
+            var filters = entries.OfType<FileSystemJunk>()
+                .Select(x => x.Path.FullName)
+                .Distinct().ToArray();
+
+            return CheckForRunningProcesses(filters, false, owner);
+        }
+#endif
+
         public static IEnumerable<ApplicationUninstallerEntry> GetApplicationsFromProcess(
             IEnumerable<ApplicationUninstallerEntry> allApplications, Process targetProcess)
         {
@@ -523,12 +534,8 @@ namespace BulkCrapUninstaller.Functions
         public void AdvancedUninstallW(IEnumerable<ApplicationUninstallerEntry> selectedUninstallers,
             IEnumerable<ApplicationUninstallerEntry> allUninstallers)
         {
-            if (!TryGetUninstallLock()) return;
-
             try
             {
-                _lockApplication(true);
-
                 var junkWindow = new JunkRemoveWindow(JunkRemoveWindowCloseAction)
                 {
                     StartPosition = FormStartPosition.CenterScreen
@@ -536,18 +543,36 @@ namespace BulkCrapUninstaller.Functions
 
                 junkWindow.Show();
 
-                MessageBoxes.DefaultOwner = junkWindow;
-                LoadingDialog.DefaultOwner = junkWindow;
-                PremadeDialogs.DefaultOwner = junkWindow;
+                var items = selectedUninstallers.ToArray();
+                var protectedItems = items.Where(x => x.IsProtected).ToArray();
+
+                if (!Settings.Default.AdvancedDisableProtection && protectedItems.Any())
+                {
+                    var affectedKeyNames = protectedItems.Select(x => x.DisplayName).ToArray();
+                    if (MessageBoxes.ProtectedItemsWarningQuestion(junkWindow, affectedKeyNames) == MessageBoxes.PressedButton.Cancel)
+                        return;
+
+                    items = selectedUninstallers.Where(x => !x.IsProtected).ToArray();
+                }
+
+                if (!items.Any())
+                {
+                    MessageBoxes.NoUninstallersSelectedInfo(junkWindow);
+                    return;
+                }
+
+                if (!TryGetUninstallLock(junkWindow)) return;
+
+                _lockApplication(true);
 
                 var junk = new List<IJunkResult>();
-                var error = LoadingDialog.ShowDialog(MessageBoxes.DefaultOwner, Localisable.LoadingDialogTitleLookingForJunk,
+                var error = LoadingDialog.ShowDialog(junkWindow, Localisable.LoadingDialogTitleLookingForJunk,
                     dialogInterface =>
                     {
                         var allValidUninstallers = allUninstallers.Where(y => y.RegKeyStillExists());
 
                         dialogInterface.SetSubProgressVisible(true);
-                        junk.AddRange(JunkManager.FindJunk(selectedUninstallers, allValidUninstallers.ToList(), x =>
+                        junk.AddRange(JunkManager.FindJunk(items, allValidUninstallers.ToList(), x =>
                         {
                             if (x.TotalCount <= 1)
                             {
@@ -579,7 +604,7 @@ namespace BulkCrapUninstaller.Functions
 
                 if (error != null)
                 {
-                    PremadeDialogs.GenericError(error);
+                    PremadeDialogs.GenericError(junkWindow, error);
                     junkWindow.Close();
                     FinallyAction();
                     return;
@@ -587,7 +612,7 @@ namespace BulkCrapUninstaller.Functions
 
                 if (!junk.Any(x => _settings.MessagesShowAllBadJunk || x.Confidence.GetRawConfidence() >= 0))
                 {
-                    MessageBoxes.NoJunkFoundInfo();
+                    MessageBoxes.NoJunkFoundInfo(junkWindow);
                     junkWindow.Close();
                     FinallyAction();
                     return;
@@ -595,28 +620,24 @@ namespace BulkCrapUninstaller.Functions
 
                 junkWindow.Initialize(junk);
 
-                void JunkRemoveWindowCloseAction(IEnumerable<IJunkResult> selectedResults, bool dialogResultsOK)
+                void JunkRemoveWindowCloseAction(JunkRemoveWindow junkWindow)
                 {
-                    MessageBoxes.DefaultOwner = null;
-                    LoadingDialog.DefaultOwner = null;
-                    PremadeDialogs.DefaultOwner = null;
-
-                    if (!dialogResultsOK)
+                    if (junkWindow.ShowDialog() != DialogResult.OK)
                     {
                         FinallyAction();
                         return;
                     }
 
-                    var selectedJunk = selectedResults.ToList();
+                    var selectedJunk = junkWindow.SelectedJunk.ToList();
 
-                    if (!CheckForRunningProcessesBeforeCleanup(selectedJunk))
+                    if (!CheckForRunningProcessesBeforeCleanup(junkWindow, selectedJunk))
                     {
                         FinallyAction();
                         return;
                     }
 
                     //Removing the junk
-                    LoadingDialog.ShowDialog(MessageBoxes.DefaultOwner, Localisable.LoadingDialogTitleRemovingJunk, controller =>
+                    LoadingDialog.ShowDialog(junkWindow, Localisable.LoadingDialogTitleRemovingJunk, controller =>
                     {
                         var top = selectedJunk.Count;
                         controller.SetMaximum(top);
@@ -959,6 +980,20 @@ namespace BulkCrapUninstaller.Functions
             MessageBoxes.UninstallAlreadyRunning();
             return false;
         }
+
+#if WPF_TEST
+        private bool TryGetUninstallLock(Form owner)
+        {
+            if (Monitor.TryEnter(_uninstallLock))
+            {
+                Monitor.Enter(PublicUninstallLock);
+                return true;
+            }
+
+            MessageBoxes.UninstallAlreadyRunning(owner);
+            return false;
+        }
+#endif
 
         public static ICollection<ApplicationUninstallerEntry> GetApplicationsFromDirectories(
             IEnumerable<ApplicationUninstallerEntry> allUninstallers, ICollection<DirectoryInfo> results)

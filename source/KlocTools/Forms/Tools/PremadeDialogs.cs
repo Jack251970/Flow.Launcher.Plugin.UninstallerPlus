@@ -84,6 +84,23 @@ namespace Klocman.Forms.Tools
                 GenericError(ex.Message, GetExceptionDetailString(ex));
         }
 
+        #region For WPF_TEST
+
+        public static void GenericError(Form owner, Exception ex)
+        {
+            if (ex == null)
+                return;
+
+            Console.WriteLine(@"Showing error message: " + ex);
+
+            if (SendErrorAction != null)
+                SendErrorQuestion(owner, ex);
+            else
+                GenericError(owner, ex.Message, GetExceptionDetailString(ex));
+        }
+
+        #endregion
+
         private static string GetExceptionDetailString(Exception ex)
         {
             if (ex == null) return string.Empty;
@@ -154,6 +171,33 @@ namespace Klocman.Forms.Tools
                 GenericErrorSafe(errorType, additionalInfo);
         }
 
+        #region For WPF_TEST
+
+        public static void GenericError(Form owner, string errorType, string additionalInfo = null)
+        {
+            if (string.IsNullOrEmpty(errorType))
+                return;
+
+            if (string.IsNullOrEmpty(additionalInfo))
+                additionalInfo = errorType;
+
+            var entryAsy = Assembly.GetEntryAssembly();
+            if (entryAsy != null)
+            {
+                var asyName = entryAsy.GetName();
+                var bits = ProcessTools.Is64BitProcess ? "64bit" : "32bit";
+                additionalInfo =
+                    $"{asyName.FullName} | {asyName.ProcessorArchitecture} | {Environment.OSVersion} | {bits}\n{additionalInfo}";
+            }
+
+            if (owner != null)
+                owner.SafeInvoke(() => GenericErrorSafe(errorType, additionalInfo));
+            else
+                GenericErrorSafe(errorType, additionalInfo);
+        }
+
+        #endregion
+
         private static bool KillRunningProcessesQuestionSafe()
         {
             return CustomMessageBox.ShowDialog(DefaultOwner,
@@ -194,6 +238,38 @@ namespace Klocman.Forms.Tools
                     break;
             }
         }
+
+        #region For WPF_TEST
+
+        private static void SendErrorQuestion(Form owner, Exception ex)
+        {
+            switch (CustomMessageBox.ShowDialog(owner,
+                new CmbBasicSettings(Localisation.PremadeDialogs_GenericError_Title,
+                    Localisation.PremadeDialogs_GenericError_Heading,
+                    string.Format(Localisation.PremadeDialogs_GenericError_Details, ex.Message), SystemIcons.Error,
+                    Buttons.ButtonSubmit, Buttons.ButtonCopy, Buttons.ButtonClose)))
+            {
+                case CustomMessageBox.PressedButton.Left:
+                    SendErrorAction.Invoke(ex);
+                    break;
+
+                case CustomMessageBox.PressedButton.Middle:
+                    var fullInfo = GetExceptionDetailString(ex);
+                    try
+                    {
+                        if (owner != null)
+                            owner.SafeInvoke(() => Clipboard.SetText(fullInfo));
+                        else
+                            Clipboard.SetText(fullInfo);
+                    }
+                    catch (ExternalException)
+                    {
+                    }
+                    break;
+            }
+        }
+
+        #endregion
 
         private static void GenericErrorSafe(string errorType, string fullInfo)
         {
