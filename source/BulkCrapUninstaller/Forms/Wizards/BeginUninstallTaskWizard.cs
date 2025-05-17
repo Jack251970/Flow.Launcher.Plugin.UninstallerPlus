@@ -23,9 +23,9 @@ namespace BulkCrapUninstaller.Forms
         private bool _quiet;
         private ICollection<ApplicationUninstallerEntry> _selectedUninstallers;
 #if WPF_TEST
-        private bool _listRefreshNeeded;
         private readonly Func<BeginUninstallTaskWizard, bool> _action;
         private readonly Action<bool, bool> _closedAction;
+        private bool _listRefreshNeeded;
 #endif
 
 #if WPF_TEST
