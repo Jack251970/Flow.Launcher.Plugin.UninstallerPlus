@@ -217,6 +217,12 @@ namespace BulkCrapUninstaller.Forms
             RunBackup(dir);
         }
 
+        private void buttonCancel_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.Cancel;
+            Close();
+        }
+
         private void buttonExport_Click(object sender, EventArgs e)
         {
             exportDialog.ShowDialog();
