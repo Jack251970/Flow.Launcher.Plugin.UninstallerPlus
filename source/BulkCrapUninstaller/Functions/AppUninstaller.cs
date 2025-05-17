@@ -579,7 +579,10 @@ namespace BulkCrapUninstaller.Functions
                 {
                     var affectedKeyNames = protectedItems.Select(x => x.DisplayName).ToArray();
                     if (MessageBoxes.ProtectedItemsWarningQuestion(junkWindow, affectedKeyNames) == MessageBoxes.PressedButton.Cancel)
+                    {
+                        junkWindow.Close();
                         return;
+                    }
 
                     items = selectedUninstallers.Where(x => !x.IsProtected).ToArray();
                 }
@@ -587,10 +590,15 @@ namespace BulkCrapUninstaller.Functions
                 if (!items.Any())
                 {
                     MessageBoxes.NoUninstallersSelectedInfo(junkWindow);
+                    junkWindow.Close();
                     return;
                 }
 
-                if (!TryGetUninstallLock(junkWindow)) return;
+                if (!TryGetUninstallLock(junkWindow))
+                {
+                    junkWindow.Close();
+                    return;
+                }
 
                 _lockApplication(true);
 
