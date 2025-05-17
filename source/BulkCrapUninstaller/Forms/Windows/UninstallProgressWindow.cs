@@ -36,6 +36,7 @@ namespace BulkCrapUninstaller.Forms
 
         private int _sleepTimePassed;
 
+#if !WPF_TEST
         public static void ShowUninstallDialog(BulkUninstallTask status, Func<IEnumerable<ApplicationUninstallerEntry>, bool> uninstallManuallyAction)
         {
             _uninstallManuallyAction = uninstallManuallyAction;
@@ -46,6 +47,7 @@ namespace BulkCrapUninstaller.Forms
                 uninstallWindow.ShowDialog(MessageBoxes.DefaultOwner);
             }
         }
+#endif
 
 #if WPF_TEST
         public static void ShowUninstallDialogW(Form owner, BulkUninstallTask status, Func<IEnumerable<ApplicationUninstallerEntry>, bool> uninstallManuallyAction)
