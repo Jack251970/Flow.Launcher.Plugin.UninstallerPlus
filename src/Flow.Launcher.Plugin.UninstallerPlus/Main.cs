@@ -39,7 +39,8 @@ public class UninstallerPlus : IAsyncPlugin, IAsyncReloadable, IContextMenu, IPl
 
     private readonly List<ApplicationUninstallerEntry> FilteredUninstallers = new();
 
-    private readonly CancellationTokenSource _cancellationTokenSource = new();
+    private readonly CancellationTokenSource _refreshSource = new();
+    private readonly CancellationToken _refreshToken;
 
     private const string FlowLauncherDisplayName = "Flow Launcher";
     private const string FlowLauncherPublisher = "Flow-Launcher Team";
@@ -52,6 +53,15 @@ public class UninstallerPlus : IAsyncPlugin, IAsyncReloadable, IContextMenu, IPl
     private readonly SemaphoreSlim _queryUpdateSemaphore = new(1, 1);
 
     private MainWindow _mainWindow = null!;
+
+    #region Constructor
+
+    public UninstallerPlus()
+    {
+        _refreshToken = _refreshSource.Token;
+    }
+
+    #endregion
 
     #region IAsyncPlugin Interface
 
@@ -168,7 +178,7 @@ public class UninstallerPlus : IAsyncPlugin, IAsyncReloadable, IContextMenu, IPl
     {
         try
         {
-            Task.Run(() => ListRefreshThread(_cancellationTokenSource.Token), _cancellationTokenSource.Token);
+            Task.Run(() => ListRefreshThread(_refreshToken), _refreshToken);
         }
         catch (OperationCanceledException)
         {
@@ -499,7 +509,7 @@ public class UninstallerPlus : IAsyncPlugin, IAsyncReloadable, IContextMenu, IPl
             case nameof(Settings.FilterShowUpdates):
             case nameof(Settings.FilterShowWinFeatures):
             case nameof(Settings.FilterShowStoreApps):
-                _ = UpdateTextAsync(_cancellationTokenSource.Token);
+                _ = UpdateTextAsync(_refreshToken);
                 break;
             // Synchronize Flow settings with BCU settings
             case nameof(Settings.BackupLeftovers):
@@ -671,9 +681,9 @@ public class UninstallerPlus : IAsyncPlugin, IAsyncReloadable, IContextMenu, IPl
     {
         if (disposing)
         {
-            _cancellationTokenSource?.Cancel();
-            _queryUpdateSemaphore?.Dispose();
-            _cancellationTokenSource?.Dispose();
+            _refreshSource.Cancel();
+            _queryUpdateSemaphore.Dispose();
+            _refreshSource.Dispose();
             _iconGetter?.Dispose();
             _disposed = true;
         }

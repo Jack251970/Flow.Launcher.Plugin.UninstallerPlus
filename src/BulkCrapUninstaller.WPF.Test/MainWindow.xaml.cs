@@ -29,7 +29,8 @@ public partial class MainWindow : Window
 
     private readonly List<ApplicationUninstallerEntry> FilteredUninstallers = new();
 
-    private readonly CancellationTokenSource _cancellationTokenSource = new();
+    private readonly CancellationTokenSource _refreshSource = new();
+    private readonly CancellationToken _refreshToken;
 
     private const string FlowLauncherDisplayName = "Flow Launcher";
     private const string FlowLauncherPublisher = "Flow-Launcher Team";
@@ -47,6 +48,8 @@ public partial class MainWindow : Window
 
     public MainWindow()
     {
+        _refreshToken = _refreshSource.Token;
+
         InitializeComponent();
         _iconGetter = new UninstallerIconGetter();
         _mainWindow = new Forms.Windows.MainWindow(InitiateListRefresh, (e) => { Debugger.Break(); });
@@ -100,7 +103,7 @@ public partial class MainWindow : Window
             case nameof(Settings.FilterShowUpdates):
             case nameof(Settings.FilterShowWinFeatures):
             case nameof(Settings.FilterShowStoreApps):
-                _ = UpdateTextAsync(_cancellationTokenSource.Token);
+                _ = UpdateTextAsync(_refreshToken);
                 break;
             // Synchronize Flow settings with BCU settings
             case nameof(Settings.BackupLeftovers):
@@ -272,21 +275,21 @@ public partial class MainWindow : Window
 
     private void Window_Closing(object sender, CancelEventArgs e)
     {
-        _cancellationTokenSource?.Cancel();
+        _refreshSource.Cancel();
     }
 
     private void Window_Closed(object sender, EventArgs e)
     {
-        _queryUpdateSemaphore?.Dispose();
-        _cancellationTokenSource?.Dispose();
-        _iconGetter?.Dispose();
+        _queryUpdateSemaphore.Dispose();
+        _refreshSource.Dispose();
+        _iconGetter.Dispose();
     }
 
     private void InitiateListRefresh()
     {
         try
         {
-            Task.Run(() => ListRefreshThread(_cancellationTokenSource.Token), _cancellationTokenSource.Token);
+            Task.Run(() => ListRefreshThread(_refreshToken), _refreshToken);
         }
         catch (OperationCanceledException)
         {
@@ -441,7 +444,7 @@ public partial class MainWindow : Window
         {
             UninstallerListTextBlock.Text = uninstallerListText;
             Image.Source = GetIcon(FilteredUninstallers[0]);
-        }, DispatcherPriority.Normal, _cancellationTokenSource.Token);
+        }, DispatcherPriority.Normal, _refreshToken);
 
         _queryUpdateSemaphore.Release();
 
@@ -524,7 +527,7 @@ public partial class MainWindow : Window
                 return;
             }
 
-            await _queryUpdateSemaphore.WaitAsync(_cancellationTokenSource.Token);
+            await _queryUpdateSemaphore.WaitAsync(_refreshToken);
 
             foreach (var uninstaller in FilteredUninstallers)
             {
