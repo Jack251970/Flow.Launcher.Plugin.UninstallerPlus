@@ -91,6 +91,7 @@ namespace BulkCrapUninstaller.Functions
             return CheckForRunningProcesses(filters, doNotKillSteam);
         }
 
+#if !WPF_TEST
         private static bool CheckForRunningProcessesBeforeCleanup(IEnumerable<IJunkResult> entries)
         {
             var filters = entries.OfType<FileSystemJunk>()
@@ -99,9 +100,10 @@ namespace BulkCrapUninstaller.Functions
 
             return CheckForRunningProcesses(filters, false);
         }
+#endif
 
 #if WPF_TEST
-        private static bool CheckForRunningProcessesBeforeCleanup(Form owner, IEnumerable<IJunkResult> entries)
+        private static bool CheckForRunningProcessesBeforeCleanupW(Form owner, IEnumerable<IJunkResult> entries)
         {
             var filters = entries.OfType<FileSystemJunk>()
                 .Select(x => x.Path.FullName)
@@ -315,7 +317,7 @@ namespace BulkCrapUninstaller.Functions
 
                 wizard.Show();
 
-                if (!TryGetUninstallLock(wizard))
+                if (!TryGetUninstallLockW(wizard))
                 {
                     wizard.Close();
                     return;
@@ -401,7 +403,7 @@ namespace BulkCrapUninstaller.Functions
                             : 1;
                         status.Start();
 
-                        UninstallProgressWindow.ShowUninstallDialogW(wizard, status, entries => SearchForAndRemoveJunk(entries, allUninstallerList));
+                        UninstallProgressWindow.ShowUninstallDialogW(wizard, status, entries => SearchForAndRemoveJunkW(wizard, entries, allUninstallerList));
 
                         var junkRemoveTargetsQuery = from bulkUninstallEntry in status.AllUninstallersList
                                                      where bulkUninstallEntry.CurrentStatus == UninstallStatus.Completed
@@ -508,6 +510,7 @@ namespace BulkCrapUninstaller.Functions
         }
 #endif
 
+#if !WPF_TEST
         /// <summary>
         ///     Returns true if things were actually removed, false if user cancelled the operation.
         /// </summary>
@@ -559,6 +562,7 @@ namespace BulkCrapUninstaller.Functions
 
             return ShowJunkWindow(junk);
         }
+#endif
 
 #if WPF_TEST
         private bool SearchForAndRemoveJunkW(Form owner, IEnumerable<ApplicationUninstallerEntry> selectedUninstallers,
@@ -646,7 +650,7 @@ namespace BulkCrapUninstaller.Functions
                     return;
                 }
 
-                if (!TryGetUninstallLock(junkWindow))
+                if (!TryGetUninstallLockW(junkWindow))
                 {
                     junkWindow.Close();
                     return;
@@ -719,7 +723,7 @@ namespace BulkCrapUninstaller.Functions
 
                     var selectedJunk = junkWindow.SelectedJunk.ToList();
 
-                    if (!CheckForRunningProcessesBeforeCleanup(junkWindow, selectedJunk))
+                    if (!CheckForRunningProcessesBeforeCleanupW(junkWindow, selectedJunk))
                     {
                         FinallyAction();
                         return;
@@ -778,6 +782,7 @@ namespace BulkCrapUninstaller.Functions
         }
 #endif
 
+#if !WPF_TEST
         private bool ShowJunkWindow(List<IJunkResult> junk)
         {
             if (!junk.Any(x => _settings.MessagesShowAllBadJunk || x.Confidence.GetRawConfidence() >= 0))
@@ -833,6 +838,7 @@ namespace BulkCrapUninstaller.Functions
                 return true;
             }
         }
+#endif
 
 #if WPF_TEST
         private bool ShowJunkWindowW(Form owner, List<IJunkResult> junk)
@@ -849,7 +855,7 @@ namespace BulkCrapUninstaller.Functions
 
                 var selectedJunk = junkWindow.SelectedJunk.ToList();
 
-                if (!CheckForRunningProcessesBeforeCleanup(owner, selectedJunk)) return false;
+                if (!CheckForRunningProcessesBeforeCleanupW(owner, selectedJunk)) return false;
 
                 //Removing the junk
                 LoadingDialog.ShowDialog(owner, Localisable.LoadingDialogTitleRemovingJunk, controller =>
@@ -1120,6 +1126,7 @@ namespace BulkCrapUninstaller.Functions
             }
         }
 
+#if !WPF_TEST
         /// <summary>
         ///     Attempt to get the lock and display error popup if the process fails.
         /// </summary>
@@ -1135,9 +1142,10 @@ namespace BulkCrapUninstaller.Functions
             MessageBoxes.UninstallAlreadyRunning();
             return false;
         }
+#endif
 
 #if WPF_TEST
-        private bool TryGetUninstallLock(Form owner)
+        private bool TryGetUninstallLockW(Form owner)
         {
             if (Monitor.TryEnter(_uninstallLock))
             {
@@ -1256,7 +1264,7 @@ namespace BulkCrapUninstaller.Functions
 #if WPF_TEST
         public void ModifyW(IEnumerable<ApplicationUninstallerEntry> selectedUninstallers)
         {
-            if (!TryGetUninstallLock()) return;
+            if (!TryGetUninstallLockW(null)) return;
 
             try
             {
