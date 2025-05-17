@@ -204,9 +204,7 @@ namespace BulkCrapUninstaller.Functions
                     if (
                         MessageBoxes.ProtectedItemsWarningQuestion(protectedTargets.Select(x => x.DisplayName).ToArray()) ==
                         MessageBoxes.PressedButton.Cancel)
-                    {
                         return;
-                    } 
 
                     targetList.RemoveAll(protectedTargets);
                 }
