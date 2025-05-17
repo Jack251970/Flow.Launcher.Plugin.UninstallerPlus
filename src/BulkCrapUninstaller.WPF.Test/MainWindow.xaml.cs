@@ -48,6 +48,7 @@ public partial class MainWindow : Window
         InitializeComponent();
         _iconGetter = new UninstallerIconGetter();
         _mainWindow = new Forms.Windows.MainWindow(InitiateListRefresh);
+        UninstallToolsGlobalConfig.Initialize();
     }
 
     private void Window_Loaded(object sender, RoutedEventArgs e)
