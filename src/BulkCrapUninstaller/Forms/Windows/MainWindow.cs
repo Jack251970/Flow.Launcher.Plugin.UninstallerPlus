@@ -60,6 +60,6 @@ public class MainWindow
             return;
         }
 
-        _appUninstaller.AdvancedUninstall(items, allUninstallers);
+        _appUninstaller.AdvancedUninstallW(items, allUninstallers);
     }
 }

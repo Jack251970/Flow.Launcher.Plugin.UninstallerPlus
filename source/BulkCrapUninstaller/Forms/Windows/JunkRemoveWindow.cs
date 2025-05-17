@@ -34,6 +34,51 @@ namespace BulkCrapUninstaller.Forms
         private bool _confirmLowConfidenceMessageShown;
         private TypedObjectListView<IJunkResult> _listViewWrapper;
 
+#if WPF_TEST
+        private readonly Action<IEnumerable<IJunkResult>, bool> _closedAction;
+        private bool _initialized;
+
+        public JunkRemoveWindow(Action<IEnumerable<IJunkResult>, bool> closedAction)
+        {
+            _closedAction = closedAction;
+            FormClosed += JunkRemoveWindow_FormClosed;
+
+            InitializeComponent();
+
+            Icon = Resources.Icon_Logo;
+        }
+
+        private void JunkRemoveWindow_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            if (_initialized)
+            {
+                _closedAction.Invoke(SelectedJunk, DialogResult == DialogResult.OK);
+            }
+        }
+
+        public void Initialize(IEnumerable<IJunkResult> junk)
+        {
+            var junkNodes = junk as IList<IJunkResult> ?? junk.ToList();
+
+            SetupListView(junkNodes);
+
+            if (junkNodes.All(x => x.Confidence.GetRawConfidence() < 0))
+            {
+                _confirmLowConfidenceMessageShown = true;
+                checkBoxHideLowConfidence.Checked = true;
+                checkBoxHideLowConfidence.Enabled = false;
+            }
+            else if (junkNodes.All(x => x.Confidence.GetRawConfidence() >= 0))
+                checkBoxHideLowConfidence.Enabled = false;
+
+            new[] { ConfidenceLevel.VeryGood, ConfidenceLevel.Good, ConfidenceLevel.Questionable, ConfidenceLevel.Bad }
+                .ForEach(x => comboBoxChecker.Items.Add(new LocalisedEnumWrapper(x)));
+            comboBoxChecker_DropDownClosed(this, EventArgs.Empty);
+
+            _initialized = true;
+        }
+#endif
+
         public JunkRemoveWindow(IEnumerable<IJunkResult> junk)
         {
             InitializeComponent();

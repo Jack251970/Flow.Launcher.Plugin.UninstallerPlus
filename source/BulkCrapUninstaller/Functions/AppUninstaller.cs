@@ -515,6 +515,151 @@ namespace BulkCrapUninstaller.Functions
             return ShowJunkWindow(junk);
         }
 
+#if WPF_TEST
+        public void AdvancedUninstallW(IEnumerable<ApplicationUninstallerEntry> selectedUninstallers,
+            IEnumerable<ApplicationUninstallerEntry> allUninstallers)
+        {
+            if (!TryGetUninstallLock()) return;
+
+            try
+            {
+                _lockApplication(true);
+
+                var junkWindow = new JunkRemoveWindow(JunkRemoveWindowCloseAction)
+                {
+                    StartPosition = FormStartPosition.CenterScreen
+                };
+
+                junkWindow.Show();
+
+                MessageBoxes.DefaultOwner = junkWindow;
+                LoadingDialog.DefaultOwner = junkWindow;
+                PremadeDialogs.DefaultOwner = junkWindow;
+
+                var junk = new List<IJunkResult>();
+                var error = LoadingDialog.ShowDialog(MessageBoxes.DefaultOwner, Localisable.LoadingDialogTitleLookingForJunk,
+                    dialogInterface =>
+                    {
+                        var allValidUninstallers = allUninstallers.Where(y => y.RegKeyStillExists());
+
+                        dialogInterface.SetSubProgressVisible(true);
+                        junk.AddRange(JunkManager.FindJunk(selectedUninstallers, allValidUninstallers.ToList(), x =>
+                        {
+                            if (x.TotalCount <= 1)
+                            {
+                                // Don't update the title label to uninstaller name when there's only one uninstaller
+                                dialogInterface.SetMaximum(-1);
+                            }
+                            else
+                            {
+                                dialogInterface.SetMaximum(x.TotalCount);
+                                dialogInterface.SetProgress(x.CurrentCount, x.Message);
+                            }
+
+                            var inner = x.Inner;
+                            if (inner != null)
+                            {
+                                dialogInterface.SetSubMaximum(inner.TotalCount);
+                                dialogInterface.SetSubProgress(inner.CurrentCount, inner.Message);
+                            }
+                            else
+                            {
+                                dialogInterface.SetSubMaximum(-1);
+                                dialogInterface.SetSubProgress(0, string.Empty);
+                            }
+
+                            if (dialogInterface.Abort)
+                                throw new OperationCanceledException();
+                        }));
+                    });
+
+                if (error != null)
+                {
+                    PremadeDialogs.GenericError(error);
+                    junkWindow.Close();
+                    FinallyAction();
+                    return;
+                }
+
+                if (!junk.Any(x => _settings.MessagesShowAllBadJunk || x.Confidence.GetRawConfidence() >= 0))
+                {
+                    MessageBoxes.NoJunkFoundInfo();
+                    junkWindow.Close();
+                    FinallyAction();
+                    return;
+                }
+
+                junkWindow.Initialize(junk);
+
+                void JunkRemoveWindowCloseAction(IEnumerable<IJunkResult> selectedResults, bool dialogResultsOK)
+                {
+                    if (!dialogResultsOK)
+                    {
+                        FinallyAction();
+                        return;
+                    }
+
+                    var selectedJunk = selectedResults.ToList();
+
+                    if (!CheckForRunningProcessesBeforeCleanup(selectedJunk))
+                    {
+                        FinallyAction();
+                        return;
+                    }
+
+                    //Removing the junk
+                    LoadingDialog.ShowDialog(MessageBoxes.DefaultOwner, Localisable.LoadingDialogTitleRemovingJunk, controller =>
+                    {
+                        var top = selectedJunk.Count;
+                        controller.SetMaximum(top);
+                        var itemsRemoved = 0; // current value
+
+                        var sortedJunk = from item in selectedJunk
+                                             // Run commands before deleting any files or reg keys to avoid missing files
+                                         orderby item is RunProcessJunk descending,
+                                                 // Need to stop and unregister service before deleting its exe
+                                                 item is StartupJunkNode descending
+                                         select item;
+
+                        foreach (var junkNode in sortedJunk)
+                        {
+                            controller.SetProgress(itemsRemoved++);
+
+                            if (_settings.AdvancedSimulate)
+                            {
+                                Thread.Sleep(100);
+                            }
+                            else
+                            {
+                                try
+                                {
+                                    junkNode.Delete();
+                                }
+                                catch (Exception)
+                                {
+                                    // Ignored
+                                }
+                            }
+                        }
+                    });
+
+                    FinallyAction();
+                    _initiateListRefresh();
+                }
+            }
+            catch (Exception)
+            {
+                FinallyAction();
+            }
+
+            void FinallyAction()
+            {
+                ReleaseUninstallLock();
+                _lockApplication(false);
+            }
+        }
+#endif
+
         private bool ShowJunkWindow(List<IJunkResult> junk)
         {
             if (!junk.Any(x => _settings.MessagesShowAllBadJunk || x.Confidence.GetRawConfidence() >= 0))
