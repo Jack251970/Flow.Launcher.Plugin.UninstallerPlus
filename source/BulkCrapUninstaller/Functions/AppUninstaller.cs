@@ -303,6 +303,10 @@ namespace BulkCrapUninstaller.Functions
 
                     void BeginUninstallTaskWizardCloseAction(bool listRefreshNeeded, bool dialogResultsOK)
                     {
+                        MessageBoxes.DefaultOwner = null;
+                        LoadingDialog.DefaultOwner = null;
+                        PremadeDialogs.DefaultOwner = null;
+
                         ReleaseUninstallLock();
                         if (dialogResultsOK)
                             SystemRestore.EndSysRestore();
@@ -593,6 +597,10 @@ namespace BulkCrapUninstaller.Functions
 
                 void JunkRemoveWindowCloseAction(IEnumerable<IJunkResult> selectedResults, bool dialogResultsOK)
                 {
+                    MessageBoxes.DefaultOwner = null;
+                    LoadingDialog.DefaultOwner = null;
+                    PremadeDialogs.DefaultOwner = null;
+
                     if (!dialogResultsOK)
                     {
                         FinallyAction();
@@ -1065,6 +1073,10 @@ namespace BulkCrapUninstaller.Functions
 
                     void ProcessWaiterCloseAction(bool dialogResultsOK)
                     {
+                        MessageBoxes.DefaultOwner = null;
+                        LoadingDialog.DefaultOwner = null;
+                        PremadeDialogs.DefaultOwner = null;
+
                         if (!dialogResultsOK)
                         {
                             FinallyAction();
