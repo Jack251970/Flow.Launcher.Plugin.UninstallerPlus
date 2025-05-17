@@ -1,6 +1,7 @@
 ﻿using Klocman;
 using System.ComponentModel;
 using System.Configuration;
+using System.Runtime.CompilerServices;
 
 namespace BulkCrapUninstaller.Properties;
 
@@ -12,296 +13,335 @@ public sealed partial class Settings : ApplicationSettingsBase
     private static Settings defaultInstance;
     public static Settings Default => defaultInstance ??= new();
 
+    // Helper Methods
+    private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+    {
+        OnPropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+    }
+
     // For Functions/MessageBoxes.cs
-    [global::System.Configuration.DefaultSettingValueAttribute("Ask")]
-    public global::Klocman.YesNoAsk BackupLeftovers
+    private YesNoAsk _backupLeftovers = YesNoAsk.Ask;
+    public YesNoAsk BackupLeftovers
     {
-        get
-        {
-            return ((global::Klocman.YesNoAsk)(this["BackupLeftovers"]));
-        }
+        get => _backupLeftovers;
         set
         {
-            this["BackupLeftovers"] = value;
+            if (_backupLeftovers != value)
+            {
+                _backupLeftovers = value;
+                OnPropertyChanged();
+            }
         }
     }
 
-    [global::System.Configuration.DefaultSettingValueAttribute("Ask")]
-    public global::Klocman.YesNoAsk MessagesRemoveJunk
+    private YesNoAsk _messagesRemoveJunk = YesNoAsk.Ask;
+    public YesNoAsk MessagesRemoveJunk
     {
-        get
-        {
-            return ((global::Klocman.YesNoAsk)(this["MessagesRemoveJunk"]));
-        }
+        get => _messagesRemoveJunk;
         set
         {
-            this["MessagesRemoveJunk"] = value;
+            if (_messagesRemoveJunk != value)
+            {
+                _messagesRemoveJunk = value;
+                OnPropertyChanged();
+            }
         }
     }
 
-    [global::System.Configuration.DefaultSettingValueAttribute("True")]
+    private bool _messagesAskRemoveLoudItems = true;
     public bool MessagesAskRemoveLoudItems
     {
-        get
-        {
-            return ((bool)(this["MessagesAskRemoveLoudItems"]));
-        }
+        get => _messagesAskRemoveLoudItems;
         set
         {
-            this["MessagesAskRemoveLoudItems"] = value;
+            if (_messagesAskRemoveLoudItems != value)
+            {
+                _messagesAskRemoveLoudItems = value;
+                OnPropertyChanged();
+            }
         }
     }
 
-    [global::System.Configuration.DefaultSettingValueAttribute("Ask")]
-    public global::Klocman.YesNoAsk MessagesRestorePoints
+    private YesNoAsk _messagesRestorePoints = YesNoAsk.Ask;
+    public YesNoAsk MessagesRestorePoints
     {
-        get
-        {
-            return ((global::Klocman.YesNoAsk)(this["MessagesRestorePoints"]));
-        }
+        get => _messagesRestorePoints;
         set
         {
-            this["MessagesRestorePoints"] = value;
+            if (_messagesRestorePoints != value)
+            {
+                _messagesRestorePoints = value;
+                OnPropertyChanged();
+            }
         }
     }
 
     // For Functions/AppUninstaller.cs
-    [global::System.Configuration.DefaultSettingValueAttribute("False")]
+    private bool _externalEnable = false;
     public bool ExternalEnable
     {
-        get
-        {
-            return ((bool)(this["ExternalEnable"]));
-        }
+        get => _externalEnable;
         set
         {
-            this["ExternalEnable"] = value;
+            if (_externalEnable != value)
+            {
+                _externalEnable = value;
+                OnPropertyChanged();
+            }
         }
     }
 
-    [global::System.Configuration.DefaultSettingValueAttribute("")]
+    private string _externalPreCommands = string.Empty;
     public string ExternalPreCommands
     {
-        get
-        {
-            return ((string)(this["ExternalPreCommands"]));
-        }
+        get => _externalPreCommands;
         set
         {
-            this["ExternalPreCommands"] = value;
+            if (_externalPreCommands != value)
+            {
+                _externalPreCommands = value;
+                OnPropertyChanged();
+            }
         }
     }
 
-    [global::System.Configuration.DefaultSettingValueAttribute("../BleachBit/bleachbit_console.exe --clean system.tmp system.logs system.memory_d" +
-            "ump system.muicache system.prefetch system.recycle_bin")]
+    private string _externalPostCommands = "../BleachBit/bleachbit_console.exe --clean system.tmp system.logs system.memory_dump system.muicache system.prefetch system.recycle_bin";
     public string ExternalPostCommands
     {
-        get
-        {
-            return ((string)(this["ExternalPostCommands"]));
-        }
+        get => _externalPostCommands;
         set
         {
-            this["ExternalPostCommands"] = value;
+            if (_externalPostCommands != value)
+            {
+                _externalPostCommands = value;
+                OnPropertyChanged();
+            }
         }
     }
 
-    [global::System.Configuration.DefaultSettingValueAttribute("False")]
+    private bool _messagesShowAllBadJunk = false;
     public bool MessagesShowAllBadJunk
     {
-        get
-        {
-            return ((bool)(this["MessagesShowAllBadJunk"]));
-        }
+        get => _messagesShowAllBadJunk;
         set
         {
-            this["MessagesShowAllBadJunk"] = value;
+            if (_messagesShowAllBadJunk != value)
+            {
+                _messagesShowAllBadJunk = value;
+                OnPropertyChanged();
+            }
         }
     }
 
     // For Forms/Windows/JunkRemoveWindow.cs
-    public string BackupLeftoversDirectory { get; set; } = string.Empty;
+    private string _backupLeftoversDirectory = string.Empty;
+    public string BackupLeftoversDirectory
+    {
+        get => _backupLeftoversDirectory;
+        set
+        {
+            if (_backupLeftoversDirectory != value)
+            {
+                _backupLeftoversDirectory = value;
+                OnPropertyChanged();
+            }
+        }
+    }
 
     // For Controls/Settings/UninstallationSettings.cs
-    [global::System.Configuration.DefaultSettingValueAttribute("True")]
+    private bool _uninstallPreventShutdown = true;
     public bool UninstallPreventShutdown
     {
-        get
-        {
-            return ((bool)(this["UninstallPreventShutdown"]));
-        }
+        get => _uninstallPreventShutdown;
         set
         {
-            this["UninstallPreventShutdown"] = value;
+            if (_uninstallPreventShutdown != value)
+            {
+                _uninstallPreventShutdown = value;
+                OnPropertyChanged();
+            }
         }
     }
 
-    [global::System.Configuration.DefaultSettingValueAttribute("True")]
+    private bool _createRestorePoint = true;
     public bool CreateRestorePoint
     {
-        get
-        {
-            return ((bool)(this["CreateRestorePoint"]));
-        }
+        get => _createRestorePoint;
         set
         {
-            this["CreateRestorePoint"] = value;
+            if (_createRestorePoint != value)
+            {
+                _createRestorePoint = value;
+                OnPropertyChanged();
+            }
         }
     }
-    
-    [global::System.Configuration.DefaultSettingValueAttribute("True")]
+
+    private bool _uninstallConcurrency = true;
     public bool UninstallConcurrency
     {
-        get
-        {
-            return ((bool)(this["UninstallConcurrency"]));
-        }
+        get => _uninstallConcurrency;
         set
         {
-            this["UninstallConcurrency"] = value;
+            if (_uninstallConcurrency != value)
+            {
+                _uninstallConcurrency = value;
+                OnPropertyChanged();
+            }
         }
     }
-    
-    [global::System.Configuration.DefaultSettingValueAttribute("True")]
+
+    private bool _uninstallConcurrentOneLoud = true;
     public bool UninstallConcurrentOneLoud
     {
-        get
-        {
-            return ((bool)(this["UninstallConcurrentOneLoud"]));
-        }
+        get => _uninstallConcurrentOneLoud;
         set
         {
-            this["UninstallConcurrentOneLoud"] = value;
+            if (_uninstallConcurrentOneLoud != value)
+            {
+                _uninstallConcurrentOneLoud = value;
+                OnPropertyChanged();
+            }
         }
     }
-    
-    [global::System.Configuration.DefaultSettingValueAttribute("False")]
+
+    private bool _uninstallConcurrentDisableManualCollisionProtection = false;
     public bool UninstallConcurrentDisableManualCollisionProtection
     {
-        get
-        {
-            return ((bool)(this["UninstallConcurrentDisableManualCollisionProtection"]));
-        }
+        get => _uninstallConcurrentDisableManualCollisionProtection;
         set
         {
-            this["UninstallConcurrentDisableManualCollisionProtection"] = value;
+            if (_uninstallConcurrentDisableManualCollisionProtection != value)
+            {
+                _uninstallConcurrentDisableManualCollisionProtection = value;
+                OnPropertyChanged();
+            }
         }
     }
-    
-    [global::System.Configuration.DefaultSettingValueAttribute("2")]
+
+    private int _uninstallConcurrentMaxCount = 2;
     public int UninstallConcurrentMaxCount
     {
-        get
-        {
-            return ((int)(this["UninstallConcurrentMaxCount"]));
-        }
+        get => _uninstallConcurrentMaxCount;
         set
         {
-            this["UninstallConcurrentMaxCount"] = value;
+            if (_uninstallConcurrentMaxCount != value)
+            {
+                _uninstallConcurrentMaxCount = value;
+                OnPropertyChanged();
+            }
         }
     }
-    
-    [global::System.Configuration.DefaultSettingValueAttribute("True")]
+
+    private bool _advancedIntelligentUninstallerSorting = true;
     public bool AdvancedIntelligentUninstallerSorting
     {
-        get
-        {
-            return ((bool)(this["AdvancedIntelligentUninstallerSorting"]));
-        }
+        get => _advancedIntelligentUninstallerSorting;
         set
         {
-            this["AdvancedIntelligentUninstallerSorting"] = value;
+            if (_advancedIntelligentUninstallerSorting != value)
+            {
+                _advancedIntelligentUninstallerSorting = value;
+                OnPropertyChanged();
+            }
         }
     }
 
-    [global::System.Configuration.DefaultSettingValueAttribute("False")]
+    private bool _advancedDisableProtection = false;
     public bool AdvancedDisableProtection
     {
-        get
-        {
-            return ((bool)(this["AdvancedDisableProtection"]));
-        }
+        get => _advancedDisableProtection;
         set
         {
-            this["AdvancedDisableProtection"] = value;
+            if (_advancedDisableProtection != value)
+            {
+                _advancedDisableProtection = value;
+                OnPropertyChanged();
+            }
         }
     }
-    
-    [global::System.Configuration.DefaultSettingValueAttribute("False")]
+
+    private bool _advancedSimulate = false;
     public bool AdvancedSimulate
     {
-        get
-        {
-            return ((bool)(this["AdvancedSimulate"]));
-        }
+        get => _advancedSimulate;
         set
         {
-            this["AdvancedSimulate"] = value;
+            if (_advancedSimulate != value)
+            {
+                _advancedSimulate = value;
+                OnPropertyChanged();
+            }
         }
     }
 
-    [global::System.Configuration.DefaultSettingValueAttribute("True")]
+    private bool _quietAutoKillStuck = true;
     public bool QuietAutoKillStuck
     {
-        get
-        {
-            return ((bool)(this["QuietAutoKillStuck"]));
-        }
+        get => _quietAutoKillStuck;
         set
         {
-            this["QuietAutoKillStuck"] = value;
+            if (_quietAutoKillStuck != value)
+            {
+                _quietAutoKillStuck = value;
+                OnPropertyChanged();
+            }
         }
     }
 
-    [global::System.Configuration.DefaultSettingValueAttribute("True")]
+    private bool _quietRetryFailedOnce = true;
     public bool QuietRetryFailedOnce
     {
-        get
-        {
-            return ((bool)(this["QuietRetryFailedOnce"]));
-        }
+        get => _quietRetryFailedOnce;
         set
         {
-            this["QuietRetryFailedOnce"] = value;
+            if (_quietRetryFailedOnce != value)
+            {
+                _quietRetryFailedOnce = value;
+                OnPropertyChanged();
+            }
         }
     }
 
-    [global::System.Configuration.DefaultSettingValueAttribute("True")]
+    private bool _quietAutomatization = true;
     public bool QuietAutomatization
     {
-        get
-        {
-            return ((bool)(this["QuietAutomatization"]));
-        }
+        get => _quietAutomatization;
         set
         {
-            this["QuietAutomatization"] = value;
+            if (_quietAutomatization != value)
+            {
+                _quietAutomatization = value;
+                OnPropertyChanged();
+            }
         }
     }
 
-    [global::System.Configuration.DefaultSettingValueAttribute("True")]
+    private bool _quietAutomatizationKillStuck = true;
     public bool QuietAutomatizationKillStuck
     {
-        get
-        {
-            return ((bool)(this["QuietAutomatizationKillStuck"]));
-        }
+        get => _quietAutomatizationKillStuck;
         set
         {
-            this["QuietAutomatizationKillStuck"] = value;
+            if (_quietAutomatizationKillStuck != value)
+            {
+                _quietAutomatizationKillStuck = value;
+                OnPropertyChanged();
+            }
         }
     }
 
-    [global::System.Configuration.DefaultSettingValueAttribute("True")]
+    private bool _quietUseDaemon = true;
     public bool QuietUseDaemon
     {
-        get
-        {
-            return ((bool)(this["QuietUseDaemon"]));
-        }
+        get => _quietUseDaemon;
         set
         {
-            this["QuietUseDaemon"] = value;
+            if (_quietUseDaemon != value)
+            {
+                _quietUseDaemon = value;
+                OnPropertyChanged();
+            }
         }
     }
 }
