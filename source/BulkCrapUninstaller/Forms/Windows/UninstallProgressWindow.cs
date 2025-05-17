@@ -47,6 +47,19 @@ namespace BulkCrapUninstaller.Forms
             }
         }
 
+#if WPF_TEST
+        public static void ShowUninstallDialogW(Form owner, BulkUninstallTask status, Func<IEnumerable<ApplicationUninstallerEntry>, bool> uninstallManuallyAction)
+        {
+            _uninstallManuallyAction = uninstallManuallyAction;
+            using (var uninstallWindow = new UninstallProgressWindow())
+            {
+                uninstallWindow._status = status;
+
+                uninstallWindow.ShowDialog(owner);
+            }
+        }
+#endif
+
         protected override void OnShown(EventArgs e)
         {
             base.OnShown(e);

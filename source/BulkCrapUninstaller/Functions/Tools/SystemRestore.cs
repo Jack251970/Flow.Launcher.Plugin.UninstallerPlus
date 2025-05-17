@@ -56,6 +56,38 @@ namespace BulkCrapUninstaller.Functions.Tools
             return true;
         }
 
+#if WPF_TEST
+        public static bool BeginSysRestoreW(Form owner, int count, bool displayMessage = true)
+        {
+            if (SysRestore.SysRestoreAvailable())
+            {
+                switch (displayMessage ? MessageBoxes.SysRestoreBeginQuestion(owner) : MessageBoxes.PressedButton.Yes)
+                {
+                    case MessageBoxes.PressedButton.Yes:
+                        var error = LoadingDialog.ShowDialog(owner, Localisable.LoadingDialogTitleCreatingRestorePoint, x =>
+                        {
+                            //if (_currentRestoreId > 0)
+                            EndSysRestore();
+
+                            var result = SysRestore.StartRestore(MessageBoxes.GetSystemRestoreDescription(count),
+                                SysRestore.RestoreType.ApplicationUninstall, out _currentRestoreId, 3);
+                            if (result < 0)
+                                throw new IOException(Localisable.SysRestoreGenericError);
+                        });
+
+                        return error == null ||
+                               MessageBoxes.SysRestoreContinueAfterError(owner, error.Message) ==
+                               MessageBoxes.PressedButton.Yes;
+
+                    default:
+                    case MessageBoxes.PressedButton.Cancel:
+                        return false;
+                }
+            }
+            return true;
+        }
+#endif
+
         /// <summary>
         ///     Cancel running restore if any
         /// </summary>

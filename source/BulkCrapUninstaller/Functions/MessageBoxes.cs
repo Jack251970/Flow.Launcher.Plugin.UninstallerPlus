@@ -190,6 +190,34 @@ namespace BulkCrapUninstaller.Functions
             return result == CustomMessageBox.PressedButton.Middle;
         }
 
+#if WPF_TEST
+        internal static bool LookForJunkQuestion(Form owner)
+        {
+            switch (Settings.Default.MessagesRemoveJunk)
+            {
+                case YesNoAsk.Yes:
+                    return true;
+                case YesNoAsk.No:
+                    return false;
+            }
+
+            var check = new CmbCheckboxSettings(Localisable.MessageBoxes_RememberChoiceCheckbox);
+            var result =
+                CustomMessageBox.ShowDialog(owner,
+                    new CmbBasicSettings(Localisable.MessageBoxes_Title_Junk_Leftover_removal,
+                        Localisable.MessageBoxes_LookForJunkQuestion_Message,
+                        Localisable.MessageBoxes_LookForJunkQuestion_Details,
+                        SystemIcons.Question, Buttons.ButtonYes, Buttons.ButtonNo), check);
+
+            if (check.Result.HasValue && check.Result.Value)
+                Settings.Default.MessagesRemoveJunk = result == CustomMessageBox.PressedButton.Middle
+                    ? YesNoAsk.Yes
+                    : YesNoAsk.No;
+
+            return result == CustomMessageBox.PressedButton.Middle;
+        }
+#endif
+
         internal static void NoJunkFoundInfo()
         {
             // If automatically searching for junk do not show this message
@@ -203,8 +231,7 @@ namespace BulkCrapUninstaller.Functions
                     SystemIcons.Information, Buttons.ButtonOk));
         }
 
-        #region For WPF_TEST
-
+#if WPF_TEST
         internal static void NoJunkFoundInfo(Form owner)
         {
             // If automatically searching for junk do not show this message
@@ -217,8 +244,7 @@ namespace BulkCrapUninstaller.Functions
                     Localisable.MessageBoxes_NoJunkFoundInfo_Details,
                     SystemIcons.Information, Buttons.ButtonOk));
         }
-
-        #endregion
+#endif
 
         internal static void NoNetworkConnected()
         {
@@ -537,6 +563,45 @@ namespace BulkCrapUninstaller.Functions
             }
         }
 
+#if WPF_TEST
+        internal static PressedButton SysRestoreBeginQuestion(Form owner)
+        {
+            switch (Settings.Default.MessagesRestorePoints)
+            {
+                case YesNoAsk.Yes:
+                    return PressedButton.Yes;
+                case YesNoAsk.No:
+                    return PressedButton.No;
+            }
+
+            var check = new CmbCheckboxSettings(Localisable.MessageBoxes_RememberChoiceCheckbox)
+            {
+                DisableRightButton = true
+            };
+            switch (
+                CustomMessageBox.ShowDialog(owner,
+                    new CmbBasicSettings(Localisable.MessageBoxes_Title_Create_restore_point,
+                        Localisable.MessageBoxes_SysRestoreBeginQuestion_Message,
+                        Localisable.MessageBoxes_SysRestoreBeginQuestion_Details,
+                        SystemIcons.Question, Buttons.ButtonCreate, Buttons.ButtonDontCreate, Buttons.ButtonCancel),
+                    check))
+            {
+                case CustomMessageBox.PressedButton.Left:
+                    if (check.Result.HasValue && check.Result.Value)
+                        Settings.Default.MessagesRestorePoints = YesNoAsk.Yes;
+                    return PressedButton.Yes;
+
+                case CustomMessageBox.PressedButton.Middle:
+                    if (check.Result.HasValue && check.Result.Value)
+                        Settings.Default.MessagesRestorePoints = YesNoAsk.No;
+                    return PressedButton.No;
+
+                default:
+                    return PressedButton.Cancel;
+            }
+        }
+#endif
+
         /// <summary>
         ///     Returns true if user wants to continue even though system restore failed
         /// </summary>
@@ -557,6 +622,26 @@ namespace BulkCrapUninstaller.Functions
                     return PressedButton.Cancel;
             }
         }
+
+#if WPF_TEST
+        internal static PressedButton SysRestoreContinueAfterError(Form owner, string exMessage)
+        {
+            switch (
+                CustomMessageBox.ShowDialog(owner,
+                    new CmbBasicSettings(Localisable.MessageBoxes_Title_Create_restore_point,
+                        Localisable.MessageBoxes_SysRestoreContinueAfterError_Message,
+                        Localisable.MessageBoxes_SysRestoreContinueAfterError_Details +
+                        Localisable.MessageBoxes_Error_details + exMessage,
+                        SystemIcons.Warning, Buttons.ButtonContinue, Buttons.ButtonCancel)))
+            {
+                case CustomMessageBox.PressedButton.Middle:
+                    return PressedButton.Yes;
+
+                default:
+                    return PressedButton.Cancel;
+            }
+        }
+#endif
 
         /// <summary>
         ///     Yes if the task should be killed,

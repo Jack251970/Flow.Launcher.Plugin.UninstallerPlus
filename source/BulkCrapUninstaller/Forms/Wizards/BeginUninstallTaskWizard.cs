@@ -26,17 +26,24 @@ namespace BulkCrapUninstaller.Forms
         private readonly Func<BeginUninstallTaskWizard, bool> _action;
         private readonly Action<bool, bool> _closedAction;
         private bool _listRefreshNeeded;
-#endif
+        private bool _initialized;
 
-#if WPF_TEST
         public BeginUninstallTaskWizard(Func<BeginUninstallTaskWizard, bool> action, Action<bool, bool> closedAction)
         {
             _action = action;
             _closedAction = closedAction;
-#else
+
+            InitializeComponent();
+
+            Icon = Resources.Icon_Logo;
+            DialogResult = DialogResult.Cancel;
+
+            tabControl1.TabIndex = 0;
+        }
+#endif
+
         public BeginUninstallTaskWizard()
         {
-#endif
             InitializeComponent();
 
             Icon = Resources.Icon_Logo;
@@ -63,7 +70,10 @@ namespace BulkCrapUninstaller.Forms
 
             DialogResult = DialogResult.OK;
 #if WPF_TEST
-            _listRefreshNeeded = _action.Invoke(this);
+            if (_initialized)
+            {
+                _listRefreshNeeded = _action.Invoke(this);
+            }
 #endif
             Close();
         }
@@ -107,6 +117,10 @@ namespace BulkCrapUninstaller.Forms
         public void Initialize(ICollection<ApplicationUninstallerEntry> selectedUninstallers,
             ICollection<ApplicationUninstallerEntry> allUninstallers, bool quiet)
         {
+#if WPF_TEST
+            _initialized = true;
+#endif
+
             _quiet = quiet;
             _selectedUninstallers = selectedUninstallers;
 
@@ -224,7 +238,10 @@ namespace BulkCrapUninstaller.Forms
         private void BeginUninstallTaskWizard_FormClosed(object sender, FormClosedEventArgs e)
         {
 #if WPF_TEST
-            _closedAction.Invoke(_listRefreshNeeded, DialogResult == DialogResult.OK);
+            if (_initialized)
+            {
+                _closedAction.Invoke(_listRefreshNeeded, DialogResult == DialogResult.OK);
+            }
 #else
             if(DialogResult != DialogResult.OK)
                 SystemRestore.CancelSysRestore();
