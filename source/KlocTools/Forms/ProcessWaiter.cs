@@ -20,6 +20,41 @@ namespace Klocman.Forms
             processWaiterControl1.CancelClicked += ProcessWaiterControl1_CancelClicked;
         }
 
+        #region For WPF_TEST projects
+
+        private readonly Action<bool> _closedAction;
+        private bool _initialized;
+
+        public ProcessWaiter(System.Drawing.Icon icon, Action<bool> closeAction)
+        {
+            _closedAction = closeAction;
+            FormClosed += JunkRemoveWindow_FormClosed;
+
+            InitializeComponent();
+
+            Icon = icon;
+            DialogResult = DialogResult.Cancel;
+
+            processWaiterControl1.AllProcessesClosed += ProcessWaiterControl1_AllProcessesClosed;
+            processWaiterControl1.CancelClicked += ProcessWaiterControl1_CancelClicked;
+        }
+
+        private void JunkRemoveWindow_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            if (_initialized)
+            {
+                _closedAction.Invoke(DialogResult == DialogResult.OK);
+            }
+        }
+
+        public void Initialize(int[] processIDs, bool processChildren)
+        {
+            processWaiterControl1.Initialize(processIDs, processChildren);
+            _initialized = true;
+        }
+
+        #endregion
+
         private void ProcessWaiterControl1_CancelClicked(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
@@ -48,7 +83,7 @@ namespace Klocman.Forms
                 return pw.ShowDialog(owner) == DialogResult.OK;
             }
         }
-        
+
         private void ProcessWaiter_Shown(object sender, EventArgs e)
         {
             processWaiterControl1.StartUpdating();
