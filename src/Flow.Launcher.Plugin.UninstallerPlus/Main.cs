@@ -86,8 +86,8 @@ public class UninstallerPlus : IAsyncPlugin, IAsyncReloadable, IContextMenu, IPl
                     Score = 0,
                     Action = _ =>
                     {
+                        Context.API.HideMainWindow();
                         _mainWindow.RunLoudUninstall(new[] { uninstaller }, AllUninstallers.ToList());
-
                         return true;
                     }
                 };
@@ -113,6 +113,7 @@ public class UninstallerPlus : IAsyncPlugin, IAsyncReloadable, IContextMenu, IPl
                     Score = match.Score,
                     Action = _ =>
                     {
+                        Context.API.HideMainWindow();
                         _mainWindow.RunLoudUninstall(new[] { uninstaller }, AllUninstallers.ToList());
                         return true;
                     }
@@ -382,6 +383,7 @@ public class UninstallerPlus : IAsyncPlugin, IAsyncReloadable, IContextMenu, IPl
             IcoPath = "Images/uninstall.png",
             Action = _ =>
             {
+                Context.API.HideMainWindow();
                 _mainWindow.RunLoudUninstall(new[] { uninstaller }, AllUninstallers.ToList());
                 return true;
             }
@@ -394,6 +396,7 @@ public class UninstallerPlus : IAsyncPlugin, IAsyncReloadable, IContextMenu, IPl
             IcoPath = "Images/quiet.png",
             Action = _ =>
             {
+                Context.API.HideMainWindow();
                 _mainWindow.RunQuietUninstall(new[] { uninstaller }, AllUninstallers.ToList());
                 return true;
             }
@@ -406,8 +409,9 @@ public class UninstallerPlus : IAsyncPlugin, IAsyncReloadable, IContextMenu, IPl
             {
                 Title = Context.API.GetTranslation("flowlauncher_plugin_uninstallerplus_context_menu_modify"),
                 IcoPath = "Images/modify.png",
-                Action = _ =>
+                Action = c =>
                 {
+                    Context.API.HideMainWindow();
                     _mainWindow.RunModify(new[] { uninstaller });
                     return true;
                 }
@@ -421,6 +425,7 @@ public class UninstallerPlus : IAsyncPlugin, IAsyncReloadable, IContextMenu, IPl
             IcoPath = "Images/manual.png",
             Action = _ =>
             {
+                Context.API.HideMainWindow();
                 _mainWindow.RunManualUninstall(new[] { uninstaller }, AllUninstallers.ToList());
                 return true;
             }
