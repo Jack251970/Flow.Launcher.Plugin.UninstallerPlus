@@ -38,8 +38,8 @@ public partial class MainWindow : Window
     private const string TweakRateId = "tweak";
 
     private readonly Settings _settings = new();
-    private readonly BCUSettings _bCUSettings = new();
-    
+    private readonly BCUSettings _bCUSettings = BCUSettings.Default;
+
     private const int QueryUpdateSemaphoreMaxCount = 1;
     private readonly SemaphoreSlim _queryUpdateSemaphore = new(1, QueryUpdateSemaphoreMaxCount);
 
