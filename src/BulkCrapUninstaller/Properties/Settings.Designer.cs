@@ -19,6 +19,8 @@ public sealed partial class Settings : ApplicationSettingsBase
         OnPropertyChanged(this, new PropertyChangedEventArgs(propertyName));
     }
 
+    #region Uninstallation Settings
+
     // For Functions/MessageBoxes.cs
     private YesNoAsk _backupLeftovers = YesNoAsk.Ask;
     public YesNoAsk BackupLeftovers
@@ -344,4 +346,6 @@ public sealed partial class Settings : ApplicationSettingsBase
             }
         }
     }
+
+    #endregion
 }

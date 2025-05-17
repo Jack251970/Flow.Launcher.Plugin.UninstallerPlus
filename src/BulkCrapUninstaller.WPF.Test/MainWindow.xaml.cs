@@ -59,8 +59,8 @@ public partial class MainWindow : Window
     {
         switch (e.PropertyName)
         {
-            case nameof(BCUSettings.UninstallPreventShutdown):
-                Debug.WriteLine("UninstallPreventShutdown changed to " + _bCUSettings.UninstallPreventShutdown);
+            case nameof(BCUSettings.BackupLeftovers):
+                Debug.WriteLine("BackupLeftovers changed to " + _bCUSettings.BackupLeftovers);
                 break;
         }
     }
@@ -68,6 +68,9 @@ public partial class MainWindow : Window
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
         InitiateListRefresh();
+        _bCUSettings.BackupLeftovers = Klocman.YesNoAsk.Yes;
+        _bCUSettings.BackupLeftovers = Klocman.YesNoAsk.Ask;
+        _bCUSettings.BackupLeftovers = Klocman.YesNoAsk.Ask;
     }
 
     private void Window_Closing(object sender, CancelEventArgs e)
