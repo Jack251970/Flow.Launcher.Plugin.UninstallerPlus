@@ -1003,7 +1003,9 @@ namespace BulkCrapUninstaller.Functions
         public void Modify(IEnumerable<ApplicationUninstallerEntry> selectedUninstallers)
         {
             if (!TryGetUninstallLock()) return;
+#if !WPF_TEST
             var listRefreshNeeded = false;
+#endif
 
             try
             {
@@ -1014,6 +1016,9 @@ namespace BulkCrapUninstaller.Functions
                 if (results.Count != 1)
                 {
                     MessageBoxes.CanSelectOnlyOneItemInfo();
+#if WPF_TEST
+                    FinallyAction();
+#endif
                     return;
                 }
 
@@ -1022,15 +1027,69 @@ namespace BulkCrapUninstaller.Functions
                 if (!_settings.AdvancedDisableProtection && selected.IsProtected)
                 {
                     MessageBoxes.ProtectedItemError(selected.DisplayName);
+#if WPF_TEST
+                    FinallyAction();
+#endif
                     return;
                 }
 
                 if (string.IsNullOrEmpty(selected.ModifyPath))
                 {
                     MessageBoxes.ModifyCommandMissing();
+#if WPF_TEST
+                    FinallyAction();
+#endif
                     return;
                 }
 
+#if WPF_TEST
+                var filters = new[] { selected }.SelectMany(e => new[] { e.InstallLocation, e.UninstallerLocation })
+                .Where(s => !string.IsNullOrEmpty(s)).Distinct().ToArray();
+
+                var idsToCheck = GetRelatedProcessIds(filters, true);
+
+                if (idsToCheck.Length > 0)
+                {
+                    var waiter = new ProcessWaiter(Resources.Icon_Logo, ProcessWaiterCloseAction)
+                    {
+                        StartPosition = FormStartPosition.CenterScreen
+                    };
+
+                    MessageBoxes.DefaultOwner = waiter;
+                    LoadingDialog.DefaultOwner = waiter;
+                    PremadeDialogs.DefaultOwner = waiter;
+
+                    waiter.Show();
+
+                    waiter.Initialize(idsToCheck.ToArray(), false);
+
+                    void ProcessWaiterCloseAction(bool dialogResultsOK)
+                    {
+                        if (!dialogResultsOK)
+                        {
+                            FinallyAction();
+                            return;
+                        }
+
+                        var listRefreshNeeded = false;
+
+                        try
+                        {
+                            selected.Modify(_settings.AdvancedSimulate);
+                        }
+                        catch (Exception ex)
+                        {
+                            PremadeDialogs.GenericError(ex);
+                        }
+                        finally
+                        {
+                            FinallyAction();
+                            if (listRefreshNeeded)
+                                _initiateListRefresh();
+                        }
+                    }
+                }
+#else
                 if (!CheckForRunningProcessesBeforeUninstall(new[] { selected }, true))
                     return;
 
@@ -1043,7 +1102,20 @@ namespace BulkCrapUninstaller.Functions
                 {
                     PremadeDialogs.GenericError(ex);
                 }
+#endif
             }
+#if WPF_TEST
+            catch (Exception)
+            {
+                FinallyAction();
+            }
+
+            void FinallyAction()
+            {
+                ReleaseUninstallLock();
+                _lockApplication(false);
+            }
+#else
             finally
             {
                 ReleaseUninstallLock();
@@ -1051,6 +1123,7 @@ namespace BulkCrapUninstaller.Functions
                 if (listRefreshNeeded)
                     _initiateListRefresh();
             }
+#endif
         }
     }
 }
