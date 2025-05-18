@@ -95,6 +95,7 @@ Follow the prompts to uninstall programs, create restore points and perform addi
 
 Right click programs to open context menu to:
 
+* Uninstall programs
 * Quietly uninstall programs
 * Modify programs
 * Manually uninstall programs
