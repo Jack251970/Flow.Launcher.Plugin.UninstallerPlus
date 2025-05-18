@@ -73,7 +73,7 @@ public class UninstallerPlus : IAsyncPlugin, IAsyncReloadable, IContextMenu, IPl
         }
         catch (OperationCanceledException)
         {
-            // Ignore
+            // Ignored - token cancelled
         }
         return EmptyResults;
     }
@@ -257,10 +257,6 @@ public class UninstallerPlus : IAsyncPlugin, IAsyncReloadable, IContextMenu, IPl
         try
         {
             _iconGetter.UpdateIconList(AllUninstallers, token);
-        }
-        catch (OperationCanceledException)
-        {
-            throw new OperationCanceledException("Icon loading cancelled");
         }
         catch (Exception ex)
         {

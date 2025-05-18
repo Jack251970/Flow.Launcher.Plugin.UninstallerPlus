@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace Klocman.Extensions
 {
@@ -116,10 +117,12 @@ namespace Klocman.Extensions
         /// <param name="collection">Base enumerable</param>
         /// <param name="action">Action to run on all of the enumerated members</param>
         /// <returns>Enumerator</returns>
-        public static IEnumerable<T> DoForEach<T>(this IEnumerable<T> collection, Action<T> action)
+        public static IEnumerable<T> DoForEach<T>(this IEnumerable<T> collection, Action<T> action, CancellationToken token = default)
         {
             foreach (var item in collection)
             {
+                if (token.IsCancellationRequested) yield break;
+
                 action(item);
                 yield return item;
             }

@@ -73,7 +73,7 @@ namespace UninstallTools.Controls
 
             foreach (var obj in objList)
             {
-                token.ThrowIfCancellationRequested();
+                if (token.IsCancellationRequested) return;
 
                 if (IconListContainsKey(obj.DisplayName))
                     continue;

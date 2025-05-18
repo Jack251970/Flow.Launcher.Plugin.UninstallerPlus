@@ -369,10 +369,6 @@ public partial class MainWindow : Window
         {
             _iconGetter.UpdateIconList(AllUninstallers, token);
         }
-        catch (OperationCanceledException)
-        {
-            throw new OperationCanceledException("Icon loading cancelled");
-        }
         catch (Exception ex)
         {
             Debug.WriteLine(ex);
@@ -471,7 +467,7 @@ public partial class MainWindow : Window
         }
     }
 
-    private bool ListViewFilter(ApplicationUninstallerEntry entry)
+    private static bool ListViewFilter(ApplicationUninstallerEntry entry)
     {
         if (!Settings.FilterShowMicrosoft && !string.IsNullOrEmpty(entry.Publisher) && entry.Publisher.Contains(MicrosoftPublisher))
         {
