@@ -10,6 +10,8 @@ using System.Drawing;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Klocman.Extensions;
 using Klocman.Properties;
@@ -66,6 +68,36 @@ namespace Klocman.Forms.Tools
             }
             return false;
         }
+
+        #region For WPF_TEST
+
+        public static Task StartSTATaskAsync(Action action)
+        {
+            var taskCompletionSource = new TaskCompletionSource();
+            Thread thread = new(() =>
+            {
+                try
+                {
+                    action();
+                    taskCompletionSource.SetResult();
+                }
+                catch (Exception e)
+                {
+                    taskCompletionSource.SetException(e);
+                }
+            })
+            {
+                IsBackground = true,
+                Priority = ThreadPriority.Normal
+            };
+
+            thread.SetApartmentState(ApartmentState.STA);
+            thread.Start();
+
+            return taskCompletionSource.Task;
+        }
+
+        #endregion
 
         /// <summary>
         ///     Show a generic error message with supplied exception info. Shows all inner exceptions and stack traces as well as a
@@ -235,6 +267,10 @@ namespace Klocman.Forms.Tools
                     catch (ExternalException)
                     {
                     }
+                    catch (ThreadStateException)
+                    {
+                        StartSTATaskAsync(() => Clipboard.SetText(fullInfo));
+                    }
                     break;
             }
         }
@@ -265,6 +301,10 @@ namespace Klocman.Forms.Tools
                     catch (ExternalException)
                     {
                     }
+                    catch (ThreadStateException)
+                    {
+                        StartSTATaskAsync(() => Clipboard.SetText(fullInfo));
+                    }
                     break;
             }
         }
@@ -294,6 +334,10 @@ namespace Klocman.Forms.Tools
                     catch (ExternalException)
                     {
                     }
+                    catch (ThreadStateException)
+                    {
+                        StartSTATaskAsync(() => Clipboard.SetText(fullInfo));
+                    }
                     break;
             }
         }
@@ -316,6 +360,10 @@ namespace Klocman.Forms.Tools
                 }
                 catch (ExternalException)
                 {
+                }
+                catch (ThreadStateException)
+                {
+                    StartSTATaskAsync(() => Clipboard.SetText(fullInfo));
                 }
             }
         }

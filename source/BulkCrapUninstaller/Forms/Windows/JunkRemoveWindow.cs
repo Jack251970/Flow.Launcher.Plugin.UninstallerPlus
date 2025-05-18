@@ -9,6 +9,7 @@ using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 using BrightIdeasSoftware;
 using BulkCrapUninstaller.Functions;
@@ -281,7 +282,14 @@ namespace BulkCrapUninstaller.Forms
 
                 if (items.Any())
                 {
-                    Clipboard.SetText(string.Join(Environment.NewLine, items));
+                    try
+                    {
+                        Clipboard.SetText(string.Join(Environment.NewLine, items));
+                    }
+                    catch (ThreadStateException)
+                    {
+                        PremadeDialogs.StartSTATaskAsync(() => Clipboard.SetText(string.Join(Environment.NewLine, items)));
+                    }
                 }
             }
             catch (Exception ex)

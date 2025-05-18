@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 using Klocman.Extensions;
 using Klocman.Forms;
@@ -130,6 +131,10 @@ namespace UninstallTools.Dialogs
                 try
                 {
                     Clipboard.SetText(string.Join(Environment.NewLine, parts));
+                }
+                catch (ThreadStateException)
+                {
+                    PremadeDialogs.StartSTATaskAsync(() => Clipboard.SetText(string.Join(Environment.NewLine, parts)));
                 }
                 catch (Exception ex)
                 {
