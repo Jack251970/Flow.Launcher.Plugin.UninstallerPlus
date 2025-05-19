@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Controls;
@@ -39,8 +38,8 @@ public class UninstallerPlus : IAsyncPlugin, IAsyncReloadable, IContextMenu, IPl
 
     private readonly List<ApplicationUninstallerEntry> FilteredUninstallers = new();
 
-    private readonly CancellationTokenSource _refreshSource = new();
-    private readonly CancellationToken _refreshToken;
+    private CancellationTokenSource? _refreshSource;
+    private CancellationToken _refreshToken;
 
     private const string FlowLauncherDisplayName = "Flow Launcher";
     private const string FlowLauncherPublisher = "Flow-Launcher Team";
@@ -53,15 +52,6 @@ public class UninstallerPlus : IAsyncPlugin, IAsyncReloadable, IContextMenu, IPl
     private readonly SemaphoreSlim _queryUpdateSemaphore = new(1, 1);
 
     private MainWindow _mainWindow = null!;
-
-    #region Constructor
-
-    public UninstallerPlus()
-    {
-        _refreshToken = _refreshSource.Token;
-    }
-
-    #endregion
 
     #region IAsyncPlugin Interface
 
@@ -80,64 +70,23 @@ public class UninstallerPlus : IAsyncPlugin, IAsyncReloadable, IContextMenu, IPl
 
     public async Task<List<Result>> Query(Query query, CancellationToken token)
     {
-        var results = new List<Result>();
-
-        await _queryUpdateSemaphore.WaitAsync(token);
-
-        var searchTerm = query.Search;
-        if (string.IsNullOrWhiteSpace(searchTerm))
+        var initialized = _allUninstallers != null && _allUninstallers.Count > 0;
+        if (!initialized)
         {
-            foreach (var uninstaller in FilteredUninstallers)
+            await _queryUpdateSemaphore.WaitAsync(token).ConfigureAwait(false);
+            try
             {
-                var result = new Result
-                {
-                    Title = uninstaller.DisplayName,
-                    AutoCompleteText = uninstaller.DisplayName,
-                    SubTitle = uninstaller.Publisher,
-                    ContextData = uninstaller,
-                    IcoPath = uninstaller.DisplayIcon,
-                    Score = 0,
-                    Action = _ =>
-                    {
-                        Context.API.HideMainWindow();
-                        _mainWindow.RunLoudUninstall(new[] { uninstaller }, AllUninstallers.ToList());
-                        return true;
-                    }
-                };
-                results.Add(result);
+                return QueryList(query.Search);
+            }
+            finally
+            {
+                _queryUpdateSemaphore.Release();
             }
         }
         else
         {
-            foreach (var uninstaller in FilteredUninstallers)
-            {
-                var match = Context.API.FuzzySearch(searchTerm, uninstaller.DisplayName);
-
-                if (!match.IsSearchPrecisionScoreMet()) continue;
-
-                var result = new Result
-                {
-                    Title = uninstaller.DisplayName,
-                    AutoCompleteText = uninstaller.DisplayName,
-                    SubTitle = uninstaller.Publisher,
-                    ContextData = uninstaller,
-                    IcoPath = uninstaller.DisplayIcon,
-                    TitleHighlightData = match.MatchData,
-                    Score = match.Score,
-                    Action = _ =>
-                    {
-                        Context.API.HideMainWindow();
-                        _mainWindow.RunLoudUninstall(new[] { uninstaller }, AllUninstallers.ToList());
-                        return true;
-                    }
-                };
-                results.Add(result);
-            }
+            return QueryList(query.Search);
         }
-
-        _queryUpdateSemaphore.Release();
-
-        return results;
     }
 
     public async Task InitAsync(PluginInitContext context)
@@ -174,11 +123,78 @@ public class UninstallerPlus : IAsyncPlugin, IAsyncReloadable, IContextMenu, IPl
 
     #region Initialize List
 
+    private List<Result> QueryList(string searchTerm)
+    {
+        var results = new List<Result>();
+
+        if (string.IsNullOrWhiteSpace(searchTerm))
+        {
+            foreach (var uninstaller in FilteredUninstallers)
+            {
+                var result = new Result
+                {
+                    Title = uninstaller.DisplayName,
+                    AutoCompleteText = uninstaller.DisplayName,
+                    SubTitle = uninstaller.Publisher,
+                    ContextData = uninstaller,
+                    IcoPath = uninstaller.DisplayIcon,
+                    Score = 0,
+                    Action = _ =>
+                    {
+                        var allUninstallers = AllUninstallers;
+                        Context.API.HideMainWindow();
+                        _mainWindow.RunLoudUninstall(new[] { uninstaller }, allUninstallers);
+                        return true;
+                    }
+                };
+                results.Add(result);
+            }
+        }
+        else
+        {
+            foreach (var uninstaller in FilteredUninstallers)
+            {
+                var match = Context.API.FuzzySearch(searchTerm, uninstaller.DisplayName);
+
+                if (!match.IsSearchPrecisionScoreMet()) continue;
+
+                var result = new Result
+                {
+                    Title = uninstaller.DisplayName,
+                    AutoCompleteText = uninstaller.DisplayName,
+                    SubTitle = uninstaller.Publisher,
+                    ContextData = uninstaller,
+                    IcoPath = uninstaller.DisplayIcon,
+                    TitleHighlightData = match.MatchData,
+                    Score = match.Score,
+                    Action = _ =>
+                    {
+                        var allUninstallers = AllUninstallers;
+                        Context.API.HideMainWindow();
+                        _mainWindow.RunLoudUninstall(new[] { uninstaller }, allUninstallers);
+                        return true;
+                    }
+                };
+                results.Add(result);
+            }
+        }
+
+        return results;
+    }
+
     private void InitiateListRefresh()
     {
         try
         {
-            Task.Run(() => ListRefreshThread(_refreshToken), _refreshToken);
+            _refreshSource?.Cancel();
+            _refreshSource?.Dispose();
+
+            var refreshSource = new CancellationTokenSource();
+            _refreshSource = refreshSource;
+            var refreshToken = refreshSource.Token;
+            _refreshToken = refreshToken;
+
+            Task.Run(() => ListRefreshThread(refreshToken), refreshToken);
         }
         catch (OperationCanceledException)
         {
@@ -194,108 +210,125 @@ public class UninstallerPlus : IAsyncPlugin, IAsyncReloadable, IContextMenu, IPl
     {
         await _queryUpdateSemaphore.WaitAsync(token).ConfigureAwait(false);
 
-        /*await InvokeAsync(() =>
+        try
         {
-            ProgressBar.Visibility = Visibility.Visible;
-            TextBlock.Visibility = Visibility.Visible;
-            TextBlock.Text = string.Empty;
-            SubProgressBar.Visibility = Visibility.Visible;
-            SubTextBlock.Visibility = Visibility.Visible;
-            SubTextBlock.Text = string.Empty;
-        }, DispatcherPriority.Normal, token);*/
+            /*await InvokeAsync(() =>
+            {
+                ProgressBar.Visibility = Visibility.Visible;
+                TextBlock.Visibility = Visibility.Visible;
+                TextBlock.Text = string.Empty;
+                SubProgressBar.Visibility = Visibility.Visible;
+                SubTextBlock.Visibility = Visibility.Visible;
+                SubTextBlock.Text = string.Empty;
+            }, DispatcherPriority.Normal, token);*/
 
-        var progressMax = 0;
-        var uninstallerEntries = ApplicationUninstallerFactory.GetUninstallerEntries((x) =>
-        {
-            progressMax = x.TotalCount + 1;
+            if (token.IsCancellationRequested) return;
+
+            var progressMax = 0;
+            var uninstallerEntries = ApplicationUninstallerFactory.GetUninstallerEntries((x) =>
+            {
+                progressMax = x.TotalCount + 1;
+
+                /*await InvokeAsync(() =>
+                {
+                    ProgressBar.Maximum = progressMax;
+                    ProgressBar.Value = x.CurrentCount;
+                    TextBlock.Text = x.Message;
+
+                    var inner = x.Inner;
+                    if (inner != null)
+                    {
+                        SubProgressBar.Maximum = progressMax;
+                        SubProgressBar.Value = x.CurrentCount;
+                        SubTextBlock.Text = inner.Message;
+                    }
+                    else
+                    {
+                        SubProgressBar.Maximum = -1;
+                        SubProgressBar.Value = 0;
+                        SubTextBlock.Text = string.Empty;
+                    }
+                }, DispatcherPriority.Normal, token);*/
+
+            }, token);
+
+            if (token.IsCancellationRequested) return;
 
             /*await InvokeAsync(() =>
             {
                 ProgressBar.Maximum = progressMax;
-                ProgressBar.Value = x.CurrentCount;
-                TextBlock.Text = x.Message;
-
-                var inner = x.Inner;
-                if (inner != null)
-                {
-                    SubProgressBar.Maximum = progressMax;
-                    SubProgressBar.Value = x.CurrentCount;
-                    SubTextBlock.Text = inner.Message;
-                }
-                else
-                {
-                    SubProgressBar.Maximum = -1;
-                    SubProgressBar.Value = 0;
-                    SubTextBlock.Text = string.Empty;
-                }
+                TextBlock.Text = Forms.Windows.MainWindow.ProgressFinishing;
+                SubProgressBar.Maximum = 2;
+                SubProgressBar.Value = 0;
+                SubTextBlock.Text = string.Empty;
             }, DispatcherPriority.Normal, token);*/
 
-        }, token);
+            if (token.IsCancellationRequested) return;
 
-        /*await InvokeAsync(() =>
-        {
-            ProgressBar.Maximum = progressMax;
-            TextBlock.Text = Forms.Windows.MainWindow.ProgressFinishing;
-            SubProgressBar.Maximum = 2;
-            SubProgressBar.Value = 0;
-            SubTextBlock.Text = string.Empty;
-        }, DispatcherPriority.Normal, token);*/
+            // Remove Flow Launcher from the list so that it doesn't show up in the UI
+            uninstallerEntries.RemoveAll(x =>
+                (x.DisplayName == FlowLauncherDisplayName || x.DisplayNameTrimmed == FlowLauncherDisplayName) &&
+                (x.Publisher == FlowLauncherPublisher || x.PublisherTrimmed == FlowLauncherPublisher));
 
-        // Remove Flow Launcher from the list so that it doesn't show up in the UI
-        uninstallerEntries.RemoveAll(x =>
-            (x.DisplayName == FlowLauncherDisplayName || x.DisplayNameTrimmed == FlowLauncherDisplayName) &&
-            (x.Publisher == FlowLauncherPublisher || x.PublisherTrimmed == FlowLauncherPublisher));
+            AllUninstallers = uninstallerEntries;
 
-        AllUninstallers = uninstallerEntries;
+            if (token.IsCancellationRequested) return;
 
-        /*await InvokeAsync(() =>
-        {
-            SubProgressBar.Value = 1;
-            SubTextBlock.Text = Forms.Windows.MainWindow.ProgressFinishingIcons;
-        }, DispatcherPriority.Normal, token);*/
+            /*await InvokeAsync(() =>
+            {
+                SubProgressBar.Value = 1;
+                SubTextBlock.Text = Forms.Windows.MainWindow.ProgressFinishingIcons;
+            }, DispatcherPriority.Normal, token);*/
 
-        try
-        {
-            _iconGetter.UpdateIconList(AllUninstallers, token);
+            if (token.IsCancellationRequested) return;
+
+            try
+            {
+                _iconGetter.UpdateIconList(uninstallerEntries, token);
+            }
+            catch (Exception ex)
+            {
+                Context.API.LogException(ClassName, "Failed to load icons", ex);
+            }
+
+            /*await InvokeAsync(() =>
+            {
+                ProgressBar.Visibility = Visibility.Collapsed;
+                TextBlock.Visibility = Visibility.Collapsed;
+                SubProgressBar.Visibility = Visibility.Collapsed;
+                SubTextBlock.Visibility = Visibility.Collapsed;
+            }, DispatcherPriority.Normal, token);*/
+
+            if (token.IsCancellationRequested) return;
+
+            Context.API.LogDebug(ClassName, $"Loaded {uninstallerEntries.Count} uninstallers");
         }
-        catch (Exception ex)
+        finally
         {
-            Context.API.LogException(ClassName, "Failed to load icons", ex);
+            _queryUpdateSemaphore.Release();
         }
-
-        /*await InvokeAsync(() =>
-        {
-            ProgressBar.Visibility = Visibility.Collapsed;
-            TextBlock.Visibility = Visibility.Collapsed;
-            SubProgressBar.Visibility = Visibility.Collapsed;
-            SubTextBlock.Visibility = Visibility.Collapsed;
-        }, DispatcherPriority.Normal, token);*/
-
-        _queryUpdateSemaphore.Release();
-
-        Context.API.LogDebug(ClassName, $"Loaded {AllUninstallers.Count} uninstallers");
 
         _ = UpdateTextAsync(token);
     }
 
     private async Task UpdateTextAsync(CancellationToken token)
     {
-        await _queryUpdateSemaphore.WaitAsync(token);
+        var allUninstallers = AllUninstallers;
 
         await Task.Run(() =>
         {
             FilteredUninstallers.Clear();
 
-            foreach (var uninstaller in AllUninstallers)
+            foreach (var uninstaller in allUninstallers)
             {
+                if (token.IsCancellationRequested) return;
+
                 if (ListViewFilter(uninstaller))
                 {
                     FilteredUninstallers.Add(uninstaller);
                 }
             }
         }, token).ConfigureAwait(false);
-
-        _queryUpdateSemaphore.Release();
 
         Context.API.LogDebug(ClassName, $"Filtered {FilteredUninstallers.Count} uninstallers");
     }
@@ -398,8 +431,9 @@ public class UninstallerPlus : IAsyncPlugin, IAsyncReloadable, IContextMenu, IPl
             IcoPath = "Images/uninstall.png",
             Action = _ =>
             {
+                var allUninstallers = AllUninstallers;
                 Context.API.HideMainWindow();
-                _mainWindow.RunLoudUninstall(new[] { uninstaller }, AllUninstallers.ToList());
+                _mainWindow.RunLoudUninstall(new[] { uninstaller }, allUninstallers);
                 return true;
             }
         };
@@ -411,8 +445,9 @@ public class UninstallerPlus : IAsyncPlugin, IAsyncReloadable, IContextMenu, IPl
             IcoPath = "Images/quiet.png",
             Action = _ =>
             {
+                var allUninstallers = AllUninstallers;
                 Context.API.HideMainWindow();
-                _mainWindow.RunQuietUninstall(new[] { uninstaller }, AllUninstallers.ToList());
+                _mainWindow.RunQuietUninstall(new[] { uninstaller }, allUninstallers);
                 return true;
             }
         };
@@ -440,8 +475,9 @@ public class UninstallerPlus : IAsyncPlugin, IAsyncReloadable, IContextMenu, IPl
             IcoPath = "Images/manual.png",
             Action = _ =>
             {
+                var allUninstallers = AllUninstallers;
                 Context.API.HideMainWindow();
-                _mainWindow.RunManualUninstall(new[] { uninstaller }, AllUninstallers.ToList());
+                _mainWindow.RunManualUninstall(new[] { uninstaller }, allUninstallers);
                 return true;
             }
         };
@@ -677,9 +713,9 @@ public class UninstallerPlus : IAsyncPlugin, IAsyncReloadable, IContextMenu, IPl
     {
         if (disposing)
         {
-            _refreshSource.Cancel();
+            _refreshSource?.Cancel();
+            _refreshSource?.Dispose();
             _queryUpdateSemaphore.Dispose();
-            _refreshSource.Dispose();
             _iconGetter?.Dispose();
             _disposed = true;
         }
