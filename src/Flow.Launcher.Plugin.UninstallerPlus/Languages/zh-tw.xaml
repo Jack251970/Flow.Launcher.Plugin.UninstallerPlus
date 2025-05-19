@@ -8,6 +8,9 @@
     <system:String x:Key="flowlauncher_plugin_uninstallerplus_plugin_name">卸載器+</system:String>
     <system:String x:Key="flowlauncher_plugin_uninstallerplus_plugin_description">基於Bulk-Crap-Uninstaller輕鬆卸載桌面與商店應用程序</system:String>
 
+    <!--  Query  -->
+    <system:String x:Key="flowlauncher_plugin_uninstallerplus_reload">重新載入解除安裝程式清單</system:String>
+
     <!--  Context Menu  -->
     <system:String x:Key="flowlauncher_plugin_uninstallerplus_context_menu_uninstall">解除安裝</system:String>
     <system:String x:Key="flowlauncher_plugin_uninstallerplus_context_menu_uninstall_quietly">靜默解除安裝</system:String>

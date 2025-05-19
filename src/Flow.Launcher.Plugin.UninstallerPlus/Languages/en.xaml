@@ -8,6 +8,9 @@
     <system:String x:Key="flowlauncher_plugin_uninstallerplus_plugin_name">Uninstaller+</system:String>
     <system:String x:Key="flowlauncher_plugin_uninstallerplus_plugin_description">Easily uninstall desktop and Microsoft store programs based on Bulk-Crap-Uninstaller</system:String>
 
+    <!--  Query  -->
+    <system:String x:Key="flowlauncher_plugin_uninstallerplus_reload">Reload uninstaller list</system:String>
+
     <!--  Context Menu  -->
     <system:String x:Key="flowlauncher_plugin_uninstallerplus_context_menu_uninstall">Uninstall</system:String>
     <system:String x:Key="flowlauncher_plugin_uninstallerplus_context_menu_uninstall_quietly">Uninstall quietly</system:String>
