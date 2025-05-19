@@ -10,6 +10,7 @@
 
     <!--  Query  -->
     <system:String x:Key="flowlauncher_plugin_uninstallerplus_reload">重新加载卸载程序列表</system:String>
+    <system:String x:Key="flowlauncher_plugin_uninstallerplus_reload_subtitle">请稍等片刻后重新查询</system:String>
 
     <!--  Context Menu  -->
     <system:String x:Key="flowlauncher_plugin_uninstallerplus_context_menu_uninstall">卸载</system:String>

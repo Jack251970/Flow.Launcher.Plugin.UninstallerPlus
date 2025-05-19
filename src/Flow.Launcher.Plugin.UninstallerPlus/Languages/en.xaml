@@ -10,6 +10,7 @@
 
     <!--  Query  -->
     <system:String x:Key="flowlauncher_plugin_uninstallerplus_reload">Reload uninstaller list</system:String>
+    <system:String x:Key="flowlauncher_plugin_uninstallerplus_reload_subtitle">Please wait for a while and requery</system:String>
 
     <!--  Context Menu  -->
     <system:String x:Key="flowlauncher_plugin_uninstallerplus_context_menu_uninstall">Uninstall</system:String>
