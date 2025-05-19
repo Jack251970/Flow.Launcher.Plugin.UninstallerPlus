@@ -27,7 +27,7 @@ public partial class MainWindow : Window
         }
     }
 
-    private readonly List<ApplicationUninstallerEntry> FilteredUninstallers = new();
+    private List<ApplicationUninstallerEntry> FilteredUninstallers = null!;
 
     private CancellationTokenSource? _refreshSource;
     private CancellationToken _refreshToken;
@@ -437,24 +437,25 @@ public partial class MainWindow : Window
     private async Task UpdateTextAsync(CancellationToken token)
     {
         var allUninstallers = AllUninstallers;
-        
+        var filteredUninstallers = new List<ApplicationUninstallerEntry>(allUninstallers.Count);
+
         var uninstallerListText = await Task.Run(() =>
         {
-            FilteredUninstallers.Clear();
-
             foreach (var uninstaller in allUninstallers)
             {
                 if (token.IsCancellationRequested) return string.Empty;
 
                 if (ListViewFilter(uninstaller))
                 {
-                    FilteredUninstallers.Add(uninstaller);
+                    filteredUninstallers.Add(uninstaller);
                 }
             }
 
+            FilteredUninstallers = filteredUninstallers;
+
             var stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine($"{FilteredUninstallers.Count}/{allUninstallers.Count} Uninstallers:");
-            foreach (var uninstaller in FilteredUninstallers)
+            stringBuilder.AppendLine($"{filteredUninstallers.Count}/{allUninstallers.Count} Uninstallers:");
+            foreach (var uninstaller in filteredUninstallers)
             {
                 stringBuilder.AppendLine($"{uninstaller.DisplayName} By {uninstaller.Publisher}");
             }
@@ -463,8 +464,12 @@ public partial class MainWindow : Window
 
         await InvokeAsync(() =>
         {
-            UninstallerListTextBlock.Text = uninstallerListText;
-            Image.Source = GetIcon(FilteredUninstallers[0]);
+            var firstUninstaller = filteredUninstallers.FirstOrDefault();
+            if (firstUninstaller != null)
+            {
+                UninstallerListTextBlock.Text = uninstallerListText;
+                Image.Source = GetIcon(firstUninstaller);
+            }
         }, DispatcherPriority.Normal, _refreshToken);
 
         // Local function
@@ -560,7 +565,8 @@ public partial class MainWindow : Window
 
                 try
                 {
-                    foreach (var uninstaller in FilteredUninstallers)
+                    var filteredUninstallers = FilteredUninstallers;
+                    foreach (var uninstaller in filteredUninstallers)
                     {
                         if (uninstaller.DisplayName.ToLower().Contains(uninstallText.ToLower()))
                         {
@@ -580,7 +586,8 @@ public partial class MainWindow : Window
             }
             else
             {
-                foreach (var uninstaller in FilteredUninstallers)
+                var filteredUninstallers = FilteredUninstallers;
+                foreach (var uninstaller in filteredUninstallers)
                 {
                     if (uninstaller.DisplayName.ToLower().Contains(uninstallText.ToLower()))
                     {
