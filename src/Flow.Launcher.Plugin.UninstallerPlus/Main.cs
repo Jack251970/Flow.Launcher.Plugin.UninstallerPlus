@@ -123,65 +123,6 @@ public class UninstallerPlus : IAsyncPlugin, IAsyncReloadable, IContextMenu, IPl
 
     #region Initialize List
 
-    private List<Result> QueryList(string searchTerm)
-    {
-        var results = new List<Result>();
-
-        if (string.IsNullOrWhiteSpace(searchTerm))
-        {
-            foreach (var uninstaller in FilteredUninstallers)
-            {
-                var result = new Result
-                {
-                    Title = uninstaller.DisplayName,
-                    AutoCompleteText = uninstaller.DisplayName,
-                    SubTitle = uninstaller.Publisher,
-                    ContextData = uninstaller,
-                    IcoPath = uninstaller.DisplayIcon,
-                    Score = 0,
-                    Action = _ =>
-                    {
-                        var allUninstallers = AllUninstallers;
-                        Context.API.HideMainWindow();
-                        _mainWindow.RunLoudUninstall(new[] { uninstaller }, allUninstallers);
-                        return true;
-                    }
-                };
-                results.Add(result);
-            }
-        }
-        else
-        {
-            foreach (var uninstaller in FilteredUninstallers)
-            {
-                var match = Context.API.FuzzySearch(searchTerm, uninstaller.DisplayName);
-
-                if (!match.IsSearchPrecisionScoreMet()) continue;
-
-                var result = new Result
-                {
-                    Title = uninstaller.DisplayName,
-                    AutoCompleteText = uninstaller.DisplayName,
-                    SubTitle = uninstaller.Publisher,
-                    ContextData = uninstaller,
-                    IcoPath = uninstaller.DisplayIcon,
-                    TitleHighlightData = match.MatchData,
-                    Score = match.Score,
-                    Action = _ =>
-                    {
-                        var allUninstallers = AllUninstallers;
-                        Context.API.HideMainWindow();
-                        _mainWindow.RunLoudUninstall(new[] { uninstaller }, allUninstallers);
-                        return true;
-                    }
-                };
-                results.Add(result);
-            }
-        }
-
-        return results;
-    }
-
     private void InitiateListRefresh()
     {
         try
@@ -331,6 +272,69 @@ public class UninstallerPlus : IAsyncPlugin, IAsyncReloadable, IContextMenu, IPl
         }, token).ConfigureAwait(false);
 
         Context.API.LogDebug(ClassName, $"Filtered {FilteredUninstallers.Count} uninstallers");
+    }
+
+    #endregion
+
+    #region Query List
+
+    private List<Result> QueryList(string searchTerm)
+    {
+        var results = new List<Result>();
+
+        if (string.IsNullOrWhiteSpace(searchTerm))
+        {
+            foreach (var uninstaller in FilteredUninstallers)
+            {
+                var result = new Result
+                {
+                    Title = uninstaller.DisplayName,
+                    AutoCompleteText = uninstaller.DisplayName,
+                    SubTitle = uninstaller.Publisher,
+                    ContextData = uninstaller,
+                    IcoPath = uninstaller.DisplayIcon,
+                    Score = 0,
+                    Action = _ =>
+                    {
+                        var allUninstallers = AllUninstallers;
+                        Context.API.HideMainWindow();
+                        _mainWindow.RunLoudUninstall(new[] { uninstaller }, allUninstallers);
+                        return true;
+                    }
+                };
+                results.Add(result);
+            }
+        }
+        else
+        {
+            foreach (var uninstaller in FilteredUninstallers)
+            {
+                var match = Context.API.FuzzySearch(searchTerm, uninstaller.DisplayName);
+
+                if (!match.IsSearchPrecisionScoreMet()) continue;
+
+                var result = new Result
+                {
+                    Title = uninstaller.DisplayName,
+                    AutoCompleteText = uninstaller.DisplayName,
+                    SubTitle = uninstaller.Publisher,
+                    ContextData = uninstaller,
+                    IcoPath = uninstaller.DisplayIcon,
+                    TitleHighlightData = match.MatchData,
+                    Score = match.Score,
+                    Action = _ =>
+                    {
+                        var allUninstallers = AllUninstallers;
+                        Context.API.HideMainWindow();
+                        _mainWindow.RunLoudUninstall(new[] { uninstaller }, allUninstallers);
+                        return true;
+                    }
+                };
+                results.Add(result);
+            }
+        }
+
+        return results;
     }
 
     #endregion
