@@ -71,7 +71,7 @@ public class UninstallerPlus : IAsyncPlugin, IContextMenu, IReloadable, IResultU
             await _queryUpdateSemaphore.WaitAsync(token).ConfigureAwait(false);
             try
             {
-                return QueryList(query.Search);
+                return QueryList(query.Search, token);
             }
             finally
             {
@@ -80,7 +80,7 @@ public class UninstallerPlus : IAsyncPlugin, IContextMenu, IReloadable, IResultU
         }
         else
         {
-            return QueryList(query.Search);
+            return QueryList(query.Search, token);
         }
     }
 
@@ -347,7 +347,7 @@ public class UninstallerPlus : IAsyncPlugin, IContextMenu, IReloadable, IResultU
 
     #region Query List
 
-    private List<Result> QueryList(string searchTerm)
+    private List<Result> QueryList(string searchTerm, CancellationToken token)
     {
         var results = new List<Result>();
 
@@ -355,6 +355,8 @@ public class UninstallerPlus : IAsyncPlugin, IContextMenu, IReloadable, IResultU
         {
             foreach (var uninstaller in FilteredUninstallers)
             {
+                token.ThrowIfCancellationRequested();
+
                 var result = new Result
                 {
                     Title = uninstaller.DisplayName,
@@ -378,6 +380,8 @@ public class UninstallerPlus : IAsyncPlugin, IContextMenu, IReloadable, IResultU
         {
             foreach (var uninstaller in FilteredUninstallers)
             {
+                token.ThrowIfCancellationRequested();
+
                 var match = Context.API.FuzzySearch(searchTerm, uninstaller.DisplayName);
 
                 if (!match.IsSearchPrecisionScoreMet()) continue;
