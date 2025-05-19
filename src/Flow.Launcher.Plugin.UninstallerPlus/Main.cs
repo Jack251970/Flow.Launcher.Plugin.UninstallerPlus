@@ -116,80 +116,6 @@ public class UninstallerPlus : IAsyncPlugin, IContextMenu, IReloadable, IResultU
 
     #endregion
 
-    #region IContextMenu Interface
-
-    public List<Result> LoadContextMenus(Result selectedResult)
-    {
-        if (selectedResult.ContextData is not ApplicationUninstallerEntry uninstaller)
-        {
-            return new List<Result>();
-        }
-
-        var results = new List<Result>();
-
-        var uninstallResult = new Result
-        {
-            Title = Context.API.GetTranslation("flowlauncher_plugin_uninstallerplus_context_menu_uninstall"),
-            IcoPath = "Images/uninstall.png",
-            Action = _ =>
-            {
-                var allUninstallers = AllUninstallers;
-                Context.API.HideMainWindow();
-                _mainWindow.RunLoudUninstall(new[] { uninstaller }, allUninstallers);
-                return true;
-            }
-        };
-        results.Add(uninstallResult);
-
-        var quietlyUninstallResult = new Result
-        {
-            Title = Context.API.GetTranslation("flowlauncher_plugin_uninstallerplus_context_menu_uninstall_quietly"),
-            IcoPath = "Images/quiet.png",
-            Action = _ =>
-            {
-                var allUninstallers = AllUninstallers;
-                Context.API.HideMainWindow();
-                _mainWindow.RunQuietUninstall(new[] { uninstaller }, allUninstallers);
-                return true;
-            }
-        };
-        results.Add(quietlyUninstallResult);
-
-        if (!string.IsNullOrEmpty(uninstaller.ModifyPath))
-        {
-            var modifyResult = new Result
-            {
-                Title = Context.API.GetTranslation("flowlauncher_plugin_uninstallerplus_context_menu_modify"),
-                IcoPath = "Images/modify.png",
-                Action = c =>
-                {
-                    Context.API.HideMainWindow();
-                    _mainWindow.RunModify(new[] { uninstaller });
-                    return true;
-                }
-            };
-            results.Add(modifyResult);
-        }
-
-        var manualUninstallResult = new Result
-        {
-            Title = Context.API.GetTranslation("flowlauncher_plugin_uninstallerplus_context_menu_uninstall_manually"),
-            IcoPath = "Images/manual.png",
-            Action = _ =>
-            {
-                var allUninstallers = AllUninstallers;
-                Context.API.HideMainWindow();
-                _mainWindow.RunManualUninstall(new[] { uninstaller }, allUninstallers);
-                return true;
-            }
-        };
-        results.Add(manualUninstallResult);
-
-        return results;
-    }
-
-    #endregion
-
     #region Initialize List
 
     private void InitiateListRefresh()
@@ -428,6 +354,80 @@ public class UninstallerPlus : IAsyncPlugin, IContextMenu, IReloadable, IResultU
                 results.Add(result);
             }
         }
+
+        return results;
+    }
+
+    #endregion
+
+    #region IContextMenu Interface
+
+    public List<Result> LoadContextMenus(Result selectedResult)
+    {
+        if (selectedResult.ContextData is not ApplicationUninstallerEntry uninstaller)
+        {
+            return new List<Result>();
+        }
+
+        var results = new List<Result>();
+
+        var uninstallResult = new Result
+        {
+            Title = Context.API.GetTranslation("flowlauncher_plugin_uninstallerplus_context_menu_uninstall"),
+            IcoPath = "Images/uninstall.png",
+            Action = _ =>
+            {
+                var allUninstallers = AllUninstallers;
+                Context.API.HideMainWindow();
+                _mainWindow.RunLoudUninstall(new[] { uninstaller }, allUninstallers);
+                return true;
+            }
+        };
+        results.Add(uninstallResult);
+
+        var quietlyUninstallResult = new Result
+        {
+            Title = Context.API.GetTranslation("flowlauncher_plugin_uninstallerplus_context_menu_uninstall_quietly"),
+            IcoPath = "Images/quiet.png",
+            Action = _ =>
+            {
+                var allUninstallers = AllUninstallers;
+                Context.API.HideMainWindow();
+                _mainWindow.RunQuietUninstall(new[] { uninstaller }, allUninstallers);
+                return true;
+            }
+        };
+        results.Add(quietlyUninstallResult);
+
+        if (!string.IsNullOrEmpty(uninstaller.ModifyPath))
+        {
+            var modifyResult = new Result
+            {
+                Title = Context.API.GetTranslation("flowlauncher_plugin_uninstallerplus_context_menu_modify"),
+                IcoPath = "Images/modify.png",
+                Action = c =>
+                {
+                    Context.API.HideMainWindow();
+                    _mainWindow.RunModify(new[] { uninstaller });
+                    return true;
+                }
+            };
+            results.Add(modifyResult);
+        }
+
+        var manualUninstallResult = new Result
+        {
+            Title = Context.API.GetTranslation("flowlauncher_plugin_uninstallerplus_context_menu_uninstall_manually"),
+            IcoPath = "Images/manual.png",
+            Action = _ =>
+            {
+                var allUninstallers = AllUninstallers;
+                Context.API.HideMainWindow();
+                _mainWindow.RunManualUninstall(new[] { uninstaller }, allUninstallers);
+                return true;
+            }
+        };
+        results.Add(manualUninstallResult);
 
         return results;
     }
