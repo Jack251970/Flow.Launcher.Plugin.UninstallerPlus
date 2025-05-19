@@ -14,15 +14,13 @@ using BCUSettings = BulkCrapUninstaller.Properties.Settings;
 
 namespace Flow.Launcher.Plugin.UninstallerPlus;
 
-public class UninstallerPlus : IAsyncPlugin, IAsyncReloadable, IContextMenu, IPluginI18n, ISettingProvider, IDisposable
+public class UninstallerPlus : IAsyncPlugin, IReloadable, IContextMenu, IPluginI18n, ISettingProvider, IDisposable
 {
     internal static PluginInitContext Context { get; private set; } = null!;
 
     internal static Settings Settings { get; private set; } = null!;
 
     private readonly static string ClassName = nameof(UninstallerPlus);
-
-    private readonly List<Result> EmptyResults = new();
 
     private UninstallerIconGetter _iconGetter = null!;
 
@@ -57,15 +55,7 @@ public class UninstallerPlus : IAsyncPlugin, IAsyncReloadable, IContextMenu, IPl
 
     public async Task<List<Result>> QueryAsync(Query query, CancellationToken token)
     {
-        try
-        {
-            return await Task.Run(() => Query(query, token), token);
-        }
-        catch (OperationCanceledException)
-        {
-            // Ignored - token cancelled
-        }
-        return EmptyResults;
+        return await Task.Run(() => Query(query, token), token);
     }
 
     public async Task<List<Result>> Query(Query query, CancellationToken token)
@@ -388,13 +378,11 @@ public class UninstallerPlus : IAsyncPlugin, IAsyncReloadable, IContextMenu, IPl
 
     #endregion
 
-    #region IAsyncReloadable Interface
+    #region IReloadable Interface
 
-    public async Task ReloadDataAsync()
+    public void ReloadData()
     {
         InitiateListRefresh();
-
-        await Task.CompletedTask;
     }
 
     #endregion
