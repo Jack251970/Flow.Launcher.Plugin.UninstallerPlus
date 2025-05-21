@@ -1,7 +1,3 @@
-using System;
-using System.IO;
-using System.Linq;
-using System.Text.Json;
 using Cake.Common;
 using Cake.Common.Diagnostics;
 using Cake.Common.IO;
@@ -13,6 +9,11 @@ using Cake.Compression;
 using Cake.Core;
 using Cake.Core.IO;
 using Cake.Frosting;
+using Flow.Launcher.Plugin;
+using System;
+using System.IO;
+using System.Linq;
+using System.Text.Json;
 
 namespace Build;
 
@@ -124,7 +125,7 @@ public class PublishTask : FrostingTask<BuildContext>
 
         if (versionFile != null)
         {
-            VersionInfo? versionInfoObj = JsonSerializer.Deserialize<VersionInfo>(
+            PluginMetadata? versionInfoObj = JsonSerializer.Deserialize<PluginMetadata>(
                 File.ReadAllText(versionFile.ToString()!)
             );
             if (versionInfoObj != null)
@@ -207,17 +208,3 @@ public sealed class CleanTask : FrostingTask<BuildContext>
 [IsDependentOn(typeof(BuildTask))]
 [IsDependentOn(typeof(PublishTask))]
 public class DefaultTask : FrostingTask { }
-
-public class VersionInfo
-{
-    public string? ID { get; set; }
-    public string? ActionKeyword { get; set; }
-    public string? Name { get; set; }
-    public string? Description { get; set; }
-    public string? Author { get; set; }
-    public string? Version { get; set; }
-    public string? Language { get; set; }
-    public string? Website { get; set; }
-    public string? IcoPath { get; set; }
-    public string? ExecuteFileName { get; set; }
-}
