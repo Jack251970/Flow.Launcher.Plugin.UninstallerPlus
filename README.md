@@ -103,8 +103,8 @@ Right click programs to open context menu to:
 ## 📚 Reference
 
 - [ICONS](https://icons8.com/icons)
-- [Bulk-Crap-Uninstaller](https://github.com/Klocman/Bulk-Crap-Uninstaller)
 - [ClipboardPlus](https://github.com/Jack251970/Flow.Launcher.Plugin.ClipboardPlus)
+- [Bulk-Crap-Uninstaller](https://github.com/Klocman/Bulk-Crap-Uninstaller)
 
 ## 📄 License
 
