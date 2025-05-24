@@ -65,13 +65,15 @@ public class UninstallerPlus : IAsyncPlugin, IContextMenu, IReloadable, IResultU
 
     public async Task<List<Result>> Query(Query query, CancellationToken token)
     {
+        var results = InitList(query);
+
         var initialized = _allUninstallers != null && _allUninstallers.Count > 0;
         if (!initialized)
         {
             await _queryUpdateSemaphore.WaitAsync(token).ConfigureAwait(false);
             try
             {
-                return QueryList(query, token);
+                return QueryList(results, query, token);
             }
             finally
             {
@@ -80,7 +82,7 @@ public class UninstallerPlus : IAsyncPlugin, IContextMenu, IReloadable, IResultU
         }
         else
         {
-            return QueryList(query, token);
+            return QueryList(results, query, token);
         }
     }
 
@@ -273,11 +275,9 @@ public class UninstallerPlus : IAsyncPlugin, IContextMenu, IReloadable, IResultU
 
     #region Query List
 
-    private List<Result> QueryList(Query query, CancellationToken token)
+    private List<Result> InitList(Query query)
     {
-        var searchTerm = query.Search;
         var results = new List<Result>();
-
         var reloadResult = new Result
         {
             Title = Context.API.GetTranslation("flowlauncher_plugin_uninstallerplus_reload"),
@@ -292,12 +292,19 @@ public class UninstallerPlus : IAsyncPlugin, IContextMenu, IReloadable, IResultU
             }
         };
         results.Add(reloadResult);
+
         ResultsUpdated?.Invoke(this, new ResultUpdatedEventArgs
         {
             Results = results,
             Query = query
         });
 
+        return results;
+    }
+
+    private List<Result> QueryList(List<Result> results, Query query, CancellationToken token)
+    {
+        var searchTerm = query.Search;
         var filteredUninstallers = FilteredUninstallers;
         if (string.IsNullOrWhiteSpace(searchTerm))
         {
