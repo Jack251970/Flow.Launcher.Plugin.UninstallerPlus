@@ -37,7 +37,7 @@ public class UninstallerPlus : IAsyncPlugin, IContextMenu, IReloadable, IResultU
         }
     }
 
-    private bool Initialized => _allUninstallers != null && _allUninstallers.Count > 0;
+    private bool UninstallersInitialized => _allUninstallers != null && _allUninstallers.Count > 0;
 
     private List<ApplicationUninstallerEntry> FilteredUninstallers = null!;
 
@@ -69,7 +69,7 @@ public class UninstallerPlus : IAsyncPlugin, IContextMenu, IReloadable, IResultU
     {
         var results = InitList(query);
 
-        var initialized = Initialized;
+        var initialized = UninstallersInitialized;
         if (!initialized)
         {
             // If the list is not initialized, we need to wait for the list to be refreshed before querying
@@ -149,7 +149,7 @@ public class UninstallerPlus : IAsyncPlugin, IContextMenu, IReloadable, IResultU
 
     private async Task ListRefreshThread(CancellationToken token)
     {
-        var initialized = Initialized;
+        var initialized = UninstallersInitialized;
 
         await _queryUpdateSemaphore.WaitAsync(token).ConfigureAwait(false);
 
@@ -595,7 +595,7 @@ public class UninstallerPlus : IAsyncPlugin, IContextMenu, IReloadable, IResultU
             case nameof(Settings.FilterShowUpdates):
             case nameof(Settings.FilterShowWinFeatures):
             case nameof(Settings.FilterShowStoreApps):
-                if (Initialized)
+                if (UninstallersInitialized)
                 {
                     _ = Task.Run(() => UpdateText(_refreshToken), _refreshToken).ConfigureAwait(false);
                 }
