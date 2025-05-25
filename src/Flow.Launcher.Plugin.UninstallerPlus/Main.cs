@@ -37,6 +37,8 @@ public class UninstallerPlus : IAsyncPlugin, IContextMenu, IReloadable, IResultU
         }
     }
 
+    private bool Initialized => _allUninstallers != null && _allUninstallers.Count > 0;
+
     private List<ApplicationUninstallerEntry> FilteredUninstallers = null!;
 
     private CancellationTokenSource? _refreshSource;
@@ -67,9 +69,10 @@ public class UninstallerPlus : IAsyncPlugin, IContextMenu, IReloadable, IResultU
     {
         var results = InitList(query);
 
-        var initialized = _allUninstallers != null && _allUninstallers.Count > 0;
+        var initialized = Initialized;
         if (!initialized)
         {
+            // If the list is not initialized, we need to wait for the list to be refreshed before querying
             await _queryUpdateSemaphore.WaitAsync(token).ConfigureAwait(false);
             try
             {
@@ -146,6 +149,8 @@ public class UninstallerPlus : IAsyncPlugin, IContextMenu, IReloadable, IResultU
 
     private async Task ListRefreshThread(CancellationToken token)
     {
+        var initialized = Initialized;
+
         await _queryUpdateSemaphore.WaitAsync(token).ConfigureAwait(false);
 
         try
@@ -229,6 +234,8 @@ public class UninstallerPlus : IAsyncPlugin, IContextMenu, IReloadable, IResultU
                 Context.API.LogException(ClassName, "Failed to load icons", ex);
             }
 
+            if (token.IsCancellationRequested) return;
+
             /*await InvokeAsync(() =>
             {
                 ProgressBar.Visibility = Visibility.Collapsed;
@@ -237,38 +244,45 @@ public class UninstallerPlus : IAsyncPlugin, IContextMenu, IReloadable, IResultU
                 SubTextBlock.Visibility = Visibility.Collapsed;
             }, DispatcherPriority.Normal, token);*/
 
+            Context.API.LogDebug(ClassName, $"Loaded {uninstallerEntries.Count} uninstallers");
+
             if (token.IsCancellationRequested) return;
 
-            Context.API.LogDebug(ClassName, $"Loaded {uninstallerEntries.Count} uninstallers");
+            // For the first time initialization, we need to update the text insides the query update semaphore
+            // to ensure the query before the uninstall initialization work correctly 
+            if (!initialized)
+            {
+                UpdateText(token);
+            }
         }
         finally
         {
             _queryUpdateSemaphore.Release();
         }
 
-        _ = UpdateTextAsync(token);
+        if (initialized)
+        {
+            _ = Task.Run(() => UpdateText(token), token).ConfigureAwait(false);
+        }
     }
 
-    private async Task UpdateTextAsync(CancellationToken token)
+    private void UpdateText(CancellationToken token)
     {
-        await Task.Run(() =>
+        var allUninstallers = AllUninstallers;
+        var filteredUninstallers = new List<ApplicationUninstallerEntry>(allUninstallers.Count);
+
+        foreach (var uninstaller in allUninstallers)
         {
-            var allUninstallers = AllUninstallers;
-            var filteredUninstallers = new List<ApplicationUninstallerEntry>(allUninstallers.Count);
+            if (token.IsCancellationRequested) return;
 
-            foreach (var uninstaller in allUninstallers)
+            if (ListViewFilter(uninstaller))
             {
-                if (token.IsCancellationRequested) return;
-
-                if (ListViewFilter(uninstaller))
-                {
-                    filteredUninstallers.Add(uninstaller);
-                }
+                filteredUninstallers.Add(uninstaller);
             }
+        }
 
-            FilteredUninstallers = filteredUninstallers;
-            Context.API.LogDebug(ClassName, $"Filtered {filteredUninstallers.Count} uninstallers");
-        }, token).ConfigureAwait(false);
+        FilteredUninstallers = filteredUninstallers;
+        Context.API.LogDebug(ClassName, $"Filtered {filteredUninstallers.Count} uninstallers");
     }
 
     #endregion
@@ -581,7 +595,10 @@ public class UninstallerPlus : IAsyncPlugin, IContextMenu, IReloadable, IResultU
             case nameof(Settings.FilterShowUpdates):
             case nameof(Settings.FilterShowWinFeatures):
             case nameof(Settings.FilterShowStoreApps):
-                _ = UpdateTextAsync(_refreshToken);
+                if (Initialized)
+                {
+                    _ = Task.Run(() => UpdateText(_refreshToken), _refreshToken).ConfigureAwait(false);
+                }
                 break;
             // Synchronize Flow settings with BCU settings
             case nameof(Settings.BackupLeftovers):
