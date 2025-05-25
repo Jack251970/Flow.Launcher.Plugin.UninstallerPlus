@@ -27,6 +27,8 @@ public partial class MainWindow : Window
         }
     }
 
+    private bool _Initialized => _allUninstallers != null && _allUninstallers.Count > 0;
+
     private List<ApplicationUninstallerEntry> FilteredUninstallers = null!;
 
     private CancellationTokenSource? _refreshSource;
@@ -309,6 +311,8 @@ public partial class MainWindow : Window
 
     private async Task ListRefreshThread(CancellationToken token)
     {
+        var initialized = _Initialized;
+
         await _queryUpdateSemaphore.WaitAsync(token).ConfigureAwait(false);
 
         try
@@ -401,13 +405,23 @@ public partial class MainWindow : Window
                 SubProgressBar.Visibility = Visibility.Collapsed;
                 SubTextBlock.Visibility = Visibility.Collapsed;
             }, DispatcherPriority.Normal, token);
+
+            if (token.IsCancellationRequested) return;
+
+            if (!initialized)
+            {
+                await UpdateTextAsync(token).ConfigureAwait(false);
+            }
         }
         finally
         {
             _queryUpdateSemaphore.Release();
         }
 
-        _ = UpdateTextAsync(token);
+        if (initialized)
+        {
+            _ = UpdateTextAsync(token).ConfigureAwait(false);
+        }
     }
 
     private static async Task InvokeAsync(Action function, DispatcherPriority priority = DispatcherPriority.Normal, CancellationToken token = default)
@@ -545,7 +559,7 @@ public partial class MainWindow : Window
         var uninstallText = UninstallTextBox.Text;
         if (!string.IsNullOrEmpty(uninstallText))
         {
-            var initialized = _allUninstallers != null && _allUninstallers.Count > 0;
+            var initialized = _Initialized;
             if (!initialized)
             {
                 if (_queryUpdateSemaphore.CurrentCount < QueryUpdateSemaphoreMaxCount)
