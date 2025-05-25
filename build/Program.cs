@@ -32,7 +32,7 @@ public class BuildContext(ICakeContext context) : FrostingContext(context)
     public string DotNetBuildConfig { get; set; } = context.Argument("configuration", "Release");
     public const string SlnFile = "../src/Flow.Launcher.Plugin.UninstallerPlus.sln";
     public Lazy<SolutionParserResult> DefaultSln { get; set; } = new Lazy<SolutionParserResult>(() => context.ParseSolution(SlnFile));
-    public const string DeployFramework = "net7.0-windows";
+    public const string DeployFramework = "net7.0-windows10.0.18362.0";
     public string PublishDir = "output";
     public string PublishVersion = string.Empty;
     public string BuildFor = "win-x64"; // win-x64 win-x86
