@@ -317,7 +317,7 @@ namespace UninstallTools.Factory
         /// <summary>
         /// Attach startup entries to uninstaller entries that are automatically detected as related.
         /// </summary>
-        public static void AttachStartupEntries(IEnumerable<ApplicationUninstallerEntry> uninstallers, IEnumerable<StartupEntryBase> startupEntries, CancellationToken token)
+        public static void AttachStartupEntries(IEnumerable<ApplicationUninstallerEntry> uninstallers, IEnumerable<StartupEntryBase> startupEntries, CancellationToken token = default)
         {
             // Using DoForEach to avoid multiple enumerations
             StartupManager.AssignStartupEntries(uninstallers
