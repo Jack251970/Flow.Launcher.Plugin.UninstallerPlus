@@ -298,7 +298,7 @@ public class UninstallerPlus : IAsyncPlugin, IContextMenu, IReloadable, IResultU
             SubTitle = Context.API.GetTranslation("flowlauncher_plugin_uninstallerplus_reload_subtitle"),
             IcoPath = "Images/reload.png",
             Glyph = new(FontFamily: "/Resources/#Segoe Fluent Icons", Glyph: "\uE72C"),
-            Score = 100,
+            Score = Result.MaxScore, // Set to the topmost
             Action = _ =>
             {
                 InitiateListRefresh();
