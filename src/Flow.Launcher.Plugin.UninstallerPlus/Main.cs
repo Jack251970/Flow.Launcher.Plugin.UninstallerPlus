@@ -334,6 +334,7 @@ public class UninstallerPlus : IAsyncPlugin, IContextMenu, IReloadable, IResultU
                     ContextData = uninstaller,
                     IcoPath = uninstaller.DisplayIcon,
                     Score = 0,
+                    AddSelectedCount = false,
                     Action = _ =>
                     {
                         var allUninstallers = AllUninstallers;
@@ -364,6 +365,7 @@ public class UninstallerPlus : IAsyncPlugin, IContextMenu, IReloadable, IResultU
                     IcoPath = uninstaller.DisplayIcon,
                     TitleHighlightData = match.MatchData,
                     Score = match.Score,
+                    AddSelectedCount = false,
                     Action = _ =>
                     {
                         var allUninstallers = AllUninstallers;
@@ -397,6 +399,8 @@ public class UninstallerPlus : IAsyncPlugin, IContextMenu, IReloadable, IResultU
             Title = Context.API.GetTranslation("flowlauncher_plugin_uninstallerplus_context_menu_uninstall"),
             IcoPath = "Images/uninstall.png",
             Glyph = new(FontFamily: "/Resources/#Segoe Fluent Icons", Glyph: "\uE835"),
+            Score = 4,
+            AddSelectedCount = false,
             Action = _ =>
             {
                 var allUninstallers = AllUninstallers;
@@ -412,6 +416,8 @@ public class UninstallerPlus : IAsyncPlugin, IContextMenu, IReloadable, IResultU
             Title = Context.API.GetTranslation("flowlauncher_plugin_uninstallerplus_context_menu_uninstall_quietly"),
             IcoPath = "Images/quiet.png",
             Glyph = new(FontFamily: "/Resources/#Segoe Fluent Icons", Glyph: "\uF71D"),
+            Score = 3,
+            AddSelectedCount = false,
             Action = _ =>
             {
                 var allUninstallers = AllUninstallers;
@@ -429,6 +435,8 @@ public class UninstallerPlus : IAsyncPlugin, IContextMenu, IReloadable, IResultU
                 Title = Context.API.GetTranslation("flowlauncher_plugin_uninstallerplus_context_menu_modify"),
                 IcoPath = "Images/modify.png",
                 Glyph = new(FontFamily: "/Resources/#Segoe Fluent Icons", Glyph: "\uE932"),
+                Score = 2,
+                AddSelectedCount = false,
                 Action = c =>
                 {
                     Context.API.HideMainWindow();
@@ -444,6 +452,8 @@ public class UninstallerPlus : IAsyncPlugin, IContextMenu, IReloadable, IResultU
             Title = Context.API.GetTranslation("flowlauncher_plugin_uninstallerplus_context_menu_uninstall_manually"),
             IcoPath = "Images/manual.png",
             Glyph = new(FontFamily: "/Resources/#Segoe Fluent Icons", Glyph: "\uE736"),
+            Score = 1,
+            AddSelectedCount = false,
             Action = _ =>
             {
                 var allUninstallers = AllUninstallers;
