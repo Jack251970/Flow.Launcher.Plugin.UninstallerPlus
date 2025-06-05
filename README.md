@@ -4,6 +4,14 @@
 
 # Flow Launcher UninstallerPlus Plugin
 
+<p>
+  <img src="https://img.shields.io/maintenance/yes/3000">
+  <a href="https://github.com/Flow-Launcher/Flow.Launcher"><img src="https://img.shields.io/badge/Flow%20Launcher-1.20.0+-orange"></a>
+  <img src="https://img.shields.io/github/release-date/Jack251970/Flow.Launcher.Plugin.UninstallerPlus">
+  <a href="https://github.com/Jack251970/Flow.Launcher.Plugin.UninstallerPlus/releases/latest"><img src="https://img.shields.io/github/v/release/Jack251970/Flow.Launcher.Plugin.UninstallerPlus"></a>
+  <img src="https://img.shields.io/github/license/Jack251970/Flow.Launcher.Plugin.UninstallerPlus">
+</p>
+
 **This plugin is a program uninstaller for [Flow Launcher](https://github.com/Flow-Launcher/Flow.Launcher). It can help you uninstall desktop and Microsoft store programs based on [Bulk-Crap-Uninstaller](https://github.com/Klocman/Bulk-Crap-Uninstaller).**
 
 ## ⭐ Features
