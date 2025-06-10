@@ -330,7 +330,9 @@ public class UninstallerPlus : IAsyncPlugin, IContextMenu, IReloadable, IResultU
                 {
                     Title = uninstaller.DisplayName,
                     AutoCompleteText = uninstaller.DisplayName,
-                    SubTitle = uninstaller.Publisher,
+                    SubTitle = string.IsNullOrEmpty(uninstaller.DisplayVersion) ?
+                        $"{uninstaller.Publisher} v{uninstaller.DisplayVersion}" :
+                        $"{uninstaller.Publisher}",
                     ContextData = uninstaller,
                     IcoPath = uninstaller.DisplayIcon,
                     Score = 0,
@@ -360,7 +362,9 @@ public class UninstallerPlus : IAsyncPlugin, IContextMenu, IReloadable, IResultU
                 {
                     Title = uninstaller.DisplayName,
                     AutoCompleteText = uninstaller.DisplayName,
-                    SubTitle = uninstaller.Publisher,
+                    SubTitle = string.IsNullOrEmpty(uninstaller.DisplayVersion) ?
+                        $"{uninstaller.Publisher} v{uninstaller.DisplayVersion}" :
+                        $"{uninstaller.Publisher}",
                     ContextData = uninstaller,
                     IcoPath = uninstaller.DisplayIcon,
                     TitleHighlightData = match.MatchData,
