@@ -330,7 +330,7 @@ public class UninstallerPlus : IAsyncPlugin, IContextMenu, IReloadable, IResultU
                 {
                     Title = uninstaller.DisplayName,
                     AutoCompleteText = uninstaller.DisplayName,
-                    SubTitle = string.IsNullOrEmpty(uninstaller.DisplayVersion) ?
+                    SubTitle = !string.IsNullOrEmpty(uninstaller.DisplayVersion) ?
                         $"{uninstaller.Publisher} v{uninstaller.DisplayVersion}" :
                         $"{uninstaller.Publisher}",
                     ContextData = uninstaller,
@@ -362,7 +362,7 @@ public class UninstallerPlus : IAsyncPlugin, IContextMenu, IReloadable, IResultU
                 {
                     Title = uninstaller.DisplayName,
                     AutoCompleteText = uninstaller.DisplayName,
-                    SubTitle = string.IsNullOrEmpty(uninstaller.DisplayVersion) ?
+                    SubTitle = !string.IsNullOrEmpty(uninstaller.DisplayVersion) ?
                         $"{uninstaller.Publisher} v{uninstaller.DisplayVersion}" :
                         $"{uninstaller.Publisher}",
                     ContextData = uninstaller,
