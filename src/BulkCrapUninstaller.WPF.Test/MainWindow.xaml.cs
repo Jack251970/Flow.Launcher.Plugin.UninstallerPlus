@@ -471,7 +471,14 @@ public partial class MainWindow : Window
             stringBuilder.AppendLine($"{filteredUninstallers.Count}/{allUninstallers.Count} Uninstallers:");
             foreach (var uninstaller in filteredUninstallers)
             {
-                stringBuilder.AppendLine($"{uninstaller.DisplayName} By {uninstaller.Publisher}");
+                if (string.IsNullOrEmpty(uninstaller.DisplayVersion))
+                {
+                    stringBuilder.AppendLine($"{uninstaller.DisplayName} By {uninstaller.Publisher}");
+                }
+                else
+                {
+                    stringBuilder.AppendLine($"{uninstaller.DisplayName} By {uninstaller.Publisher} v{uninstaller.DisplayVersion}");
+                }
             }
             return stringBuilder.ToString();
         }).ConfigureAwait(false);
