@@ -10,6 +10,7 @@
     Height="450"
     Closed="Window_Closed"
     Closing="Window_Closing"
+    DataContext="{Binding RelativeSource={RelativeSource Self}}"
     Loaded="Window_Loaded"
     mc:Ignorable="d">
     <Grid>
