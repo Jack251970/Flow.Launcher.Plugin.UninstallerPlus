@@ -335,6 +335,8 @@ public class UninstallerPlus : IAsyncPlugin, IContextMenu, IReloadable, IResultU
                         $"{uninstaller.Publisher}",
                     ContextData = uninstaller,
                     IcoPath = uninstaller.DisplayIcon,
+                    ShowBadge = true,
+                    BadgeIcoPath = "Images/badge.png",
                     Score = 0,
                     AddSelectedCount = false,
                     Action = _ =>
@@ -367,6 +369,8 @@ public class UninstallerPlus : IAsyncPlugin, IContextMenu, IReloadable, IResultU
                         $"{uninstaller.Publisher}",
                     ContextData = uninstaller,
                     IcoPath = uninstaller.DisplayIcon,
+                    ShowBadge = true,
+                    BadgeIcoPath = "Images/badge.png",
                     TitleHighlightData = match.MatchData,
                     Score = match.Score,
                     AddSelectedCount = false,
