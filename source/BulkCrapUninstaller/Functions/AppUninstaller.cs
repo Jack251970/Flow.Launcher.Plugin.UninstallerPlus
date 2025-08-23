@@ -1096,6 +1096,8 @@ namespace BulkCrapUninstaller.Functions
 
         private void ReleaseUninstallLock()
         {
+            // TODO: Fix possible issue here
+            // SynchronizationLockException: Object synchronization method was called from an unsynchronized block of code.
             Monitor.Exit(PublicUninstallLock);
             Monitor.Exit(_uninstallLock);
         }
