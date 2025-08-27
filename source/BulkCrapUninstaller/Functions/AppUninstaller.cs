@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Windows.Forms;
 using BulkCrapUninstaller.Forms;
@@ -1368,4 +1369,19 @@ namespace BulkCrapUninstaller.Functions
         }
 #endif
     }
+
+#if WPF_TEST
+    public interface IFlowPublicAPI
+    {
+        void LogDebug(string className, string message, [CallerMemberName] string methodName = "");
+
+        void LogInfo(string className, string message, [CallerMemberName] string methodName = "");
+
+        void LogWarn(string className, string message, [CallerMemberName] string methodName = "");
+
+        void LogError(string className, string message, [CallerMemberName] string methodName = "");
+
+        void LogException(string className, string message, Exception e, [CallerMemberName] string methodName = "");
+    }
+#endif
 }
