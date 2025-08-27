@@ -21,6 +21,8 @@ public class UninstallerPlus : IAsyncPlugin, IContextMenu, IReloadable, IResultU
 
     internal static Settings Settings { get; private set; } = null!;
 
+    internal static FlowPublicAPI FlowAPI { get; private set; } = null!;
+
     #region Private Fileds
 
     private readonly static string ClassName = nameof(UninstallerPlus);
@@ -92,6 +94,9 @@ public class UninstallerPlus : IAsyncPlugin, IContextMenu, IReloadable, IResultU
     public async Task InitAsync(PluginInitContext context)
     {
         Context = context;
+        
+        // Init Flow api
+        FlowAPI = new(context.API);
         
         // Init settings
         Settings = context.API.LoadSettingJsonStorage<Settings>();
