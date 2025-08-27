@@ -595,7 +595,7 @@ public partial class MainWindow : Window
                                 "Uninstall", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                             {
                                 var allUninstallers = AllUninstallers;
-                                _mainWindow.RunLoudUninstall(new[] { uninstaller }, allUninstallers);
+                                _mainWindow.RunLoudUninstall([uninstaller], allUninstallers);
                             }
                         }
                     }
@@ -616,7 +616,7 @@ public partial class MainWindow : Window
                             "Uninstall", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                         {
                             var allUninstallers = AllUninstallers;
-                            _mainWindow.RunLoudUninstall(new[] { uninstaller }, allUninstallers);
+                            _mainWindow.RunLoudUninstall([uninstaller], allUninstallers);
                         }
                     }
                 }
