@@ -116,7 +116,7 @@ public class UninstallerPlus : IAsyncPlugin, IContextMenu, IReloadable, IResultU
 
         // Init Bulk-Crap-Uninstaller instances
         _iconGetter = new UninstallerIconGetter();
-        _mainWindow = new MainWindow(InitiateListRefresh, (e) => Context.API.LogException(ClassName, "Exception happened in Bulk-Crap-Uninstaller", e));
+        _mainWindow = new MainWindow(InitiateListRefresh, FlowAPI);
 
         // Init program list
         InitiateListRefresh();

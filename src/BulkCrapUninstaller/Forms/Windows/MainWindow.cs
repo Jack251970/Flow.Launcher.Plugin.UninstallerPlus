@@ -3,6 +3,7 @@ using BulkCrapUninstaller.Properties;
 using Klocman.Forms.Tools;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UninstallTools;
 
 namespace BulkCrapUninstaller.Forms.Windows;
@@ -15,12 +16,21 @@ public class MainWindow
     public static string ProgressFinishing => Localisable.Progress_Finishing;
     public static string ProgressFinishingIcons => Localisable.Progress_Finishing_Icons;
 
+    private static readonly string ClassName = nameof(MainWindow);
+
     private readonly AppUninstaller _appUninstaller;
 
-    public MainWindow(Action listRefreshCallback, Action<Exception> sendErrorAction)
+    public MainWindow(Action listRefreshCallback, IFlowPublicAPI api)
     {
         _appUninstaller = new AppUninstaller(listRefreshCallback, b => { }, b => { });
-        PremadeDialogs.SendErrorAction = sendErrorAction;
+        if (api is null)
+        {
+            PremadeDialogs.SendErrorAction = (e) => { Debugger.Break(); };
+        }
+        else
+        {
+            PremadeDialogs.SendErrorAction = (e) => api.LogException(ClassName, "Exception happened in Bulk-Crap-Uninstaller", e);
+        }
     }
 
     public void RunLoudUninstall(IEnumerable<ApplicationUninstallerEntry> selectedUninstallers,

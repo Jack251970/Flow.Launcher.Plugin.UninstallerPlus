@@ -52,7 +52,7 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         _iconGetter = new UninstallerIconGetter();
-        _mainWindow = new Forms.Windows.MainWindow(InitiateListRefresh, (e) => { Debugger.Break(); });
+        _mainWindow = new Forms.Windows.MainWindow(InitiateListRefresh, null);
         UninstallToolsGlobalConfig.Initialize();
 
         Settings.BackupLeftovers = Klocman.YesNoAsk.Yes;
