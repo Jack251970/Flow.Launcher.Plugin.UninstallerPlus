@@ -304,7 +304,7 @@ namespace BulkCrapUninstaller.Functions
 
 #if WPF_TEST
         public void RunUninstallW(IEnumerable<ApplicationUninstallerEntry> selectedUninstallers,
-            IEnumerable<ApplicationUninstallerEntry> allUninstallers, bool quiet)
+            IEnumerable<ApplicationUninstallerEntry> allUninstallers, bool quiet, IFlowPublicAPI api)
         {
             try
             {
@@ -446,8 +446,9 @@ namespace BulkCrapUninstaller.Functions
                         _initiateListRefresh();
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                api?.LogException(nameof(AppUninstaller), quiet ? "Failed to uninstall application quietly" : "Failed to uninstall application", e);
                 FinallyAction();
             }
 

@@ -94,7 +94,7 @@ public class UninstallerPlus : IAsyncPlugin, IContextMenu, IReloadable, IResultU
     public async Task InitAsync(PluginInitContext context)
     {
         Context = context;
-        
+
         // Init Flow api
         FlowAPI = new(context.API);
         
@@ -348,7 +348,7 @@ public class UninstallerPlus : IAsyncPlugin, IContextMenu, IReloadable, IResultU
                     {
                         var allUninstallers = AllUninstallers;
                         Context.API.HideMainWindow();
-                        _mainWindow.RunLoudUninstall(new[] { uninstaller }, allUninstallers);
+                        _mainWindow.RunLoudUninstall(new[] { uninstaller }, allUninstallers, FlowAPI);
                         return true;
                     }
                 };
@@ -383,7 +383,7 @@ public class UninstallerPlus : IAsyncPlugin, IContextMenu, IReloadable, IResultU
                     {
                         var allUninstallers = AllUninstallers;
                         Context.API.HideMainWindow();
-                        _mainWindow.RunLoudUninstall(new[] { uninstaller }, allUninstallers);
+                        _mainWindow.RunLoudUninstall(new[] { uninstaller }, allUninstallers, FlowAPI);
                         return true;
                     }
                 };
@@ -418,7 +418,7 @@ public class UninstallerPlus : IAsyncPlugin, IContextMenu, IReloadable, IResultU
             {
                 var allUninstallers = AllUninstallers;
                 Context.API.HideMainWindow();
-                _mainWindow.RunLoudUninstall(new[] { uninstaller }, allUninstallers);
+                _mainWindow.RunLoudUninstall(new[] { uninstaller }, allUninstallers, FlowAPI);
                 return true;
             }
         };
@@ -435,7 +435,7 @@ public class UninstallerPlus : IAsyncPlugin, IContextMenu, IReloadable, IResultU
             {
                 var allUninstallers = AllUninstallers;
                 Context.API.HideMainWindow();
-                _mainWindow.RunQuietUninstall(new[] { uninstaller }, allUninstallers);
+                _mainWindow.RunQuietUninstall(new[] { uninstaller }, allUninstallers, FlowAPI);
                 return true;
             }
         };

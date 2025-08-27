@@ -24,15 +24,15 @@ public class MainWindow
     }
 
     public void RunLoudUninstall(IEnumerable<ApplicationUninstallerEntry> selectedUninstallers,
-        IEnumerable<ApplicationUninstallerEntry> allUninstallers)
+        IEnumerable<ApplicationUninstallerEntry> allUninstallers, IFlowPublicAPI api = null)
     {
-        _appUninstaller.RunUninstallW(selectedUninstallers, allUninstallers, false);
+        _appUninstaller.RunUninstallW(selectedUninstallers, allUninstallers, false, api);
     }
 
     public void RunQuietUninstall(IEnumerable<ApplicationUninstallerEntry> selectedUninstallers,
-        IEnumerable<ApplicationUninstallerEntry> allUninstallers)
+        IEnumerable<ApplicationUninstallerEntry> allUninstallers, IFlowPublicAPI api = null)
     {
-        _appUninstaller.RunUninstallW(selectedUninstallers, allUninstallers, true);
+        _appUninstaller.RunUninstallW(selectedUninstallers, allUninstallers, true, api);
     }
 
     public void RunModify(IEnumerable<ApplicationUninstallerEntry> selectedUninstallers)
