@@ -8,5 +8,6 @@
   "Language": "csharp",
   "Website": "https://github.com/Jack251970/Flow.Launcher.Plugin.UninstallerPlus",
   "IcoPath": "Images/icon.png",
-  "ExecuteFileName": "Flow.Launcher.Plugin.UninstallerPlus.dll"
+  "ExecuteFileName": "Flow.Launcher.Plugin.UninstallerPlus.dll",
+  "MinimumAppVersion": "2.0.0"
 }
