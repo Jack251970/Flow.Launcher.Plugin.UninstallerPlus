@@ -381,7 +381,7 @@ namespace BulkCrapUninstaller.Functions
                             }
                         }
 
-                        if (_settings.CreateRestorePoint && IsAdministrator())
+                        if (_settings.MessagesRestorePoints != YesNoAsk.No && IsAdministrator())
                         {
                             try
                             {
