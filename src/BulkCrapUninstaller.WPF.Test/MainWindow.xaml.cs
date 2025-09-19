@@ -75,7 +75,6 @@ public partial class MainWindow : Window
         _bCUSettings.MessagesShowAllBadJunk = Settings.MessagesShowAllBadJunk;
         _bCUSettings.BackupLeftoversDirectory = Settings.BackupLeftoversDirectory;
         _bCUSettings.UninstallPreventShutdown = Settings.UninstallPreventShutdown;
-        _bCUSettings.CreateRestorePoint = Settings.CreateRestorePoint;
         _bCUSettings.UninstallConcurrency = Settings.UninstallConcurrency;
         _bCUSettings.UninstallConcurrentOneLoud = Settings.UninstallConcurrentOneLoud;
         _bCUSettings.UninstallConcurrentDisableManualCollisionProtection = Settings.UninstallConcurrentDisableManualCollisionProtection;
@@ -136,9 +135,6 @@ public partial class MainWindow : Window
                 break;
             case nameof(Settings.UninstallPreventShutdown):
                 _bCUSettings.UninstallPreventShutdown = Settings.UninstallPreventShutdown;
-                break;
-            case nameof(Settings.CreateRestorePoint):
-                _bCUSettings.CreateRestorePoint = Settings.CreateRestorePoint;
                 break;
             case nameof(Settings.UninstallConcurrency):
                 _bCUSettings.UninstallConcurrency = Settings.UninstallConcurrency;
@@ -214,9 +210,6 @@ public partial class MainWindow : Window
                 break;
             case nameof(BCUSettings.UninstallPreventShutdown):
                 Settings.UninstallPreventShutdown = _bCUSettings.UninstallPreventShutdown;
-                break;
-            case nameof(BCUSettings.CreateRestorePoint):
-                Settings.CreateRestorePoint = _bCUSettings.CreateRestorePoint;
                 break;
             case nameof(BCUSettings.UninstallConcurrency):
                 Settings.UninstallConcurrency = _bCUSettings.UninstallConcurrency;

@@ -35,7 +35,6 @@ public sealed partial class Settings : ApplicationSettingsBase
             nameof(MessagesShowAllBadJunk) => MessagesShowAllBadJunk,
             nameof(BackupLeftoversDirectory) => BackupLeftoversDirectory,
             nameof(UninstallPreventShutdown) => UninstallPreventShutdown,
-            nameof(CreateRestorePoint) => CreateRestorePoint,
             nameof(UninstallConcurrency) => UninstallConcurrency,
             nameof(UninstallConcurrentOneLoud) => UninstallConcurrentOneLoud,
             nameof(UninstallConcurrentDisableManualCollisionProtection) => UninstallConcurrentDisableManualCollisionProtection,
@@ -64,7 +63,6 @@ public sealed partial class Settings : ApplicationSettingsBase
                 case nameof(MessagesShowAllBadJunk): MessagesShowAllBadJunk = Convert.ToBoolean(value); break;
                 case nameof(BackupLeftoversDirectory): BackupLeftoversDirectory = Convert.ToString(value); break;
                 case nameof(UninstallPreventShutdown): UninstallPreventShutdown = Convert.ToBoolean(value); break;
-                case nameof(CreateRestorePoint): CreateRestorePoint = Convert.ToBoolean(value); break;
                 case nameof(UninstallConcurrency): UninstallConcurrency = Convert.ToBoolean(value); break;
                 case nameof(UninstallConcurrentOneLoud): UninstallConcurrentOneLoud = Convert.ToBoolean(value); break;
                 case nameof(UninstallConcurrentDisableManualCollisionProtection): UninstallConcurrentDisableManualCollisionProtection = Convert.ToBoolean(value); break;
@@ -223,20 +221,6 @@ public sealed partial class Settings : ApplicationSettingsBase
             if (_uninstallPreventShutdown != value)
             {
                 _uninstallPreventShutdown = value;
-                OnPropertyChanged();
-            }
-        }
-    }
-
-    private bool _createRestorePoint = true;
-    public bool CreateRestorePoint
-    {
-        get => _createRestorePoint;
-        set
-        {
-            if (_createRestorePoint != value)
-            {
-                _createRestorePoint = value;
                 OnPropertyChanged();
             }
         }

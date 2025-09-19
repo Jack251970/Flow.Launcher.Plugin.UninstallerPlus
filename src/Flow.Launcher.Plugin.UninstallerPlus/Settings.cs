@@ -293,20 +293,6 @@ public class Settings : BaseModel
         }
     }
 
-    private bool _createRestorePoint = true;
-    public bool CreateRestorePoint
-    {
-        get => _createRestorePoint;
-        set
-        {
-            if (_createRestorePoint != value)
-            {
-                _createRestorePoint = value;
-                OnPropertyChanged();
-            }
-        }
-    }
-
     private bool _uninstallConcurrency = true;
     public bool UninstallConcurrency
     {
