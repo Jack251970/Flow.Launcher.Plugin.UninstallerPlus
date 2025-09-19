@@ -352,7 +352,7 @@ namespace BulkCrapUninstaller.Functions
 
                 _lockApplication(true);
 
-                BulkUninstallEntry[] taskEntries;
+                IReadOnlyList<BulkUninstallEntry> taskEntries;
 
                 wizard.Initialize(targetList, allUninstallerList.ToList(), quiet);
 
@@ -362,7 +362,7 @@ namespace BulkCrapUninstaller.Functions
 
                     try
                     {
-                        if (wizard.Results.Length == 0)
+                        if (wizard.Results.Count == 0)
                             return false;
 
                         taskEntries = wizard.Results;
@@ -385,7 +385,7 @@ namespace BulkCrapUninstaller.Functions
                         {
                             try
                             {
-                                SystemRestore.BeginSysRestoreW(wizard, taskEntries.Length, false);
+                                SystemRestore.BeginSysRestoreW(wizard, taskEntries.Count, false);
                             }
                             catch (Exception exception)
                             {

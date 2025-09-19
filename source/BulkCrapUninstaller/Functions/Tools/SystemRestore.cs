@@ -62,32 +62,32 @@ namespace BulkCrapUninstaller.Functions.Tools
 #if WPF_TEST
         public static bool BeginSysRestoreW(Form owner, int count, bool displayMessage = true)
         {
-            if (SysRestore.SysRestoreAvailable())
+            if (!SysRestore.SysRestoreAvailable()) return false;
+
+            // If a restore is already running, do not start another one
+            if (_currentRestoreId != long.MinValue) return true;
+
+            switch (displayMessage ? MessageBoxes.SysRestoreBeginQuestionW(owner) : MessageBoxes.PressedButton.Yes)
             {
-                switch (displayMessage ? MessageBoxes.SysRestoreBeginQuestionW(owner) : MessageBoxes.PressedButton.Yes)
-                {
-                    case MessageBoxes.PressedButton.Yes:
-                        var error = LoadingDialog.ShowDialog(owner, Localisable.LoadingDialogTitleCreatingRestorePoint, x =>
-                        {
-                            //if (_currentRestoreId > 0)
-                            EndSysRestore();
+                case MessageBoxes.PressedButton.Yes:
+                    var error = LoadingDialog.ShowDialog(owner, Localisable.LoadingDialogTitleCreatingRestorePoint, x =>
+                    {
+                        EndSysRestore();
 
-                            var result = SysRestore.StartRestore(MessageBoxes.GetSystemRestoreDescription(count),
-                                SysRestore.RestoreType.ApplicationUninstall, out _currentRestoreId, 3);
-                            if (result < 0)
-                                throw new IOException(Localisable.SysRestoreGenericError);
-                        });
+                        var result = SysRestore.StartRestore(MessageBoxes.GetSystemRestoreDescription(count), out _currentRestoreId, 3);
+                        if (result < 0)
+                            throw new IOException(Localisable.SysRestoreGenericError);
+                    });
 
-                        return error == null ||
-                               MessageBoxes.SysRestoreContinueAfterErrorW(owner, error.Message) ==
-                               MessageBoxes.PressedButton.Yes;
+                    return error == null ||
+                           MessageBoxes.SysRestoreContinueAfterErrorW(owner, error.Message) ==
+                           MessageBoxes.PressedButton.Yes;
 
-                    default:
-                    case MessageBoxes.PressedButton.Cancel:
-                        return false;
-                }
+                default:
+                case MessageBoxes.PressedButton.No:
+                case MessageBoxes.PressedButton.Cancel:
+                    return false;
             }
-            return true;
         }
 #endif
 
