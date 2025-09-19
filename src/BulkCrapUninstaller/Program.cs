@@ -40,9 +40,14 @@ public static class Program
     public static Uri ConnectionString { get; } = Debugger.IsAttached ? new Uri(@"http://localhost:7721") : new Uri(@"http://bugsklocman.ddns.net:7721");
 
 #pragma warning disable CA1024
-    public static HttpClient GetHttpClient() => new HttpClient
+    public static HttpClient HomeServerClient
     {
-        BaseAddress = ConnectionString
-    };
+        get
+        {
+            var cl = new HttpClient();
+            cl.BaseAddress = ConnectionString;
+            return cl;
+        }
+    }
 #pragma warning restore CA1024
 }
