@@ -3,7 +3,6 @@ using Klocman.Extensions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Controls;
@@ -32,7 +31,7 @@ public class UninstallerPlus : IAsyncPlugin, IContextMenu, IReloadable, IResultU
     private IList<ApplicationUninstallerEntry>? _allUninstallers;
     public IList<ApplicationUninstallerEntry> AllUninstallers
     {
-        get => _allUninstallers ?? new List<ApplicationUninstallerEntry>();
+        get => _allUninstallers ?? [];
         private set
         {
             _allUninstallers = value;
@@ -97,7 +96,7 @@ public class UninstallerPlus : IAsyncPlugin, IContextMenu, IReloadable, IResultU
 
         // Init Flow api
         FlowAPI = new(context.API);
-        
+
         // Init settings
         Settings = context.API.LoadSettingJsonStorage<Settings>();
         Context.API.LogDebug(ClassName, $"Init: {Settings}");
@@ -348,7 +347,7 @@ public class UninstallerPlus : IAsyncPlugin, IContextMenu, IReloadable, IResultU
                     {
                         var allUninstallers = AllUninstallers;
                         Context.API.HideMainWindow();
-                        _mainWindow.RunLoudUninstall(new[] { uninstaller }, allUninstallers, FlowAPI);
+                        _mainWindow.RunLoudUninstall([uninstaller], allUninstallers, FlowAPI);
                         return true;
                     }
                 };
@@ -383,7 +382,7 @@ public class UninstallerPlus : IAsyncPlugin, IContextMenu, IReloadable, IResultU
                     {
                         var allUninstallers = AllUninstallers;
                         Context.API.HideMainWindow();
-                        _mainWindow.RunLoudUninstall(new[] { uninstaller }, allUninstallers, FlowAPI);
+                        _mainWindow.RunLoudUninstall([uninstaller], allUninstallers, FlowAPI);
                         return true;
                     }
                 };
@@ -402,7 +401,7 @@ public class UninstallerPlus : IAsyncPlugin, IContextMenu, IReloadable, IResultU
     {
         if (selectedResult.ContextData is not ApplicationUninstallerEntry uninstaller)
         {
-            return new List<Result>();
+            return [];
         }
 
         var results = new List<Result>();
@@ -418,7 +417,7 @@ public class UninstallerPlus : IAsyncPlugin, IContextMenu, IReloadable, IResultU
             {
                 var allUninstallers = AllUninstallers;
                 Context.API.HideMainWindow();
-                _mainWindow.RunLoudUninstall(new[] { uninstaller }, allUninstallers, FlowAPI);
+                _mainWindow.RunLoudUninstall([uninstaller], allUninstallers, FlowAPI);
                 return true;
             }
         };
@@ -435,7 +434,7 @@ public class UninstallerPlus : IAsyncPlugin, IContextMenu, IReloadable, IResultU
             {
                 var allUninstallers = AllUninstallers;
                 Context.API.HideMainWindow();
-                _mainWindow.RunQuietUninstall(new[] { uninstaller }, allUninstallers, FlowAPI);
+                _mainWindow.RunQuietUninstall([uninstaller], allUninstallers, FlowAPI);
                 return true;
             }
         };
@@ -453,7 +452,7 @@ public class UninstallerPlus : IAsyncPlugin, IContextMenu, IReloadable, IResultU
                 Action = c =>
                 {
                     Context.API.HideMainWindow();
-                    _mainWindow.RunModify(new[] { uninstaller });
+                    _mainWindow.RunModify([uninstaller]);
                     return true;
                 }
             };
@@ -471,7 +470,7 @@ public class UninstallerPlus : IAsyncPlugin, IContextMenu, IReloadable, IResultU
             {
                 var allUninstallers = AllUninstallers;
                 Context.API.HideMainWindow();
-                _mainWindow.RunManualUninstall(new[] { uninstaller }, allUninstallers);
+                _mainWindow.RunManualUninstall([uninstaller], allUninstallers);
                 return true;
             }
         };
@@ -556,11 +555,6 @@ public class UninstallerPlus : IAsyncPlugin, IContextMenu, IReloadable, IResultU
     public string GetTranslatedPluginDescription()
     {
         return Localize.flowlauncher_plugin_uninstallerplus_plugin_description();
-    }
-
-    public void OnCultureInfoChanged(CultureInfo cultureInfo)
-    {
-
     }
 
     #endregion

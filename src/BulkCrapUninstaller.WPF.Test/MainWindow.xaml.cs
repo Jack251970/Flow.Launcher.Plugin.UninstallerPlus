@@ -59,7 +59,7 @@ public partial class MainWindow : Window
         Settings.PropertyChanged += Settings_PropertyChanged;
 
         InitBCUSettings();
-        
+
         _bCUSettings.PropertyChanged += BCUSettings_PropertyChanged;
     }
 
