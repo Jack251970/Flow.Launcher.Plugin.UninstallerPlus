@@ -299,8 +299,8 @@ public class UninstallerPlus : IAsyncPlugin, IContextMenu, IReloadable, IResultU
         var results = new List<Result>();
         var reloadResult = new Result
         {
-            Title = Context.API.GetTranslation("flowlauncher_plugin_uninstallerplus_reload"),
-            SubTitle = Context.API.GetTranslation("flowlauncher_plugin_uninstallerplus_reload_subtitle"),
+            Title = Localize.flowlauncher_plugin_uninstallerplus_reload(),
+            SubTitle = Localize.flowlauncher_plugin_uninstallerplus_reload_subtitle(),
             IcoPath = "Images/reload.png",
             Glyph = new(FontFamily: "/Resources/#Segoe Fluent Icons", Glyph: "\uE72C"),
             Score = Result.MaxScore, // Set to the topmost
@@ -409,7 +409,7 @@ public class UninstallerPlus : IAsyncPlugin, IContextMenu, IReloadable, IResultU
 
         var uninstallResult = new Result
         {
-            Title = Context.API.GetTranslation("flowlauncher_plugin_uninstallerplus_context_menu_uninstall"),
+            Title = Localize.flowlauncher_plugin_uninstallerplus_context_menu_uninstall(),
             IcoPath = "Images/uninstall.png",
             Glyph = new(FontFamily: "/Resources/#Segoe Fluent Icons", Glyph: "\uE835"),
             Score = 4,
@@ -426,7 +426,7 @@ public class UninstallerPlus : IAsyncPlugin, IContextMenu, IReloadable, IResultU
 
         var quietlyUninstallResult = new Result
         {
-            Title = Context.API.GetTranslation("flowlauncher_plugin_uninstallerplus_context_menu_uninstall_quietly"),
+            Title = Localize.flowlauncher_plugin_uninstallerplus_context_menu_uninstall_quietly(),
             IcoPath = "Images/quiet.png",
             Glyph = new(FontFamily: "/Resources/#Segoe Fluent Icons", Glyph: "\uF71D"),
             Score = 3,
@@ -445,7 +445,7 @@ public class UninstallerPlus : IAsyncPlugin, IContextMenu, IReloadable, IResultU
         {
             var modifyResult = new Result
             {
-                Title = Context.API.GetTranslation("flowlauncher_plugin_uninstallerplus_context_menu_modify"),
+                Title = Localize.flowlauncher_plugin_uninstallerplus_context_menu_modify(),
                 IcoPath = "Images/modify.png",
                 Glyph = new(FontFamily: "/Resources/#Segoe Fluent Icons", Glyph: "\uE932"),
                 Score = 2,
@@ -462,7 +462,7 @@ public class UninstallerPlus : IAsyncPlugin, IContextMenu, IReloadable, IResultU
 
         var manualUninstallResult = new Result
         {
-            Title = Context.API.GetTranslation("flowlauncher_plugin_uninstallerplus_context_menu_uninstall_manually"),
+            Title = Localize.flowlauncher_plugin_uninstallerplus_context_menu_uninstall_manually(),
             IcoPath = "Images/manual.png",
             Glyph = new(FontFamily: "/Resources/#Segoe Fluent Icons", Glyph: "\uE736"),
             Score = 1,
@@ -550,12 +550,12 @@ public class UninstallerPlus : IAsyncPlugin, IContextMenu, IReloadable, IResultU
 
     public string GetTranslatedPluginTitle()
     {
-        return Context.API.GetTranslation("flowlauncher_plugin_uninstallerplus_plugin_name");
+        return Localize.flowlauncher_plugin_uninstallerplus_plugin_name();
     }
 
     public string GetTranslatedPluginDescription()
     {
-        return Context.API.GetTranslation("flowlauncher_plugin_uninstallerplus_plugin_description");
+        return Localize.flowlauncher_plugin_uninstallerplus_plugin_description();
     }
 
     public void OnCultureInfoChanged(CultureInfo cultureInfo)
