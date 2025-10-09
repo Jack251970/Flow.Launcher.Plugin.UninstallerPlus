@@ -20,7 +20,7 @@ public partial class MainWindow : Window
     private IList<ApplicationUninstallerEntry>? _allUninstallers;
     public IList<ApplicationUninstallerEntry> AllUninstallers
     {
-        get => _allUninstallers ?? new List<ApplicationUninstallerEntry>();
+        get => _allUninstallers ?? [];
         private set
         {
             _allUninstallers = value;
@@ -582,7 +582,7 @@ public partial class MainWindow : Window
                     var filteredUninstallers = FilteredUninstallers;
                     foreach (var uninstaller in filteredUninstallers)
                     {
-                        if (uninstaller.DisplayName.ToLower().Contains(uninstallText.ToLower()))
+                        if (uninstaller.DisplayName.Contains(uninstallText, StringComparison.CurrentCultureIgnoreCase))
                         {
                             if (MessageBox.Show($"Do you want to uninstall {uninstaller.DisplayName} by {uninstaller.Publisher}?",
                                 "Uninstall", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
@@ -603,7 +603,7 @@ public partial class MainWindow : Window
                 var filteredUninstallers = FilteredUninstallers;
                 foreach (var uninstaller in filteredUninstallers)
                 {
-                    if (uninstaller.DisplayName.ToLower().Contains(uninstallText.ToLower()))
+                    if (uninstaller.DisplayName.Contains(uninstallText, StringComparison.CurrentCultureIgnoreCase))
                     {
                         if (MessageBox.Show($"Do you want to uninstall {uninstaller.DisplayName} by {uninstaller.Publisher}?",
                             "Uninstall", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
