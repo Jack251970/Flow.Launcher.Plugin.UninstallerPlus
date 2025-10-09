@@ -8,7 +8,6 @@
     ".NETCoreApp,Version=v6.0": {
       "WinUpdateHelper/1.0.0": {
         "dependencies": {
-          "Microsoft.CSharp": "4.7.0",
           "Interop.WUApiLib": "2.0.0.0",
           "runtimepack.Microsoft.Windows.SDK.NET.Ref": "10.0.18362.55"
         },
@@ -28,7 +27,6 @@
           }
         }
       },
-      "Microsoft.CSharp/4.7.0": {},
       "Interop.WUApiLib/2.0.0.0": {
         "runtime": {
           "Interop.WUApiLib.dll": {
@@ -49,13 +47,6 @@
       "type": "runtimepack",
       "serviceable": false,
       "sha512": ""
-    },
-    "Microsoft.CSharp/4.7.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-pTj+D3uJWyN3My70i2Hqo+OXixq3Os2D1nJ2x92FFo6sk8fYS1m1WLNTs0Dc1uPaViH0YvEEwvzddQ7y4rhXmA==",
-      "path": "microsoft.csharp/4.7.0",
-      "hashPath": "microsoft.csharp.4.7.0.nupkg.sha512"
     },
     "Interop.WUApiLib/2.0.0.0": {
       "type": "reference",
