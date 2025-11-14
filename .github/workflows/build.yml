@@ -59,6 +59,7 @@ jobs:
       - name: Upload Build package
         uses: actions/upload-artifact@v5
         with:
+          retention-days: 7
           path: |
             output/Uninstaller+*.zip
           compression-level: 0
