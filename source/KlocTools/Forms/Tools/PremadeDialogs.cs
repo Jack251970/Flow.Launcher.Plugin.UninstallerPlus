@@ -193,8 +193,10 @@ namespace Klocman.Forms.Tools
             {
                 var asyName = entryAsy.GetName();
                 var bits = ProcessTools.Is64BitProcess ? "64bit" : "32bit";
+#pragma warning disable SYSLIB0037 // Type or member is obsolete
                 additionalInfo =
                     $"{asyName.FullName} | {asyName.ProcessorArchitecture} | {Environment.OSVersion} | {bits}\n{additionalInfo}";
+#pragma warning restore SYSLIB0037 // Type or member is obsolete
             }
 
             if (DefaultOwner != null)
@@ -218,8 +220,10 @@ namespace Klocman.Forms.Tools
             {
                 var asyName = entryAsy.GetName();
                 var bits = ProcessTools.Is64BitProcess ? "64bit" : "32bit";
+#pragma warning disable SYSLIB0037 // Type or member is obsolete
                 additionalInfo =
                     $"{asyName.FullName} | {asyName.ProcessorArchitecture} | {Environment.OSVersion} | {bits}\n{additionalInfo}";
+#pragma warning restore SYSLIB0037 // Type or member is obsolete
             }
 
             if (owner != null)

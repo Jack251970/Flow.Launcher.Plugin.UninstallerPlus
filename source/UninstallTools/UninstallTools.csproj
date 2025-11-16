@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFramework>net6.0-windows10.0.18362.0</TargetFramework>
+		<TargetFramework>net9.0-windows10.0.18362.0</TargetFramework>
 		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
 		<OutputType>Library</OutputType>
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -78,7 +78,6 @@
     -->
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="Microsoft.VisualBasic" Version="10.3.0" />
 		<PackageReference Include="System.Management" Version="9.0.8" />
 		<PackageReference Include="TaskScheduler" Version="2.12.2" />
 	</ItemGroup>
