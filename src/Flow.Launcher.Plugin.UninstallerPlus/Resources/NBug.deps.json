@@ -1,0 +1,111 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v9.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v9.0": {
+      "NBug/1.0.0": {
+        "dependencies": {
+          "runtimepack.Microsoft.Windows.SDK.NET.Ref": "10.0.18362.57"
+        },
+        "runtime": {
+          "NBug.dll": {}
+        },
+        "resources": {
+          "es/NBug.resources.dll": {
+            "locale": "es"
+          },
+          "fr/NBug.resources.dll": {
+            "locale": "fr"
+          },
+          "hu/NBug.resources.dll": {
+            "locale": "hu"
+          },
+          "ja/NBug.resources.dll": {
+            "locale": "ja"
+          },
+          "nl/NBug.resources.dll": {
+            "locale": "nl"
+          },
+          "pt-BR/NBug.resources.dll": {
+            "locale": "pt-BR"
+          },
+          "sv/NBug.resources.dll": {
+            "locale": "sv"
+          },
+          "tr/NBug.resources.dll": {
+            "locale": "tr"
+          },
+          "vi/NBug.resources.dll": {
+            "locale": "vi"
+          },
+          "zh-Hans/NBug.resources.dll": {
+            "locale": "zh-Hans"
+          },
+          "zh-Hant/NBug.resources.dll": {
+            "locale": "zh-Hant"
+          },
+          "ar/NBug.resources.dll": {
+            "locale": "ar"
+          },
+          "cs/NBug.resources.dll": {
+            "locale": "cs"
+          },
+          "de/NBug.resources.dll": {
+            "locale": "de"
+          },
+          "fi-FI/NBug.resources.dll": {
+            "locale": "fi-FI"
+          },
+          "hr/NBug.resources.dll": {
+            "locale": "hr"
+          },
+          "it/NBug.resources.dll": {
+            "locale": "it"
+          },
+          "ko-KR/NBug.resources.dll": {
+            "locale": "ko-KR"
+          },
+          "pl/NBug.resources.dll": {
+            "locale": "pl"
+          },
+          "pt/NBug.resources.dll": {
+            "locale": "pt"
+          },
+          "ru/NBug.resources.dll": {
+            "locale": "ru"
+          },
+          "sl/NBug.resources.dll": {
+            "locale": "sl"
+          }
+        }
+      },
+      "runtimepack.Microsoft.Windows.SDK.NET.Ref/10.0.18362.57": {
+        "runtime": {
+          "Microsoft.Windows.SDK.NET.dll": {
+            "assemblyVersion": "10.0.18362.38",
+            "fileVersion": "10.0.18362.55"
+          },
+          "WinRT.Runtime.dll": {
+            "assemblyVersion": "2.2.0.0",
+            "fileVersion": "2.2.0.48161"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "NBug/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "runtimepack.Microsoft.Windows.SDK.NET.Ref/10.0.18362.57": {
+      "type": "runtimepack",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

@@ -1,0 +1,228 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v9.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v9.0": {
+      "UniversalUninstaller/1.0.0": {
+        "dependencies": {
+          "KlocTools": "1.0.0",
+          "ObjectListView": "1.0.0",
+          "Interop.Scripting": "1.0.0.0",
+          "runtimepack.Microsoft.Windows.SDK.NET.Ref": "10.0.18362.57"
+        },
+        "runtime": {
+          "UniversalUninstaller.dll": {}
+        },
+        "resources": {
+          "ar/UniversalUninstaller.resources.dll": {
+            "locale": "ar"
+          },
+          "cs/UniversalUninstaller.resources.dll": {
+            "locale": "cs"
+          },
+          "de/UniversalUninstaller.resources.dll": {
+            "locale": "de"
+          },
+          "es/UniversalUninstaller.resources.dll": {
+            "locale": "es"
+          },
+          "fr/UniversalUninstaller.resources.dll": {
+            "locale": "fr"
+          },
+          "hu/UniversalUninstaller.resources.dll": {
+            "locale": "hu"
+          },
+          "it/UniversalUninstaller.resources.dll": {
+            "locale": "it"
+          },
+          "ja/UniversalUninstaller.resources.dll": {
+            "locale": "ja"
+          },
+          "nl/UniversalUninstaller.resources.dll": {
+            "locale": "nl"
+          },
+          "pl/UniversalUninstaller.resources.dll": {
+            "locale": "pl"
+          },
+          "pt-BR/UniversalUninstaller.resources.dll": {
+            "locale": "pt-BR"
+          },
+          "pt/UniversalUninstaller.resources.dll": {
+            "locale": "pt"
+          },
+          "ru/UniversalUninstaller.resources.dll": {
+            "locale": "ru"
+          },
+          "sl/UniversalUninstaller.resources.dll": {
+            "locale": "sl"
+          },
+          "sv/UniversalUninstaller.resources.dll": {
+            "locale": "sv"
+          },
+          "tr/UniversalUninstaller.resources.dll": {
+            "locale": "tr"
+          },
+          "vi/UniversalUninstaller.resources.dll": {
+            "locale": "vi"
+          },
+          "zh-Hans/UniversalUninstaller.resources.dll": {
+            "locale": "zh-Hans"
+          },
+          "zh-Hant/UniversalUninstaller.resources.dll": {
+            "locale": "zh-Hant"
+          }
+        }
+      },
+      "runtimepack.Microsoft.Windows.SDK.NET.Ref/10.0.18362.57": {
+        "runtime": {
+          "Microsoft.Windows.SDK.NET.dll": {
+            "assemblyVersion": "10.0.18362.38",
+            "fileVersion": "10.0.18362.55"
+          },
+          "WinRT.Runtime.dll": {
+            "assemblyVersion": "2.2.0.0",
+            "fileVersion": "2.2.0.48161"
+          }
+        }
+      },
+      "System.Management/9.0.8": {
+        "runtime": {
+          "lib/net9.0/System.Management.dll": {
+            "assemblyVersion": "9.0.0.8",
+            "fileVersion": "9.0.825.36511"
+          }
+        },
+        "runtimeTargets": {
+          "runtimes/win/lib/net9.0/System.Management.dll": {
+            "rid": "win",
+            "assetType": "runtime",
+            "assemblyVersion": "9.0.0.8",
+            "fileVersion": "9.0.825.36511"
+          }
+        }
+      },
+      "KlocTools/1.0.0": {
+        "dependencies": {
+          "System.Management": "9.0.8"
+        },
+        "runtime": {
+          "KlocTools.dll": {
+            "assemblyVersion": "5.9.0.0",
+            "fileVersion": "5.9.0.0"
+          }
+        },
+        "resources": {
+          "ar/KlocTools.resources.dll": {
+            "locale": "ar"
+          },
+          "cs/KlocTools.resources.dll": {
+            "locale": "cs"
+          },
+          "de/KlocTools.resources.dll": {
+            "locale": "de"
+          },
+          "es/KlocTools.resources.dll": {
+            "locale": "es"
+          },
+          "fr/KlocTools.resources.dll": {
+            "locale": "fr"
+          },
+          "hu/KlocTools.resources.dll": {
+            "locale": "hu"
+          },
+          "it/KlocTools.resources.dll": {
+            "locale": "it"
+          },
+          "ja/KlocTools.resources.dll": {
+            "locale": "ja"
+          },
+          "nl/KlocTools.resources.dll": {
+            "locale": "nl"
+          },
+          "pl/KlocTools.resources.dll": {
+            "locale": "pl"
+          },
+          "pt/KlocTools.resources.dll": {
+            "locale": "pt"
+          },
+          "pt-BR/KlocTools.resources.dll": {
+            "locale": "pt-BR"
+          },
+          "ru/KlocTools.resources.dll": {
+            "locale": "ru"
+          },
+          "sl/KlocTools.resources.dll": {
+            "locale": "sl"
+          },
+          "sv/KlocTools.resources.dll": {
+            "locale": "sv"
+          },
+          "tr/KlocTools.resources.dll": {
+            "locale": "tr"
+          },
+          "vi/KlocTools.resources.dll": {
+            "locale": "vi"
+          },
+          "zh-Hans/KlocTools.resources.dll": {
+            "locale": "zh-Hans"
+          },
+          "zh-Hant/KlocTools.resources.dll": {
+            "locale": "zh-Hant"
+          }
+        }
+      },
+      "ObjectListView/1.0.0": {
+        "runtime": {
+          "ObjectListView.dll": {
+            "fileVersion": "0.0.0.0"
+          }
+        }
+      },
+      "Interop.Scripting/1.0.0.0": {
+        "runtime": {
+          "Interop.Scripting.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "UniversalUninstaller/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "runtimepack.Microsoft.Windows.SDK.NET.Ref/10.0.18362.57": {
+      "type": "runtimepack",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "System.Management/9.0.8": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-D7icHff0OpEEIOLsTgnPL+Ff1VmJ3tzA8y20LNKgv4hx1MFMA3XGAVlWMCkLQfBkyvEwib6rMG6nP27lf98KRA==",
+      "path": "system.management/9.0.8",
+      "hashPath": "system.management.9.0.8.nupkg.sha512"
+    },
+    "KlocTools/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "ObjectListView/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Interop.Scripting/1.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

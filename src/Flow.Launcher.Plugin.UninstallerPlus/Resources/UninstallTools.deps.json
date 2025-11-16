@@ -1,0 +1,267 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v9.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v9.0": {
+      "UninstallTools/1.0.0": {
+        "dependencies": {
+          "KlocTools": "1.0.0",
+          "ObjectListView": "1.0.0",
+          "System.Management": "9.0.8",
+          "TaskScheduler": "2.12.2",
+          "runtimepack.Microsoft.Windows.SDK.NET.Ref": "10.0.18362.57"
+        },
+        "runtime": {
+          "UninstallTools.dll": {}
+        },
+        "resources": {
+          "ar/UninstallTools.resources.dll": {
+            "locale": "ar"
+          },
+          "cs/UninstallTools.resources.dll": {
+            "locale": "cs"
+          },
+          "de/UninstallTools.resources.dll": {
+            "locale": "de"
+          },
+          "es/UninstallTools.resources.dll": {
+            "locale": "es"
+          },
+          "fr/UninstallTools.resources.dll": {
+            "locale": "fr"
+          },
+          "hu/UninstallTools.resources.dll": {
+            "locale": "hu"
+          },
+          "it/UninstallTools.resources.dll": {
+            "locale": "it"
+          },
+          "ja/UninstallTools.resources.dll": {
+            "locale": "ja"
+          },
+          "nl/UninstallTools.resources.dll": {
+            "locale": "nl"
+          },
+          "pl/UninstallTools.resources.dll": {
+            "locale": "pl"
+          },
+          "pt-BR/UninstallTools.resources.dll": {
+            "locale": "pt-BR"
+          },
+          "pt/UninstallTools.resources.dll": {
+            "locale": "pt"
+          },
+          "ru/UninstallTools.resources.dll": {
+            "locale": "ru"
+          },
+          "sl/UninstallTools.resources.dll": {
+            "locale": "sl"
+          },
+          "sv/UninstallTools.resources.dll": {
+            "locale": "sv"
+          },
+          "tr/UninstallTools.resources.dll": {
+            "locale": "tr"
+          },
+          "vi/UninstallTools.resources.dll": {
+            "locale": "vi"
+          },
+          "zh-Hans/UninstallTools.resources.dll": {
+            "locale": "zh-Hans"
+          },
+          "zh-Hant/UninstallTools.resources.dll": {
+            "locale": "zh-Hant"
+          }
+        }
+      },
+      "runtimepack.Microsoft.Windows.SDK.NET.Ref/10.0.18362.57": {
+        "runtime": {
+          "Microsoft.Windows.SDK.NET.dll": {
+            "assemblyVersion": "10.0.18362.38",
+            "fileVersion": "10.0.18362.55"
+          },
+          "WinRT.Runtime.dll": {
+            "assemblyVersion": "2.2.0.0",
+            "fileVersion": "2.2.0.48161"
+          }
+        }
+      },
+      "System.Management/9.0.8": {
+        "runtime": {
+          "lib/net9.0/System.Management.dll": {
+            "assemblyVersion": "9.0.0.8",
+            "fileVersion": "9.0.825.36511"
+          }
+        },
+        "runtimeTargets": {
+          "runtimes/win/lib/net9.0/System.Management.dll": {
+            "rid": "win",
+            "assetType": "runtime",
+            "assemblyVersion": "9.0.0.8",
+            "fileVersion": "9.0.825.36511"
+          }
+        }
+      },
+      "TaskScheduler/2.12.2": {
+        "runtime": {
+          "lib/net9.0-windows7.0/Microsoft.Win32.TaskScheduler.dll": {
+            "assemblyVersion": "2.12.2.0",
+            "fileVersion": "2.12.2.0"
+          }
+        },
+        "resources": {
+          "lib/net9.0-windows7.0/de/Microsoft.Win32.TaskScheduler.resources.dll": {
+            "locale": "de"
+          },
+          "lib/net9.0-windows7.0/es/Microsoft.Win32.TaskScheduler.resources.dll": {
+            "locale": "es"
+          },
+          "lib/net9.0-windows7.0/fr/Microsoft.Win32.TaskScheduler.resources.dll": {
+            "locale": "fr"
+          },
+          "lib/net9.0-windows7.0/it/Microsoft.Win32.TaskScheduler.resources.dll": {
+            "locale": "it"
+          },
+          "lib/net9.0-windows7.0/ja/Microsoft.Win32.TaskScheduler.resources.dll": {
+            "locale": "ja"
+          },
+          "lib/net9.0-windows7.0/pl/Microsoft.Win32.TaskScheduler.resources.dll": {
+            "locale": "pl"
+          },
+          "lib/net9.0-windows7.0/ru/Microsoft.Win32.TaskScheduler.resources.dll": {
+            "locale": "ru"
+          },
+          "lib/net9.0-windows7.0/sv/Microsoft.Win32.TaskScheduler.resources.dll": {
+            "locale": "sv"
+          },
+          "lib/net9.0-windows7.0/tr/Microsoft.Win32.TaskScheduler.resources.dll": {
+            "locale": "tr"
+          },
+          "lib/net9.0-windows7.0/zh-CN/Microsoft.Win32.TaskScheduler.resources.dll": {
+            "locale": "zh-CN"
+          },
+          "lib/net9.0-windows7.0/zh-Hant/Microsoft.Win32.TaskScheduler.resources.dll": {
+            "locale": "zh-Hant"
+          }
+        }
+      },
+      "KlocTools/1.0.0": {
+        "dependencies": {
+          "System.Management": "9.0.8"
+        },
+        "runtime": {
+          "KlocTools.dll": {
+            "assemblyVersion": "5.9.0.0",
+            "fileVersion": "5.9.0.0"
+          }
+        },
+        "resources": {
+          "ar/KlocTools.resources.dll": {
+            "locale": "ar"
+          },
+          "cs/KlocTools.resources.dll": {
+            "locale": "cs"
+          },
+          "de/KlocTools.resources.dll": {
+            "locale": "de"
+          },
+          "es/KlocTools.resources.dll": {
+            "locale": "es"
+          },
+          "fr/KlocTools.resources.dll": {
+            "locale": "fr"
+          },
+          "hu/KlocTools.resources.dll": {
+            "locale": "hu"
+          },
+          "it/KlocTools.resources.dll": {
+            "locale": "it"
+          },
+          "ja/KlocTools.resources.dll": {
+            "locale": "ja"
+          },
+          "nl/KlocTools.resources.dll": {
+            "locale": "nl"
+          },
+          "pl/KlocTools.resources.dll": {
+            "locale": "pl"
+          },
+          "pt/KlocTools.resources.dll": {
+            "locale": "pt"
+          },
+          "pt-BR/KlocTools.resources.dll": {
+            "locale": "pt-BR"
+          },
+          "ru/KlocTools.resources.dll": {
+            "locale": "ru"
+          },
+          "sl/KlocTools.resources.dll": {
+            "locale": "sl"
+          },
+          "sv/KlocTools.resources.dll": {
+            "locale": "sv"
+          },
+          "tr/KlocTools.resources.dll": {
+            "locale": "tr"
+          },
+          "vi/KlocTools.resources.dll": {
+            "locale": "vi"
+          },
+          "zh-Hans/KlocTools.resources.dll": {
+            "locale": "zh-Hans"
+          },
+          "zh-Hant/KlocTools.resources.dll": {
+            "locale": "zh-Hant"
+          }
+        }
+      },
+      "ObjectListView/1.0.0": {
+        "runtime": {
+          "ObjectListView.dll": {
+            "assemblyVersion": "2.10.0.0",
+            "fileVersion": "2.9.1.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "UninstallTools/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "runtimepack.Microsoft.Windows.SDK.NET.Ref/10.0.18362.57": {
+      "type": "runtimepack",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "System.Management/9.0.8": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-D7icHff0OpEEIOLsTgnPL+Ff1VmJ3tzA8y20LNKgv4hx1MFMA3XGAVlWMCkLQfBkyvEwib6rMG6nP27lf98KRA==",
+      "path": "system.management/9.0.8",
+      "hashPath": "system.management.9.0.8.nupkg.sha512"
+    },
+    "TaskScheduler/2.12.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-glpAb3VrwfdAofp6PIyAzL0ZeTV7XUJ8muu0oZoTeyU5jtk2sMJ6QAMRRuFbovcaj+SBJiEUGklxIWOqQoxshA==",
+      "path": "taskscheduler/2.12.2",
+      "hashPath": "taskscheduler.2.12.2.nupkg.sha512"
+    },
+    "KlocTools/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "ObjectListView/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

@@ -1,99 +1,71 @@
 {
   "runtimeTarget": {
-    "name": ".NETCoreApp,Version=v6.0",
+    "name": ".NETCoreApp,Version=v9.0",
     "signature": ""
   },
   "compilationOptions": {},
   "targets": {
-    ".NETCoreApp,Version=v6.0": {
+    ".NETCoreApp,Version=v9.0": {
       "OculusHelper/1.0.0": {
         "dependencies": {
           "KlocTools": "1.0.0",
-          "Newtonsoft.Json": "13.0.3",
-          "System.ServiceProcess.ServiceController": "8.0.0",
-          "runtimepack.Microsoft.Windows.SDK.NET.Ref": "10.0.18362.55"
+          "Newtonsoft.Json": "13.0.4",
+          "System.ServiceProcess.ServiceController": "9.0.11",
+          "runtimepack.Microsoft.Windows.SDK.NET.Ref": "10.0.18362.57"
         },
         "runtime": {
           "OculusHelper.dll": {}
         }
       },
-      "runtimepack.Microsoft.Windows.SDK.NET.Ref/10.0.18362.55": {
+      "runtimepack.Microsoft.Windows.SDK.NET.Ref/10.0.18362.57": {
         "runtime": {
           "Microsoft.Windows.SDK.NET.dll": {
             "assemblyVersion": "10.0.18362.38",
             "fileVersion": "10.0.18362.55"
           },
           "WinRT.Runtime.dll": {
-            "assemblyVersion": "2.1.0.0",
+            "assemblyVersion": "2.2.0.0",
             "fileVersion": "2.2.0.48161"
           }
         }
       },
-      "Newtonsoft.Json/13.0.3": {
+      "Newtonsoft.Json/13.0.4": {
         "runtime": {
           "lib/net6.0/Newtonsoft.Json.dll": {
             "assemblyVersion": "13.0.0.0",
-            "fileVersion": "13.0.3.27908"
-          }
-        }
-      },
-      "System.CodeDom/9.0.8": {
-        "runtime": {
-          "lib/netstandard2.0/System.CodeDom.dll": {
-            "assemblyVersion": "9.0.0.0",
-            "fileVersion": "9.0.825.36511"
-          }
-        }
-      },
-      "System.Diagnostics.EventLog/8.0.0": {
-        "runtime": {
-          "lib/net6.0/System.Diagnostics.EventLog.dll": {
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.23.53103"
-          }
-        },
-        "runtimeTargets": {
-          "runtimes/win/lib/net6.0/System.Diagnostics.EventLog.Messages.dll": {
-            "rid": "win",
-            "assetType": "runtime",
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "0.0.0.0"
-          },
-          "runtimes/win/lib/net6.0/System.Diagnostics.EventLog.dll": {
-            "rid": "win",
-            "assetType": "runtime",
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.23.53103"
+            "fileVersion": "13.0.4.30916"
           }
         }
       },
       "System.Management/9.0.8": {
-        "dependencies": {
-          "System.CodeDom": "9.0.8"
-        },
         "runtime": {
-          "lib/netstandard2.0/System.Management.dll": {
-            "assemblyVersion": "4.0.0.0",
+          "lib/net9.0/System.Management.dll": {
+            "assemblyVersion": "9.0.0.8",
+            "fileVersion": "9.0.825.36511"
+          }
+        },
+        "runtimeTargets": {
+          "runtimes/win/lib/net9.0/System.Management.dll": {
+            "rid": "win",
+            "assetType": "runtime",
+            "assemblyVersion": "9.0.0.8",
             "fileVersion": "9.0.825.36511"
           }
         }
       },
-      "System.ServiceProcess.ServiceController/8.0.0": {
-        "dependencies": {
-          "System.Diagnostics.EventLog": "8.0.0"
-        },
+      "System.ServiceProcess.ServiceController/9.0.11": {
         "runtime": {
-          "lib/net6.0/System.ServiceProcess.ServiceController.dll": {
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.23.53103"
+          "lib/net9.0/System.ServiceProcess.ServiceController.dll": {
+            "assemblyVersion": "9.0.0.11",
+            "fileVersion": "9.0.1125.51716"
           }
         },
         "runtimeTargets": {
-          "runtimes/win/lib/net6.0/System.ServiceProcess.ServiceController.dll": {
+          "runtimes/win/lib/net9.0/System.ServiceProcess.ServiceController.dll": {
             "rid": "win",
             "assetType": "runtime",
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.23.53103"
+            "assemblyVersion": "9.0.0.11",
+            "fileVersion": "9.0.1125.51716"
           }
         }
       },
@@ -175,31 +147,17 @@
       "serviceable": false,
       "sha512": ""
     },
-    "runtimepack.Microsoft.Windows.SDK.NET.Ref/10.0.18362.55": {
+    "runtimepack.Microsoft.Windows.SDK.NET.Ref/10.0.18362.57": {
       "type": "runtimepack",
       "serviceable": false,
       "sha512": ""
     },
-    "Newtonsoft.Json/13.0.3": {
+    "Newtonsoft.Json/13.0.4": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-HrC5BXdl00IP9zeV+0Z848QWPAoCr9P3bDEZguI+gkLcBKAOxix/tLEAAHC+UvDNPv4a2d18lOReHMOagPa+zQ==",
-      "path": "newtonsoft.json/13.0.3",
-      "hashPath": "newtonsoft.json.13.0.3.nupkg.sha512"
-    },
-    "System.CodeDom/9.0.8": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-kxg1TE/BMUAaMve/lPH9Bds+CFF4JPrN9WkQqHejc7UP6PO4KDAjZNF0uhvpZmoLR+EvHdRt232J++ZDI7aGqA==",
-      "path": "system.codedom/9.0.8",
-      "hashPath": "system.codedom.9.0.8.nupkg.sha512"
-    },
-    "System.Diagnostics.EventLog/8.0.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-fdYxcRjQqTTacKId/2IECojlDSFvp7LP5N78+0z/xH7v/Tuw5ZAxu23Y6PTCRinqyu2ePx+Gn1098NC6jM6d+A==",
-      "path": "system.diagnostics.eventlog/8.0.0",
-      "hashPath": "system.diagnostics.eventlog.8.0.0.nupkg.sha512"
+      "sha512": "sha512-pdgNNMai3zv51W5aq268sujXUyx7SNdE2bj1wZcWjAQrKMFZV260lbqYop1d2GM67JI1huLRwxo9ZqnfF/lC6A==",
+      "path": "newtonsoft.json/13.0.4",
+      "hashPath": "newtonsoft.json.13.0.4.nupkg.sha512"
     },
     "System.Management/9.0.8": {
       "type": "package",
@@ -208,12 +166,12 @@
       "path": "system.management/9.0.8",
       "hashPath": "system.management.9.0.8.nupkg.sha512"
     },
-    "System.ServiceProcess.ServiceController/8.0.0": {
+    "System.ServiceProcess.ServiceController/9.0.11": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-jtYVG3bpw2n/NvNnP2g/JLri0D4UtfusTvLeH6cZPNAEjJXJVGspS3wLgVvjNbm+wjaYkFgsXejMTocV1T5DIQ==",
-      "path": "system.serviceprocess.servicecontroller/8.0.0",
-      "hashPath": "system.serviceprocess.servicecontroller.8.0.0.nupkg.sha512"
+      "sha512": "sha512-dW+ZMX5jv5Px5XXcpIkiFjbU64IY8aQPjZDPRxyXohZUIIx/RvXz0EmjsyudUH9f52aM1/nfp0HFpEpszoVOYg==",
+      "path": "system.serviceprocess.servicecontroller/9.0.11",
+      "hashPath": "system.serviceprocess.servicecontroller.9.0.11.nupkg.sha512"
     },
     "KlocTools/1.0.0": {
       "type": "project",

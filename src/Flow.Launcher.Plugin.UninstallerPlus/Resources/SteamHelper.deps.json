@@ -1,47 +1,44 @@
 {
   "runtimeTarget": {
-    "name": ".NETCoreApp,Version=v6.0",
+    "name": ".NETCoreApp,Version=v9.0",
     "signature": ""
   },
   "compilationOptions": {},
   "targets": {
-    ".NETCoreApp,Version=v6.0": {
+    ".NETCoreApp,Version=v9.0": {
       "SteamHelper/1.0.0": {
         "dependencies": {
           "KlocTools": "1.0.0",
-          "runtimepack.Microsoft.Windows.SDK.NET.Ref": "10.0.18362.55"
+          "runtimepack.Microsoft.Windows.SDK.NET.Ref": "10.0.18362.57"
         },
         "runtime": {
           "SteamHelper.dll": {}
         }
       },
-      "runtimepack.Microsoft.Windows.SDK.NET.Ref/10.0.18362.55": {
+      "runtimepack.Microsoft.Windows.SDK.NET.Ref/10.0.18362.57": {
         "runtime": {
           "Microsoft.Windows.SDK.NET.dll": {
             "assemblyVersion": "10.0.18362.38",
             "fileVersion": "10.0.18362.55"
           },
           "WinRT.Runtime.dll": {
-            "assemblyVersion": "2.1.0.0",
+            "assemblyVersion": "2.2.0.0",
             "fileVersion": "2.2.0.48161"
           }
         }
       },
-      "System.CodeDom/9.0.8": {
+      "System.Management/9.0.8": {
         "runtime": {
-          "lib/netstandard2.0/System.CodeDom.dll": {
-            "assemblyVersion": "9.0.0.0",
+          "lib/net9.0/System.Management.dll": {
+            "assemblyVersion": "9.0.0.8",
             "fileVersion": "9.0.825.36511"
           }
-        }
-      },
-      "System.Management/9.0.8": {
-        "dependencies": {
-          "System.CodeDom": "9.0.8"
         },
-        "runtime": {
-          "lib/netstandard2.0/System.Management.dll": {
-            "assemblyVersion": "4.0.0.0",
+        "runtimeTargets": {
+          "runtimes/win/lib/net9.0/System.Management.dll": {
+            "rid": "win",
+            "assetType": "runtime",
+            "assemblyVersion": "9.0.0.8",
             "fileVersion": "9.0.825.36511"
           }
         }
@@ -124,17 +121,10 @@
       "serviceable": false,
       "sha512": ""
     },
-    "runtimepack.Microsoft.Windows.SDK.NET.Ref/10.0.18362.55": {
+    "runtimepack.Microsoft.Windows.SDK.NET.Ref/10.0.18362.57": {
       "type": "runtimepack",
       "serviceable": false,
       "sha512": ""
-    },
-    "System.CodeDom/9.0.8": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-kxg1TE/BMUAaMve/lPH9Bds+CFF4JPrN9WkQqHejc7UP6PO4KDAjZNF0uhvpZmoLR+EvHdRt232J++ZDI7aGqA==",
-      "path": "system.codedom/9.0.8",
-      "hashPath": "system.codedom.9.0.8.nupkg.sha512"
     },
     "System.Management/9.0.8": {
       "type": "package",

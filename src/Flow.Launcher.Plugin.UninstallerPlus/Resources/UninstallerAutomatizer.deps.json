@@ -1,0 +1,415 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v9.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v9.0": {
+      "UninstallerAutomatizer/1.0.0": {
+        "dependencies": {
+          "FlaUI.Adapter.White": "0.2.1",
+          "FlaUI.UIA3": "5.0.0",
+          "KlocTools": "1.0.0",
+          "UninstallTools": "1.0.0",
+          "runtimepack.Microsoft.Windows.SDK.NET.Ref": "10.0.18362.57"
+        },
+        "runtime": {
+          "UninstallerAutomatizer.dll": {}
+        },
+        "resources": {
+          "ar/UninstallerAutomatizer.resources.dll": {
+            "locale": "ar"
+          },
+          "cs/UninstallerAutomatizer.resources.dll": {
+            "locale": "cs"
+          },
+          "de/UninstallerAutomatizer.resources.dll": {
+            "locale": "de"
+          },
+          "es/UninstallerAutomatizer.resources.dll": {
+            "locale": "es"
+          },
+          "fr/UninstallerAutomatizer.resources.dll": {
+            "locale": "fr"
+          },
+          "hu/UninstallerAutomatizer.resources.dll": {
+            "locale": "hu"
+          },
+          "it/UninstallerAutomatizer.resources.dll": {
+            "locale": "it"
+          },
+          "ja/UninstallerAutomatizer.resources.dll": {
+            "locale": "ja"
+          },
+          "nl/UninstallerAutomatizer.resources.dll": {
+            "locale": "nl"
+          },
+          "pl/UninstallerAutomatizer.resources.dll": {
+            "locale": "pl"
+          },
+          "pt-BR/UninstallerAutomatizer.resources.dll": {
+            "locale": "pt-BR"
+          },
+          "pt/UninstallerAutomatizer.resources.dll": {
+            "locale": "pt"
+          },
+          "ru/UninstallerAutomatizer.resources.dll": {
+            "locale": "ru"
+          },
+          "sl/UninstallerAutomatizer.resources.dll": {
+            "locale": "sl"
+          },
+          "sv/UninstallerAutomatizer.resources.dll": {
+            "locale": "sv"
+          },
+          "tr/UninstallerAutomatizer.resources.dll": {
+            "locale": "tr"
+          },
+          "vi/UninstallerAutomatizer.resources.dll": {
+            "locale": "vi"
+          },
+          "zh-Hans/UninstallerAutomatizer.resources.dll": {
+            "locale": "zh-Hans"
+          },
+          "zh-Hant/UninstallerAutomatizer.resources.dll": {
+            "locale": "zh-Hant"
+          }
+        }
+      },
+      "runtimepack.Microsoft.Windows.SDK.NET.Ref/10.0.18362.57": {
+        "runtime": {
+          "Microsoft.Windows.SDK.NET.dll": {
+            "assemblyVersion": "10.0.18362.38",
+            "fileVersion": "10.0.18362.55"
+          },
+          "WinRT.Runtime.dll": {
+            "assemblyVersion": "2.2.0.0",
+            "fileVersion": "2.2.0.48161"
+          }
+        }
+      },
+      "FlaUI.Adapter.White/0.2.1": {
+        "dependencies": {
+          "FlaUI.Core": "5.0.0"
+        },
+        "runtime": {
+          "lib/net5.0-windows7.0/FlaUI.Adapter.White.dll": {
+            "assemblyVersion": "0.2.1.0",
+            "fileVersion": "0.2.1.0"
+          }
+        }
+      },
+      "FlaUI.Core/5.0.0": {
+        "dependencies": {
+          "System.Management": "9.0.8"
+        },
+        "runtime": {
+          "lib/net8.0-windows7.0/FlaUI.Core.dll": {
+            "assemblyVersion": "5.0.0.0",
+            "fileVersion": "5.0.0.0"
+          }
+        }
+      },
+      "FlaUI.UIA3/5.0.0": {
+        "dependencies": {
+          "FlaUI.Core": "5.0.0",
+          "Interop.UIAutomationClient": "10.19041.0"
+        },
+        "runtime": {
+          "lib/net8.0-windows7.0/FlaUI.UIA3.dll": {
+            "assemblyVersion": "5.0.0.0",
+            "fileVersion": "5.0.0.0"
+          }
+        }
+      },
+      "Interop.UIAutomationClient/10.19041.0": {
+        "runtime": {
+          "lib/netcoreapp3.0/Interop.UIAutomationClient.dll": {
+            "assemblyVersion": "10.0.19041.0",
+            "fileVersion": "10.0.19041.0"
+          }
+        }
+      },
+      "System.Management/9.0.8": {
+        "runtime": {
+          "lib/net9.0/System.Management.dll": {
+            "assemblyVersion": "9.0.0.8",
+            "fileVersion": "9.0.825.36511"
+          }
+        },
+        "runtimeTargets": {
+          "runtimes/win/lib/net9.0/System.Management.dll": {
+            "rid": "win",
+            "assetType": "runtime",
+            "assemblyVersion": "9.0.0.8",
+            "fileVersion": "9.0.825.36511"
+          }
+        }
+      },
+      "TaskScheduler/2.12.2": {
+        "runtime": {
+          "lib/net9.0-windows7.0/Microsoft.Win32.TaskScheduler.dll": {
+            "assemblyVersion": "2.12.2.0",
+            "fileVersion": "2.12.2.0"
+          }
+        },
+        "resources": {
+          "lib/net9.0-windows7.0/de/Microsoft.Win32.TaskScheduler.resources.dll": {
+            "locale": "de"
+          },
+          "lib/net9.0-windows7.0/es/Microsoft.Win32.TaskScheduler.resources.dll": {
+            "locale": "es"
+          },
+          "lib/net9.0-windows7.0/fr/Microsoft.Win32.TaskScheduler.resources.dll": {
+            "locale": "fr"
+          },
+          "lib/net9.0-windows7.0/it/Microsoft.Win32.TaskScheduler.resources.dll": {
+            "locale": "it"
+          },
+          "lib/net9.0-windows7.0/ja/Microsoft.Win32.TaskScheduler.resources.dll": {
+            "locale": "ja"
+          },
+          "lib/net9.0-windows7.0/pl/Microsoft.Win32.TaskScheduler.resources.dll": {
+            "locale": "pl"
+          },
+          "lib/net9.0-windows7.0/ru/Microsoft.Win32.TaskScheduler.resources.dll": {
+            "locale": "ru"
+          },
+          "lib/net9.0-windows7.0/sv/Microsoft.Win32.TaskScheduler.resources.dll": {
+            "locale": "sv"
+          },
+          "lib/net9.0-windows7.0/tr/Microsoft.Win32.TaskScheduler.resources.dll": {
+            "locale": "tr"
+          },
+          "lib/net9.0-windows7.0/zh-CN/Microsoft.Win32.TaskScheduler.resources.dll": {
+            "locale": "zh-CN"
+          },
+          "lib/net9.0-windows7.0/zh-Hant/Microsoft.Win32.TaskScheduler.resources.dll": {
+            "locale": "zh-Hant"
+          }
+        }
+      },
+      "KlocTools/1.0.0": {
+        "dependencies": {
+          "System.Management": "9.0.8"
+        },
+        "runtime": {
+          "KlocTools.dll": {
+            "assemblyVersion": "5.9.0.0",
+            "fileVersion": "5.9.0.0"
+          }
+        },
+        "resources": {
+          "ar/KlocTools.resources.dll": {
+            "locale": "ar"
+          },
+          "cs/KlocTools.resources.dll": {
+            "locale": "cs"
+          },
+          "de/KlocTools.resources.dll": {
+            "locale": "de"
+          },
+          "es/KlocTools.resources.dll": {
+            "locale": "es"
+          },
+          "fr/KlocTools.resources.dll": {
+            "locale": "fr"
+          },
+          "hu/KlocTools.resources.dll": {
+            "locale": "hu"
+          },
+          "it/KlocTools.resources.dll": {
+            "locale": "it"
+          },
+          "ja/KlocTools.resources.dll": {
+            "locale": "ja"
+          },
+          "nl/KlocTools.resources.dll": {
+            "locale": "nl"
+          },
+          "pl/KlocTools.resources.dll": {
+            "locale": "pl"
+          },
+          "pt/KlocTools.resources.dll": {
+            "locale": "pt"
+          },
+          "pt-BR/KlocTools.resources.dll": {
+            "locale": "pt-BR"
+          },
+          "ru/KlocTools.resources.dll": {
+            "locale": "ru"
+          },
+          "sl/KlocTools.resources.dll": {
+            "locale": "sl"
+          },
+          "sv/KlocTools.resources.dll": {
+            "locale": "sv"
+          },
+          "tr/KlocTools.resources.dll": {
+            "locale": "tr"
+          },
+          "vi/KlocTools.resources.dll": {
+            "locale": "vi"
+          },
+          "zh-Hans/KlocTools.resources.dll": {
+            "locale": "zh-Hans"
+          },
+          "zh-Hant/KlocTools.resources.dll": {
+            "locale": "zh-Hant"
+          }
+        }
+      },
+      "ObjectListView/1.0.0": {
+        "runtime": {
+          "ObjectListView.dll": {
+            "assemblyVersion": "2.10.0.0",
+            "fileVersion": "2.9.1.0"
+          }
+        }
+      },
+      "UninstallTools/1.0.0": {
+        "dependencies": {
+          "KlocTools": "1.0.0",
+          "ObjectListView": "1.0.0",
+          "System.Management": "9.0.8",
+          "TaskScheduler": "2.12.2"
+        },
+        "runtime": {
+          "UninstallTools.dll": {
+            "assemblyVersion": "5.9.0.0",
+            "fileVersion": "5.9.0.0"
+          }
+        },
+        "resources": {
+          "ar/UninstallTools.resources.dll": {
+            "locale": "ar"
+          },
+          "cs/UninstallTools.resources.dll": {
+            "locale": "cs"
+          },
+          "de/UninstallTools.resources.dll": {
+            "locale": "de"
+          },
+          "es/UninstallTools.resources.dll": {
+            "locale": "es"
+          },
+          "fr/UninstallTools.resources.dll": {
+            "locale": "fr"
+          },
+          "hu/UninstallTools.resources.dll": {
+            "locale": "hu"
+          },
+          "it/UninstallTools.resources.dll": {
+            "locale": "it"
+          },
+          "ja/UninstallTools.resources.dll": {
+            "locale": "ja"
+          },
+          "nl/UninstallTools.resources.dll": {
+            "locale": "nl"
+          },
+          "pl/UninstallTools.resources.dll": {
+            "locale": "pl"
+          },
+          "pt/UninstallTools.resources.dll": {
+            "locale": "pt"
+          },
+          "pt-BR/UninstallTools.resources.dll": {
+            "locale": "pt-BR"
+          },
+          "ru/UninstallTools.resources.dll": {
+            "locale": "ru"
+          },
+          "sl/UninstallTools.resources.dll": {
+            "locale": "sl"
+          },
+          "sv/UninstallTools.resources.dll": {
+            "locale": "sv"
+          },
+          "tr/UninstallTools.resources.dll": {
+            "locale": "tr"
+          },
+          "vi/UninstallTools.resources.dll": {
+            "locale": "vi"
+          },
+          "zh-Hans/UninstallTools.resources.dll": {
+            "locale": "zh-Hans"
+          },
+          "zh-Hant/UninstallTools.resources.dll": {
+            "locale": "zh-Hant"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "UninstallerAutomatizer/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "runtimepack.Microsoft.Windows.SDK.NET.Ref/10.0.18362.57": {
+      "type": "runtimepack",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "FlaUI.Adapter.White/0.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Vg4e+i/zC+RcOrjK+ghpom35QkLVP632S4I78l5i7mCkYo6by9TJcZPe75Al+VMQ3kAO2FEBYRIh387WCpcCPg==",
+      "path": "flaui.adapter.white/0.2.1",
+      "hashPath": "flaui.adapter.white.0.2.1.nupkg.sha512"
+    },
+    "FlaUI.Core/5.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-VWWYqwjsYkii2BrUsz5+bpXEp27NherKhLt19hTxHwJP4KrfyZoeo1FdBov4ZTh655wZAKDGIjR7NJLDesuzeg==",
+      "path": "flaui.core/5.0.0",
+      "hashPath": "flaui.core.5.0.0.nupkg.sha512"
+    },
+    "FlaUI.UIA3/5.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-s1Yy1RsRJ0OXvmtxQlNJd0cu4sfvN3PFFu6skBGK8VlwPl/b38E0V5kCbo2gvkuhRIu4Itfxjdo7DUMF7qJw4Q==",
+      "path": "flaui.uia3/5.0.0",
+      "hashPath": "flaui.uia3.5.0.0.nupkg.sha512"
+    },
+    "Interop.UIAutomationClient/10.19041.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Me5vKNZ1JSg6txTsPQXaWx7fVNh+fmcUPPwtDKJtqvbMM0N8aoa/l/QPolkJIRnasCabCNt4v2zG4p1Q9HU98A==",
+      "path": "interop.uiautomationclient/10.19041.0",
+      "hashPath": "interop.uiautomationclient.10.19041.0.nupkg.sha512"
+    },
+    "System.Management/9.0.8": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-D7icHff0OpEEIOLsTgnPL+Ff1VmJ3tzA8y20LNKgv4hx1MFMA3XGAVlWMCkLQfBkyvEwib6rMG6nP27lf98KRA==",
+      "path": "system.management/9.0.8",
+      "hashPath": "system.management.9.0.8.nupkg.sha512"
+    },
+    "TaskScheduler/2.12.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-glpAb3VrwfdAofp6PIyAzL0ZeTV7XUJ8muu0oZoTeyU5jtk2sMJ6QAMRRuFbovcaj+SBJiEUGklxIWOqQoxshA==",
+      "path": "taskscheduler/2.12.2",
+      "hashPath": "taskscheduler.2.12.2.nupkg.sha512"
+    },
+    "KlocTools/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "ObjectListView/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "UninstallTools/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

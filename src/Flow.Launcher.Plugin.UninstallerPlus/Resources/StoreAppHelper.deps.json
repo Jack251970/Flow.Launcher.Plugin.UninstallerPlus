@@ -1,27 +1,27 @@
 {
   "runtimeTarget": {
-    "name": ".NETCoreApp,Version=v6.0",
+    "name": ".NETCoreApp,Version=v9.0",
     "signature": ""
   },
   "compilationOptions": {},
   "targets": {
-    ".NETCoreApp,Version=v6.0": {
+    ".NETCoreApp,Version=v9.0": {
       "StoreAppHelper/1.0.0": {
         "dependencies": {
-          "runtimepack.Microsoft.Windows.SDK.NET.Ref": "10.0.18362.55"
+          "runtimepack.Microsoft.Windows.SDK.NET.Ref": "10.0.18362.57"
         },
         "runtime": {
           "StoreAppHelper.dll": {}
         }
       },
-      "runtimepack.Microsoft.Windows.SDK.NET.Ref/10.0.18362.55": {
+      "runtimepack.Microsoft.Windows.SDK.NET.Ref/10.0.18362.57": {
         "runtime": {
           "Microsoft.Windows.SDK.NET.dll": {
             "assemblyVersion": "10.0.18362.38",
             "fileVersion": "10.0.18362.55"
           },
           "WinRT.Runtime.dll": {
-            "assemblyVersion": "2.1.0.0",
+            "assemblyVersion": "2.2.0.0",
             "fileVersion": "2.2.0.48161"
           }
         }
@@ -34,7 +34,7 @@
       "serviceable": false,
       "sha512": ""
     },
-    "runtimepack.Microsoft.Windows.SDK.NET.Ref/10.0.18362.55": {
+    "runtimepack.Microsoft.Windows.SDK.NET.Ref/10.0.18362.57": {
       "type": "runtimepack",
       "serviceable": false,
       "sha512": ""
