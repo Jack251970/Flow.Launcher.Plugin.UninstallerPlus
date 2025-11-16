@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   
 	<PropertyGroup>
-		<TargetFramework>net6.0-windows10.0.18362.0</TargetFramework>
+		<TargetFramework>net9.0-windows10.0.18362.0</TargetFramework>
     <OutputType>Library</OutputType>
     <RootNamespace>BulkCrapUninstaller</RootNamespace>
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -281,10 +281,6 @@
 		</BootstrapperPackage>
 	</ItemGroup>
   -->
-  
-	<ItemGroup>
-		<PackageReference Include="Microsoft.VisualBasic" Version="10.3.0" />
-	</ItemGroup>
   
 	<ItemGroup>
 		<EmbeddedResource Update="..\..\source\BulkCrapUninstaller\Properties\Localisable.resx">
