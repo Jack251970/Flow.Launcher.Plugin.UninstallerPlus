@@ -54,7 +54,7 @@ jobs:
 
       # Publish to GitHub releases
       - name: Publish
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: |
             output/Uninstaller+*.zip
